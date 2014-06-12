@@ -2,7 +2,7 @@ Thesis
 ======
 
 The Bachelor Thesis will be writte in LaTeX.
-If you´ve not installed it on your computer please follow the steps below:
+If you´ve not installed it on your computer please follow the steps below or open the included pdf.
 
 - visit www.writelatex.com
 - create a new Project
