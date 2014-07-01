@@ -1,45 +1,65 @@
-\documentclass[11pt, a4paper]{scrreprt}
+\documentclass[10pt, a4paper]{scrreprt}
 
-% TODO: export in Layout-File
-% TODO: parse into new layout!
-% TODO: create table of bibliography
-% TODO: create table of contents  --> the real one!
+	% TODO: export in Layout-File
+	% parse into new layout!
+	% create table of bibliography
+	% Schriftgröße, Seitenränder, Abstand erhöhen --> erst zum Schluss ;-)
 
-%% ------- LAYOUT ------- %%
+%% --------------------------- LAYOUT ------------------ %%
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[ngerman]{babel}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{selinput}
+\usepackage{setspace}
 \SelectInputMappings{
  adieresis={ä},
  germandbls={ß},
 }
-% Wörter mit Umlauten werden getrennt
-%% ------------ END LAYOUT -------%
 
-\title{Implementierung einer Smartphone-Anwendung zum Austausch verschlüsselter Daten mit einer Cloud}
-\begin{document}
-\titlepage
-\maketitle
-\tableofcontents
+% TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
+% Seitenränder erhöhen!
+
 
 %% ------------------------------------------------------ %%
 %% ------------------------ BEGIN ---------------------- %%
 %% -------------------------------------------------------%% 
+
+\begin{document}
+
+
+
+%% ---------------------------- TITLE ------------------------%%
+\title{Implementierung einer Smartphone-Anwendung zum Austausch verschlüsselter Daten mit einer Cloud}
+
+\titlepage
+\maketitle
+\tableofcontents
 
 
 %% -------------------- EINLEITUNG ------------------ %%
 \part{Einleitung}
 	% TODO: Text über Sicherheit, Privatsphäre, Bedürnisse, Internet, Überwachung, Smartphones ..
 \chapter{Motivation}
-Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine Plattformunabhänginge Möglichkeit Dokuente Online abzuspeichern und von jedem anderen Standort über ein Internetfähiges Gerät die Daten wieder zu öffnen.
-Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft alle wichtigen Dokumente voll verschlüsselt auf diesem Server abgelegt werden.
+Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine plattformunabhänginge Möglichkeit Dokuente Online abzuspeichern und von einem anderen Standort über ein internetfähiges Gerät wieder zu öffnen [https://www.dropbox.com/]. Auch wenn Dropbox nach eigenen Angaben den Advanced Encryption Standard (AES)  verwendet, bevor die Daten gespeichert werden, liegen die dafür notwendigen Schlüssel in Händen der Betreiber selbst, die somit vollen Klartextzugriff auf die Nutzerdateien haben. Dropbox begründet diesen Zugriff wie folgt:  "Wie die meisten Online-Dienste verfügt auch Dropbox über einen kleinen Mitarbeiterstamm, dem aus in unserer Datenschutzrichtlinie dargelegten Gründen Zugriffsrechte auf Nutzerdaten gewährt werden muss [...]" % TODO [https://www.dropbox.com/help/27/de aufgerufen 01.07.2014]
+
+Das DESY in Hamburg ist sehr daran bestrebt die erhobenen Daten in Ihrer eigenen Cloud abzusichern und gegen Fremdzugriff zu schüten.
+Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft alle wichtigen Daten nicht nur in dieser Cloud gespeichert werden, sondern auch zusätzlich durch eine Verschlüsselung gesichert werden.
+
 
 \chapter{Zielsetzung}
 	% TODO: Dieser Block ist eventuell mit in Motivation enthalten
+Ziel dieser Arbeit ist es aus diesem Grund einen Prototyp zu entwickeln, der einerseits mit dem Cloud-System des DESY Kommunizieren kann um dort Dateien hoch- und herunter zu laden, andererseits diese Daten auch in angemessener Form (siehe Kapitel Validierung) zu Verschlüsseln.
+
+In der ersten Version dieser Arbeit wird ein Programm ausschließlich für das Betriebssystem Android entwickelt.
 \chapter{Verwandte Arbeiten}
+\chapter{Verwandte Programme}
+	% TODO: Unterscheidung in Arbeiten & Programme notwendig?
+	% vgl. Dropbox
+	% vgl. ownCloud <<- speziell: soll in Zukunft am DESY verwendet werden --> kompatiblität beachten?!? 
+	% vgl. boxcryptor
+	% vgl. cloudfogger
 \chapter{Diese Arbeit}
 \section{Inhaltlicher Aufbau}
 \section{Veränderung ggü. Anforderung}
@@ -48,8 +68,12 @@ Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft al
 \part{Grundlagen}
 \chapter{Android}
 \section{Zusammenhang Kryptographie}
+\subsection{OpenSSL}
+	%TODO: Größere Probleme der letzten Zeit: Heartbleed -> Android 4.1.1 infected
+	% eigenständiges Updaten der ossl-version.
 
 \chapter{Kryptographie}
+	% TODO: Begriffserklärung: integrität, authentifizierung, autorisierung usw. ..
 \section{Grundlagen}
 	% TODO: Ziele, Begriffserklärung: kryptographie, kryptoanalsyse, kryptologie, symetrisch, asymetrisch, 
 \section{Verschlüsselung}
@@ -58,16 +82,20 @@ Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft al
 
 \section{Hash-Funktionen}
 \section{Digitale Signature}
-	% TODO: Begriffserklärung: integrität, authentifizierung, authentizierung usw. ..
 \subsection{Public Key Infrastruktur}
 \section{Schlüsselvereinbarung}
 \subsection{Diffie Hellmann}
 \subsection{ElGamal}
 \section{Schlüsselgenerierung}
+\section{Authentifizierung}
+\subsection{Zwei-Faktor-Authentifizierung}
+	% TODO: Erklärung: http://de.wikipedia.org/wiki/Zwei-Faktor-Authentifizierung (need Quelle)
+
 
 %% ------------------------ VALIDIERUNG --------------------- %%
 \part{Validierung}
-	% TODO: Erläuterung des Testgerätes
+	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
+	% aufzeigen der Notwendigkeit dieser Validierung
 \chapter{Verschlüsselungsverfahren}
 \chapter{Hashfunktionen}
 
