@@ -13,11 +13,16 @@
 \usepackage{amssymb}
 \usepackage{selinput}
 \usepackage{setspace}
+\usepackage{geometry}
+\usepackage{graphicx}
+
 \SelectInputMappings{
  adieresis={ä},
  germandbls={ß},
 }
-
+\setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
+\geometry{paper=a4paper,left=30mm,right=20mm,top=20mm} 
+\graphicspath{{pictures/}} % Specifies the directory where pictures are stored
 % TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
 % Seitenränder erhöhen!
 
@@ -29,52 +34,74 @@
 \begin{document}
 
 
-
 %% ---------------------------- TITLE ------------------------%%
+\begin{titlepage}
 \title{Implementierung einer Smartphone-Anwendung zum Austausch verschlüsselter Daten mit einer Cloud}
-
-\titlepage
 \maketitle
+\end{titlepage}
+
+% Text komplett in der Mitte von der Seite!
+\vspace*{\fill}
+\begin{center}
+“If you think technology can solve your security problems, then you don’t understand the problems and you don’t understand the technology.”
+\end{center}
+\begin{flushright}
+Bruce Schneier
+\end{flushright}
+\vspace*{\fill}
+
+
 \tableofcontents
 
-
 %% -------------------- EINLEITUNG ------------------ %%
-\part{Einleitung}
+\chapter{Einleitung}
+% \setcounter{page}{1}
 	% TODO: Text über Sicherheit, Privatsphäre, Bedürnisse, Internet, Überwachung, Smartphones ..
-\chapter{Motivation}
-Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine plattformunabhänginge Möglichkeit Dokuente Online abzuspeichern und von einem anderen Standort über ein internetfähiges Gerät wieder zu öffnen [https://www.dropbox.com/]. Auch wenn Dropbox nach eigenen Angaben den Advanced Encryption Standard (AES)  verwendet, bevor die Daten gespeichert werden, liegen die dafür notwendigen Schlüssel in Händen der Betreiber selbst, die somit vollen Klartextzugriff auf die Nutzerdateien haben. Dropbox begründet diesen Zugriff wie folgt:  "Wie die meisten Online-Dienste verfügt auch Dropbox über einen kleinen Mitarbeiterstamm, dem aus in unserer Datenschutzrichtlinie dargelegten Gründen Zugriffsrechte auf Nutzerdaten gewährt werden muss [...]" % TODO [https://www.dropbox.com/help/27/de aufgerufen 01.07.2014]
+"Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
+Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am Deutschen Elektronen Synchrotron (DESY) in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie Smartphones oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
+\begin{center}
+\includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\end{center}
+Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. % TODO: prüfen? kann man das so stehen lassen?!?
 
-Das DESY in Hamburg ist sehr daran bestrebt die erhobenen Daten in Ihrer eigenen Cloud abzusichern und gegen Fremdzugriff zu schüten.
+
+\section{Motivation}
+Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine plattformunabhänginge Möglichkeit Dokuente Online abzuspeichern und von einem anderen Standort über ein internetfähiges Gerät wieder zu öffnen [https://www.dropbox.com/]. Auch wenn Dropbox nach eigenen Angaben den Advanced Encryption Standard (AES)  verwendet, bevor die Daten gespeichert werden, liegen die dafür notwendigen Schlüssel in Händen der Betreiber selbst, die somit vollen Klartextzugriff auf die Nutzerdateien haben. Dropbox begründet diesen Zugriff wie folgt:  "Wie die meisten Online-Dienste verfügt auch Dropbox über einen kleinen Mitarbeiterstamm, dem aus in unserer Datenschutzrichtlinie dargelegten Gründen Zugriffsrechte auf Nutzerdaten gewährt werden muss [...]". \\ % TODO [https://www.dropbox.com/help/27/de aufgerufen 01.07.2014]
 Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft alle wichtigen Daten nicht nur in dieser Cloud gespeichert werden, sondern auch zusätzlich durch eine Verschlüsselung gesichert werden.
 
 
-\chapter{Zielsetzung}
-	% TODO: Dieser Block ist eventuell mit in Motivation enthalten
-Ziel dieser Arbeit ist es aus diesem Grund einen Prototyp zu entwickeln, der einerseits mit dem Cloud-System des DESY Kommunizieren kann um dort Dateien hoch- und herunter zu laden, andererseits diese Daten auch in angemessener Form (siehe Kapitel Validierung) zu Verschlüsseln.
+\section{Zielsetzung}
+Ziel dieser Arbeit ist es aus diesem Grund einen Prototyp zu entwickeln, der einerseits mit dem Cloud-System des DESY Kommunizieren kann um dort Dateien hoch- und herunter zu laden, andererseits diese Daten auch in angemessener Form (siehe Kapitel Validierung) zu Verschlüsseln. \\
+In der ersten Version dieser Arbeit wird ein Programm entwickelt, welches auf Android-Betriebssystemen zum Einsatz kommen kann. Darüber hinaus ist es wichtig, dass die entsprechenden Schlüssel zum entschlüsseln der Daten nicht zusammen mit den Daten abgelegt werden, sondern ausschließlich den Parteien des Datenaustauschs bekannt sein soll. Dies bedeutet, das selbst die Betreiber am DESY nicht die Möglichkeit haben die abgelegten Daten zu entschlüsseln. \\
+Zum ver- und entschüsseln der Daten sollen Verfahren verwendet werden, die in der heutigen Zeit als sicher angesehen werden und Smartphones im Bezug auf Performance und Akkuverbrauch nicht zu stark belasten. Um diese Faktoren zu Validieren wird eine Testanwendung geschrieben, die mit bestimmten Faktoren die verschiedenen Verfahren untereinander überprüfen (siehe Kapitel Validierung).
 
-In der ersten Version dieser Arbeit wird ein Programm ausschließlich für das Betriebssystem Android entwickelt.
-\chapter{Verwandte Arbeiten}
-\chapter{Verwandte Programme}
+	% TODO: Prüfen, ob dieser Part wirklich hier rein muss? Andere Software vergleichen?
+\section{Verwandte Arbeiten}
+	% TODO: Recherche?!? --> wird nicht benötigt, da es sich bei der Arbeit hautpsächlich um die Entwicklung des Programmes handelt. Kryptographische Verfahren wurdne zu genüge behandelt.
+\section{Verwandte Programme}
 	% TODO: Unterscheidung in Arbeiten & Programme notwendig?
 	% vgl. Dropbox
 	% vgl. ownCloud <<- speziell: soll in Zukunft am DESY verwendet werden --> kompatiblität beachten?!? 
 	% vgl. boxcryptor
 	% vgl. cloudfogger
-\chapter{Diese Arbeit}
-\section{Inhaltlicher Aufbau}
-\section{Veränderung ggü. Anforderung}
+
+
+\section{Diese Arbeit}
+\subsection{Inhaltlicher Aufbau}
+
+% \chapter{Anforderungen} ?
+
 
 %% ---------------------- GRUNDLAGEN ----------------- %%
-\part{Grundlagen}
-\chapter{Android}
+\chapter{Grundlagen Android}
 \section{Zusammenhang Kryptographie}
-\subsection{OpenSSL}
+\section{OpenSSL}
 	%TODO: Größere Probleme der letzten Zeit: Heartbleed -> Android 4.1.1 infected
 	% eigenständiges Updaten der ossl-version.
 
-\chapter{Kryptographie}
+\chapter{Grundlagen Kryptographie}
 	% TODO: Begriffserklärung: integrität, authentifizierung, autorisierung usw. ..
-\section{Grundlagen}
+	% tiefe Beschreibung der einzelnen Dinge notwendig?
 	% TODO: Ziele, Begriffserklärung: kryptographie, kryptoanalsyse, kryptologie, symetrisch, asymetrisch, 
 \section{Verschlüsselung}
 \subsection{Symetrische Verfahren}
@@ -93,25 +120,40 @@ In der ersten Version dieser Arbeit wird ein Programm ausschließlich für das B
 
 
 %% ------------------------ VALIDIERUNG --------------------- %%
-\part{Validierung}
+\chapter{Validierung}
 	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
 	% aufzeigen der Notwendigkeit dieser Validierung
-\chapter{Verschlüsselungsverfahren}
-\chapter{Hashfunktionen}
+\section{Verschlüsselungsverfahren}
+\section{Hashfunktionen}
 
 %% ------------------------ IMPLEMENTIERUNG ---------------- %%
-\part{Implementierung}
-\chapter{Entwurf}
+\chapter{Implementierung}
+\section{Entwurf}
 
 %% ----------------------------- TEST -------------------------- %%
-\part{Test}
-\chapter{Validierung}
-\chapter{Testverfahren}
+\chapter{Test}
+\section{Validierung}
+\section{Testverfahren}
 
 %% -------------------------- ZUSAMMENFASSUNG -------------- %%
-\part{Zusammenfassung und Ausblick}
-\chapter{Zusammenfassung}
-\chapter{Ausblick}
+\chapter{Zusammenfassung und Ausblick}
+\section{Zusammenfassung}
+\section{Ausblick}
+
+%--------------------------------------------------------------------
+% -----------------------ENDE ------------------------------------
+%------------------------------------------------------------------
+
+
+%% --------------------------- BIBLIO --------------------------------%%
+%\label{Bibliography}
+
+%\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+
+%\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+
+%\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+
 
 %Glossar
 %Literatur
