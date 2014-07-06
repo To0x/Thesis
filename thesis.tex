@@ -23,6 +23,7 @@
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
 \geometry{paper=a4paper,left=30mm,right=20mm,top=20mm} 
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
+
 % TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
 % Seitenränder erhöhen!
 
@@ -93,11 +94,33 @@ Zum ver- und entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 
 
 %% ---------------------- GRUNDLAGEN ----------------- %%
+\chapter{Grundlagen Allgemein}
+\section{Cloud}
+\section{Kryptografische Definitionen}
+	% TODO: anders aufteilen!
+
+
 \chapter{Grundlagen Android}
+In diesem Kapitel wird kurz darauf eingegangen, welche Kryptografischen Aspekte Android in den verschiedenen Versionen zur Verfügung stellt um diese im darauffolgendan Kapitel genauer zu Untersuchen. Aufgrund der Aussage, dass die Android Version Gingerbread (2.3.3) im Juni 2014 noch einen Marktanteil von knapp 15\% hält, ist dies auch die niedrigste vom Programm unterstützte Verstion. \\
+\begin{center}
+\includegraphics[scale=0.6]{android_version_marktanteil.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\end{center}
+Bei der Analyse wird darauf geachtet, dass alle Funktionalitäten die im Programm entwickelt werden, von dieser Version unterstützt werden. Die, während des Schreibens dieser Arbeit, aktuellste Version der Android API ist KitKat (4.4), bei der darauf geachtet wird, dass die in von Gingerbread genutzten Funktionen auch in dieser Version noch zur Verfügung stehen und nicht mit \textit{deprecated (veraltet)} markiert sind.
+
+
 \section{Zusammenhang Kryptographie}
+Android stellt mich dem Paket javax.crypto eine Schnittstelle zur Verfügung, mit dem der Programmierer die Möglichkeit hat verschiedene Kryptografische Verfahren aufzurufen, ohne die genaue Implementierung kennen zu müssen. Des Weiteren ist die Klasse abstrahiert von der darunter liegenden Umsetzung der Verfahren. %TODO: Quelle?
+In den tieferen Ebenen der Implementierung existieren verschiedene Provider, welche dann die einzelnen Implementierungen der Verfahren zur Verfügung stellen. Mit folgendem Codeabschnitt ist es möglich die einzelnen Provider mit den unterstützten Verfahren auszulesen. \\
+\begin{center}
+\includegraphics[scale=1.0]{read_cryptoprovider.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\end{center}
+
+
 \section{OpenSSL}
 	%TODO: Größere Probleme der letzten Zeit: Heartbleed -> Android 4.1.1 infected
 	% eigenständiges Updaten der ossl-version.
+	% 
+\section{Bouncy Castle}
 
 \chapter{Grundlagen Kryptographie}
 	% TODO: Begriffserklärung: integrität, authentifizierung, autorisierung usw. ..
