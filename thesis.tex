@@ -15,6 +15,7 @@
 \usepackage{setspace}
 \usepackage{geometry}
 \usepackage{graphicx}
+\usepackage{makeidx}
 
 \SelectInputMappings{
  adieresis={ä},
@@ -23,8 +24,9 @@
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
 \geometry{paper=a4paper,left=30mm,right=20mm,top=20mm} 
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
+\makeindex
 
-% TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
+%TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
 % Seitenränder erhöhen!
 
 
@@ -57,9 +59,8 @@ Bruce Schneier
 %% -------------------- EINLEITUNG ------------------ %%
 \chapter{Einleitung}
 % \setcounter{page}{1}
-	% TODO: Text über Sicherheit, Privatsphäre, Bedürnisse, Internet, Überwachung, Smartphones ..
 "Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
-Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am Deutschen Elektronen Synchrotron (DESY) in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie Smartphones oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
+Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
 \begin{center}
 \includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
 \end{center}
@@ -101,26 +102,41 @@ Zum ver- und entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 
 
 \chapter{Grundlagen Android}
-In diesem Kapitel wird kurz darauf eingegangen, welche Kryptografischen Aspekte Android in den verschiedenen Versionen zur Verfügung stellt um diese im darauffolgendan Kapitel genauer zu Untersuchen. Aufgrund der Aussage, dass die Android Version Gingerbread (2.3.3) im Juni 2014 noch einen Marktanteil von knapp 15\% hält, ist dies auch die niedrigste vom Programm unterstützte Verstion. \\
+Android ist ein Betriebssystem für Smartphones und Tables, welches von der open handset alliance entwickelt wird. Das Konsortium besteht aktuell aus 84 Unternehmen, die an der Entwicklung des Betriebssytemes arbeiten. %http://www.openhandsetalliance.com/index.html]
+In diesem Kapitel wird kurz darauf eingegangen, welche Kryptografischen Aspekte Android in den verschiedenen Versionen zur Verfügung stellt um diese im darauffolgendan Kapitel genauer zu Untersuchen. Aufgrund der Tatsache, dass die Android Version Gingerbread (2.3.3) im Juni 2014 noch einen Marktanteil von knapp 15\% hält, ist dies auch die niedrigste vom Programm unterstützte Verstion. \\
 \begin{center}
 \includegraphics[scale=0.6]{android_version_marktanteil.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
 \end{center}
-Bei der Analyse wird darauf geachtet, dass alle Funktionalitäten die im Programm entwickelt werden, von dieser Version unterstützt werden. Die, während des Schreibens dieser Arbeit, aktuellste Version der Android API ist KitKat (4.4), bei der darauf geachtet wird, dass die in von Gingerbread genutzten Funktionen auch in dieser Version noch zur Verfügung stehen und nicht mit \textit{deprecated (veraltet)} markiert sind.
+Bei der Analyse wird darauf geachtet, dass alle Funktionalitäten die im Programm entwickelt werden, von dieser Version unterstützt werden. Die, während des Schreibens dieser Arbeit, aktuellste Version der Android API ist KitKat (4.4), bei der darauf geachtet wird, dass die eingesetzten Funktionen auch in dieser Version noch zur Verfügung stehen und nicht mit \textit{deprecated (veraltet)} markiert sind.
 
 
 \section{Zusammenhang Kryptographie}
-Android stellt mich dem Paket javax.crypto eine Schnittstelle zur Verfügung, mit dem der Programmierer die Möglichkeit hat verschiedene Kryptografische Verfahren aufzurufen, ohne die genaue Implementierung kennen zu müssen. Des Weiteren ist die Klasse abstrahiert von der darunter liegenden Umsetzung der Verfahren. %TODO: Quelle?
+Beim Thema Sicherheit im Zusammenhang mit Android ist erstmals der Begriff der Sandbox zu nennen. Eine Anwendung wird abgekapselt in einer eigenen Umgebung mit eigenem Prozess, eigenem Betriebssytem-User, eigener Dalvik-VM, eigenem Heap und eigenem Dateisystem ausgeführt. Diese Abgekapselte Konstrukt wird Sandbox bezeichnet. Dadurch ist es dem Betriebssystem möglich unerlaubten Zugriff auf Ressourcen oder andere Programme zu beschränken, hierbei wird das Berechtigungs und Prozess-Management-System von Linux verwendet. %Becker, Arno Android 4.4 - Seite 33]
+Um dennoch verschiedene Zugriffe zu erlauben muss in der sogenannten Manifest-Datei der Anwendung die Berechtigung festgelegt werden und vom Benutzer bei der Erstinstallation bestätigt werden.
+Auch wenn dieses Konzept Daten zur Laufzeit innerhalb einer Anwendung schützt, ist es möglich Dateien auch auf einer SD-Karte zu speichern, in das Internet zu verschicken oder über andere Wege auszutauschen. Diese Daten sind dann ausserhalb der Anwendung und gegen externe Zugriffe nicht mehr geschützt.
+Dennoch gibt es die Möglichkeit in Android diese Daten zusätzlich mit einer Verschülsselung zu versehen - hierfür stellt das Paket javax.crypto eine Schnittstelle zur Verfügung, mit dem der Programmierer die Möglichkeit hat verschiedene Kryptografische Verfahren aufzurufen, ohne die genaue Implementierung kennen zu müssen. Des Weiteren ist die Klasse abstrahiert von der darunter liegenden Umsetzung der Verfahren. %TODO: Quelle?
 In den tieferen Ebenen der Implementierung existieren verschiedene Provider, welche dann die einzelnen Implementierungen der Verfahren zur Verfügung stellen. Mit folgendem Codeabschnitt ist es möglich die einzelnen Provider mit den unterstützten Verfahren auszulesen. \\
 \begin{center}
 \includegraphics[scale=1.0]{read_cryptoprovider.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
 \end{center}
+Im Vergleich stehen folgende Android-Versionen:
+\shorthandoff{"}
+\begin{itemize}
+\item 2.3.3 (Gingerbread) : die niedrigste vom Programm unterstützte Version
+\item 4.1.1 (Jelly Bean) : die Version des Entwickler-Gerätes
+\item 4.4.4 (KitKat) : aktuellste auf dem Markt verfügbare Android-Version
+\item "L" : zukünftige Version, welche bereits zu testzwecken als Entwickler-Version freigeschaltet ist. Der CodeName "L" zeigt auf, dass es sich in der Folge der Süßigkeiten (Gingerbread, HoneyComb, Ice Cream Sandwich, Jelly Bean, KitKat) vermutlich alphabetisch fortsetzen wird - die Versionsnummer ist bis dato nicht bekannt.
+\end{itemize}
+Im Vergleich der Ausgabe eines Gerätes mit Android 2.3.3 und eines mit 4.1.1 bzw. 4.4.4 und "L" liegt der Hauptunterschied in der Unterstützung von Elliptischen Kurven für das Diffie-Hellmann-Verfahren und den Digital-Signature-Algorithm, welche in der Version 2.3.3 nicht unterstützt werden. Des Weiteren ist ab der Version 4.4.x der Provider OpenSSL und deren Algorithmen genauer aufgesplittet.
+Folgende Verschlüsselungsverfahren werden sowohl von der Version 2.3.3 als auch von der Version 4.4 unterstützt und werden im nachfolgenden Kapiter näher erläutert: AES, ARC4, Blowfish, DES, Triple DES, PBE, RSA. Des Weiteren wird die Möglichkeit des Key-Wrap für AES und Triple DES beschrieben. Die von Android unterstützten Hash-Funktionen sind: MD5, SHA1, SHA256, SHA384, SHA512. Ausserdem unterstützt wird der Authentifizierungsalgorithmus HMAC und der Standard X509. Die Vollständige Liste aller Unterstützen Algorithmen mit dessen Providern befindet sich im Anhang.
 
 
-\section{OpenSSL}
+\subsection{OpenSSL}
 	%TODO: Größere Probleme der letzten Zeit: Heartbleed -> Android 4.1.1 infected
 	% eigenständiges Updaten der ossl-version.
 	% 
-\section{Bouncy Castle}
+\subsection{Bouncy Castle}
+	% TODO: write about?!? Standard Systems?! 
 
 \chapter{Grundlagen Kryptographie}
 	% TODO: Begriffserklärung: integrität, authentifizierung, autorisierung usw. ..
@@ -128,6 +144,7 @@ In den tieferen Ebenen der Implementierung existieren verschiedene Provider, wel
 	% TODO: Ziele, Begriffserklärung: kryptographie, kryptoanalsyse, kryptologie, symetrisch, asymetrisch, 
 \section{Verschlüsselung}
 \subsection{Symetrische Verfahren}
+	% DES --> AES ist der Nachfolgder, deswegen keine weitere Behandlung.
 \subsection{Asymetrische Verfahren}
 
 \section{Hash-Funktionen}
@@ -177,11 +194,15 @@ In den tieferen Ebenen der Implementierung existieren verschiedene Provider, wel
 
 %\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
 
+\printindex
 
 %Glossar
 %Literatur
 %Diagramme
 %Tabellen
 %eigenständigkeitsverklärung
+
+%% ---------------------------------- ANHANG --------------------------- %%
+	%TODO: Algorithmen 411 und 322.
 
 \end{document}
