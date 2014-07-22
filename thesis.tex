@@ -133,7 +133,6 @@ ARC4 & SHA1 \\
 Blowfish & SHA256 \\
 DES & SHA384 \\
 3DES & SHA512 \\
-PBE & \\
 RSA & \\
 \hline\hline
 \end{tabular} \\
@@ -240,11 +239,48 @@ Selbst das Bundesamt für Sicherheit in der Informationstechnik (BSI) schreibt i
 Durch diese gezeigten Publikationen wird das Verfahren RC4 als unsicher angesehen und in dieser Arbeit nicht verwendet.
 
 
-\subsection{PBE}
-
-
 \subsection{Blowfish}
+Blowfish ist eine Blockchiffrierung mit einer Blockgröße von 64 Bit. Wie auch bei DES und Triple-DES beschrieben ist diese Blockgröße für die heutigen Computer ungeeignet. Um diese Problem zu beheben hat der Erfinder des Verfahrens Bruce Schneier das Verfahren Twofish entwickelt, welches bei der Ausschreibung von AES auch unter den 5 Finalisten nominiert war. Es arbeitet auf einer Blockgröße von 128 Bit. Auch wenn es keine Beweisbaren belege für die Unsicherheit von Blowfish gibt, merkt Bruce Schneier in einem Interview an, dass man Twofish verwenden solle: "If people ask, I recommend Twofish instead." %http://www.computerworld.com.au/article/46254/bruce_almighty_schneier_preaches_security_linux_faithful/?pp=3
+Aus der Analyse der Verfügbaren Kryptoverfahren, die in den verwendeten Android-Versionen angeboten werden ist Twofish noch nicht standardisiert enthalten. Durch die Validierung im späteren Kapitel bleibt offen, ob das Verfahren Blowfish in der Implementierung Einzug finden wird.
 
+\subsubsection{Funktionsweise}
+Die Vorgehensweise der Datenverschlüsselung von Blowfish beruht auf dem Feistel-Netzwerk. Hierbei wie der Block in 2 Hälften unterteilt, wobei die eine Teilhälfte immer durch eine Funktion verändert wird und die andere Teilhälfte in die nächste Runde weitergeben wird. Dabei wird bei jeder Runde beide Hälften miteinander vertauscht, sodass jede Teilhälfte alle 2 Runden der Funktion unterzogen wird. \\ \\
+L$_{i}$ = R$_{i-1}$ \\
+R$_{i}$ = L$_{i-1}$ $\oplus$ f(R$_{i-1}$, PK$_{i}$) \\ \\
+In folgender Grafik wird das Verfahren von Blowfish und der Feistel-Struktur verdeutlicht dargestellt: \\ \\
+%\includegraphics[scale=0.3]{blowfish_1.JPG} 
+
+
+\begin{figure}[htbp]
+\begin{minipage}[t]{4cm}
+\vspace{0pt}
+\centering
+\includegraphics[scale=0.3]{blowfish_1.JPG}
+\caption{Bild1}
+\label{fig:Bild1}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{10cm}
+
+Hierbei beschreibt PK$_{i}$ den Teilschlüssel der aktuellen Runde. Innerhalb der Funkion von Blowfish wird die 32 Bit große Teilhälfte in 4x8 Bit unterteile gesplittet und jeweils einer Substitution durch S-Boxen unterzogen. Im Gegensatz zu AES sind alle 4 S-Boxen in Blowfish verschieden. (Berechnung: siehe Teilschlüssel) Folgende Vorgehensweise wird innerhalb der Funktion durchgeführt: \\
+\includegraphics[scale=0.25]{blowfish_2.JPG} \\ % Schneier 1996, Seite 389f]
+Das Ergebnis von S-Box 1 und S-Box 2 wird Addiert und Modulo 2$^{32}$ berechnet. Anschließend wird das Ergebnis mit dem Ergebnis von S-Box 3 XOR-Verknüpft und zum Schluss dessen Ergebnis mit dem Ergebnis aus S-Box 4 erneut addiert und Module 2$^{32}$ errechnet. Zusammenfassend ergibt das folgende Formel: \\ \\
+F(x$_{L}$ = ((S$_{1,a}$ + S$_{2,b}$ mod 2$^{32}$) $\oplus$ S$_{3,c}$) + S$_{4,d}$ mod 2$^{32}$ \\ \\
+\end{minipage}
+\end{figure}
+\subsubsection{Teilschlüssel}
+Für die Generierung der Teilschlüsse, sowie der Erzeugung der S-Boxen existiert ein Algorithmus, der wie folgt vorgeht:
+\begin{enumerate}
+\item Das P-Array (Array der Größe 18, welches die Teilschlüssel mit je 32 Bit hält) und die vier S-Boxen werden der Reihe nach mit den Hexadezimalstellen von $\pi$ befüllt.
+\item P$_{1}$ wird mit den ersten 32 Bit des Schlüssels XOR-Verknüpft, P$_{2}$ mit den zweiten. Ist das Schlüsselende erreicht, wird von vorne begonnen. Dieses Verfahren wird solange ausgeführt, bis alle 18 Felder des P-Arrays mit den Schlüsselbits XOR-Verknüpft sind.
+\item Eine Zeichenkette bestehend aus Nullen wird in den Blowfish Algorithmus gegeben (Wichtig ist, dass hierbei bereits das geänderte P-Array verwendet wird)
+\item Das Ergebnis der Verschlüsselung aus Punkt 3 wird als P$_{1}$ und P$_{2}$ verwendet.
+\item Die Ausgabe von Punkt 3 wird erneut Verschlüsselt (Wieder mit dem geänderten P-Array)
+\item Die Ausgabe von Punkt 5 wird zu P$_{2}$ und P$_{4}$.
+\item Dieses Verfahren wird solange fortgesetzt, bis alle Elemente des P-Array, sowie der Reihe nach alle vier S-Boxen mit der Ausgabe des wechselnden Blowfish-Algorithmus ersetzt wurden.
+\end{enumerate}
+Bleibt der Schlüssel identisch, so kann die Anwendung die in 521 Iterationen errechneten Teilschlüssel speichern und muss diese nicht bei jeder Verschlüsselung neu errechnen.
+Das hier gezeigte Verfahren zum Erstellen der Teilschlüssel wird auch Schlüsselexpansion genannt, da der Algorithmus nun auf insgesamt 4168 Bit Teilschlüsseln besteht. 
 
 \section{Asymetrische Verfahren}
 \subsection{RSA}
@@ -252,7 +288,7 @@ Durch diese gezeigten Publikationen wird das Verfahren RC4 als unsicher angesehe
 \section{Hash-Funktionen}
 \section{Digitale Signature}
 \subsection{Public Key Infrastruktur}
-\section{Schlüsselvereinbarung}
+\section{Schlüsselvereinbarung} 
 \subsection{Diffie Hellmann}
 \subsection{ElGamal}
 \section{Schlüsselgenerierung}
