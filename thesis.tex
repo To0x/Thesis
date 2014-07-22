@@ -22,11 +22,11 @@
  germandbls={ß},
 }
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
-\geometry{paper=a4paper,left=30mm,right=20mm,top=20mm} 
+\geometry{paper=a4paper,left=30mm,right=20mm,top=40mm} 
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
 \makeindex
 
-%TODO: \onehalfspacing % Zeilenabstand erhöhen (1.5) 
+\onehalfspacing % Zeilenabstand erhöhen (1.5) 
 % Seitenränder erhöhen!
 
 
@@ -64,6 +64,9 @@ Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 au
 \begin{center}
 \includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
 \end{center}
+% http://de.statista.com/statistik/daten/studie/198959/umfrage/anzahl-der-smartphonenutzer-in-deutschland-seit-2010/
+% http://de.statista.com/statistik/daten/studie/12885/umfrage/marktanteil-bei-smartphones-nach-betriebssystem-weltweit-seit-2009/
+% http://de.statista.com/statistik/daten/studie/3506/umfrage/monatliches-datenvolumen-pro-mobilfunknutzer-in-deutschland/
 Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. % TODO: prüfen? kann man das so stehen lassen?!?
 
 
@@ -169,8 +172,9 @@ Neben der chosen-ciphertext-Angriffe gibt es weitere Angriffsszenarien auf Krypt
 
 
 \section{Symmetrische Verfahren}
-	% DES --> AES ist der Nachfolgder, deswegen keine weitere Behandlung.
 Bei symmetrischen Verschlüsselungsverfahren existiert ein Schlüssel, der jeweils für Ver- und Entschlüsselung verwendet wird. Dieser Schlüssel muss bereits beiden Parteien bekannt sein, bevor ein verschlüsselter Kanal aufgebaut werden kann. Eines der Probleme bei symmetrischen Verfahren ist der Austausch des Schlüssels, den man von Sender zu Empfänger, bereits vor der sicheren Kommunikation, übertragen muss (siehe Kapitel Schlüsselvereinbarung). Symmetrische Verfahren unterteilt man in zwei Grundtypen, die Block- und Stromchiffrierung. Bei der Blockchiffrierung wird der Klartext in Blöcke, mit fester Größe, aufgeteilt und innerhalb des Blockes werden die mathematischen Funktionen angewandt. Bei der Stromchiffrierung werden die Daten nicht in Blöcken zusammengefasst, sondern jedes einzelne Klartextbit wird in ein Chiffrebit überführt. [Schneier 1996, Seite 223] 
+
+\subsection{Betriebsmodi}
 
 
 \subsection{DES, 3DES}
@@ -179,9 +183,67 @@ Niels Ferguson weißt darauf hin, dass DES aufgrund seiner Schlüsselänge von 5
 Da das System als unsicher angesehen ist, wird auf eine nähere Untersuchung und Erläuterung der mathematischen Funktionen verzichtet. DES und 3DES wird in der zu entwickelnden Anwendung nicht implementiert.
 
 \subsection{AES}
+Der Advanced Encryption Standard, im folgenden AES genannt, ist ein Verschlüsselungsverfahren welches auf Blockchiffrierung beruht und seit 2002 ein offizieller Standard ist. Entwickelt wurde der neue Standard mit dem Namen Rijndael bei einer Ausschreibung für einen neuen Sicherheitsstandard durch J. Daemen und V. Rijmen, die sich gegen 14 andere Konkurrenten durchsetzen konnten. Auch unter den besten 5 dieser Ausschreibung waren die Verfahren MARS, RC6, Serpent und Twofish, wobei keiner dieser fünf eine Sicherheitsschwäche aufwies. Rijndael konnte letztendlich durch seine einfache Struktur und gute Performance im Software-, sowie im Hardwarebereich überzeugen. %[Eckert 2012, Seite 343f]
+Darüber hinaus hat die US National Security Agency (NSA) AES für interne Dokumente bis zum Sicherheitsstatus TOP SECRET, mit einer Schlüssellänge von 192 oder 256 und für den Sicherheitsstatus SECRET mit einer Schlüsselänge von 128 Bit erlaubt, was verdeutlicht, dass selbst Kryptographen von Geheimdiensten diesen Standard als sicher ansehen. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
+
+
+\subsubsection{Funktionsweise}
+AES arbeitet mit einer Blockgröße von 128 Bit, also 16 Byte welcher intern als 2-Dimensionale Matrix (4x4) abgespeichert wird und auf der mathematische Funktionen angewandt werden.
+Alle Funktionen innerhalb von AES werden Byteweise ausgeführt (8 Bit-Blöcke).  Die interne Nachricht bezeichnet man als \textit{state}, also den aktuellen Status des Blockes. \\
+\includegraphics[scale=1.0]{aes_state.JPG} \\
+Die Schlüssellänge des Verfahren ist entweder 128, 192 oder 256 Bit, wovon auch die auszuführende Rundenzahl abhängt (10 Runden bei 128 Bit, 12 bei 192 und 14 bei 256 Bit Schlüssellänge). In jeder dieser Runden werden Verfahren angewandt um den Klartext weiter zu verschlüsseln. Bei AES sind das \textit{ByteSubstitution, ShiftRow, MixColumns} und \textit{KeyAddition}. \\ \\
+Ausgenommen von dieser Regel ist die letzte Runde, in der MixColumns ausgelassen wird. %[Eckert, Seite 345] 
+Zusätzlich wird vor der ersten Runde die Funktion KeyAddition angewendet. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
+
+
+\subsubsection{ByteSubstitution}
+In der Funktion ByteSubstitution wird eines der beiden Verfahren zum Verbergen von Redundanz angewendet - die Konfusion. Die Konfusion sorgt dafür, dass der Zusammenhang zwischen Klartext und Chiffrat verschleiert wird und möglichst aus einer kleiner Änderung im Klartext eine große Änderung im Chiffrat erzeugt wird. Hierzu wird jedes Byte in eine sogenannte S-Box eingegeben, wobei diese  wiederum ein Byte aus Ausgabewert hat (Dieses Verfahren wird für alle 16 Byte eines Blockes angewandt). Die S-Box selbst ist eine 16x16 Matrix, mit der zu jeder eingegebenen Bit-Reihenfolge eine neue Ausgabe-Reihenfolge erzeugt wird. Ziel ist es, durch minimale Veränderung des Eingabewertes eine maximale Veränderung des Ausgabewertes zu erzeugen. Darüber hinaus ist die in AES verwendete S-Box nicht linear - das bedeutet, dass die Addition zweier einzelner Ausgabewerte nicht das selbe Ergebnis liefert wie die Addition zweier Eingabewerte:\\ \\
+\(S(A) + S(B) \neq S(A+B)\) \\ \\
+Zusätzlich ist die S-Box bijektiv, es existiert also zu jeder Bitreihenfolge genaue eine eindeutige Zuweisung - Bitreihenfolgen die zwei Ausgabewerte erzeugen können existieren nicht. Im Umkehrschluss bedeutet das, dass jedes Ausgabebyte der S-Box wieder durch eine inverse S-Box zurück transformiert werden kann (Wird bei der Entschlüsselung verwendet). Die S-Boxen innerhalb von AES sind alle identische, sodass 16x pro Runde immer die selbe Matrix verwendet wird. Das hat zur Folge, dass sie in den den meisten Softwareimplementierungen durch fixe Tabellen realisiert werden, anstatt sie jedes mal neu zu Berechnen. Die Berechnung einer S-Box erfolgt durch Endliche Körper und eine fixe Multiplikation und Addition um die Logik der endlichen Körper zu verwischen. [c. Paar, Seite 102 %http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
+
+
+\subsubsection{ShiftRow}
+Das zweite Verfahren zum Vergeben von Redundanz ist die Diffusion, bei der die Redundanz verteilt wird (Einfachster Anwendungsfall ist das Vertauschen der Klartextbuchstaben in eine neue Reihenfolge). Eine Funktion die innerhalb von AES die für Diffusion sorgt, ist das ShiftRow-Verfahren. Hierbei werden die Bytes innerhalb einer Spalte des state-Blockes auf alle anderen Spalten aufgeteilt. Eine Änderung innerhalb einer Spalte (A$_{0}$ bis A$_{3}$ der state-Matrix) hat somit Auswirkung auf alle anderen Spalten (Auswirkung auf komplette State-Matrix). Folgende Grafik soll das verdeutlichen, wobei B$_{0}$, B$_{1}$, ..., B$_{15}$ jeweils die Bytes A$_{0}$, A$_{1}$, ..., A$_{15}$ nach der Transformation durch die S-Box sind. In der Grafik ist die interne 4x4 Matrix (state) hier Spaltenweise nebeneinander abgebildet. (Vergleiche state-Matrix)  \\ \\%TODO: Grafik-Nummer
+\includegraphics[scale=0.5]{aes_Shift_Row.JPG} \\ \\
+Die in der Grafik gezeigten Linien, die die Verschiebung darstellen sollen, ist innerhalb der state-Matrix durch einfaches Shifting realisiert. Hierbei wird in der ersten Zeile keine Verschiebung durchgeführt, in der zweiten Zeile wird jedes Byte um 1 nach Links rotiert, in der dritten 2 nach Links und in der vierten Zeile 3 nach Links. \\ \\
+\includegraphics[scale=0.5]{shift_row_before.JPG}
+\includegraphics[scale=0.5]{shift_row_after.JPG} \\
+
+
+\subsubsection{MixColumns}
+Die MixColumns-Funktion ist die zweite Funktion in AES die für die Diffusion sorgt - sie bewirkt, dass die Änderung eines einzigen Eingabebytes in die Funktion alle Ausgabebytes verändert. Hierbei wird jede Spalte (als Vector dargestellt) mit einer festen 4x4 Matrix multipliziert. \\ \\
+\includegraphics[scale=0.5]{aes_mixcol.JPG} \\
+In der Grafik beschreibt der Vector B$_{0}$, B$_{5}$, B$_{10}$, B$_{15}$ genau die erste Spalte nach der Verschiebung durch ShiftRow. 
+Durch die starke Diffusion die durch die Verteilung der Bytes von einer Spalte auf alle Spalten in der Funktion ShiftRow und die Vermischung aller Bytes durch die MixColumns-Funktion erreicht wird, ist es dem Verfahren AES mögilch in 3 Runden jedes Byte des Klartextes von allen 16Byte der state-Matrix abhängig zu machen. Wenn also die zu verschlüsselnde Nachricht aus einer 1 und restlichen Nullen besteht wird diese 1 in nur 3 Runden auf alle anderen Nullen Auswirkung zeigen.
+
+
+\subsubsection{KeyAddition}
+Beim KeyAddition wird jeweils der aktuelle Block (4x4 state-Matrix) mit dem aktuellen Rundenschlüssel (16 byte) via XOR Bitweise verknüpft. 
+
+\subsubsection{Rundenschlüssel}
+AES erzeugt für die verschiedenen Runden, die bei der Ver- und Entschlüsselung durchlaufen werden Rundenschlüssel (1 Schlüssel mehr als Runden die durchlaufen werden), welche in 4x 32-Bit große Blöcke (Word-oriented) abgespeichert werden. In der ersten Runde entspricht der Rundenschlüssel dem Original AES-Schlüssel (W[0] bis W[3] = 4x32Bit = 128Bit Schlüssellänge). Der letzte Word-Block einer Runde, wird dann durch eine Funktion gegeben und mit den anderen Blöcken XOR-Verknüpft. \\ \\
+\includegraphics[scale=0.5]{key_sched_1_round.JPG} 
+\includegraphics[scale=0.5]{aes_key_sched_function_g.JPG} \\
+Die Funktion \textit{g} rotiert hierbei jeweils die Eingabebytes und führt sie durch eine nichtlineare S-Box. Am Ende dieses Verfahrens wird noch die Rundennummer mittels XOR dem linken Teilblock zugefügt. Das Ergebnis dieser Durchführung (W[4] bis W[7]) ist dann der Rundenschlüssel für die erste Runde. Dieses Verfahren wird wiederholt bis alle Rundenschlüssel entsprechend berechnet wurden. Die Anzahl der benötigten Rundenschlüssel und damit verbunden mit den benötigten Word-Blöcke erhöht sich mit der Erhöhung der Schlüssellänge von AES.
+
+\subsubsection{Entschlüsselung}
+Für die Entschlüsselung eines AES-Chiffretextes müssen alle Funktionen in umgekehrter Reihenfolge und umgekehrter Logik (Inverse Funktionen) ausgeführt werden. So hat man z. B. in der letzten Runde der Verschlüsselung die Funktion MixColumns nicht ausgeführt - so wird man in der ersten Runde der Entschlüsselung diese Funktion ebenfalls nicht ausführen. Darüber hinaus muss man für alle fixen Matrizen, die verwendet wurden eine inverse Matrix erstellen (S-Boxen, MixColumns-Matrix). Das Shifting in der Funktion ShiftRow erfolgt bei der Entschlüsselung dann entsprechend nach Rechts, anstatt nach Links wie bei der Entschlüsselung. Ausgenommen von der Umgekehrten Logik ist die Berechnung der Rundenschlüssel - da man in der ersten Runde der Entschlüsselung den letzten Rundenschlüssel benötigt, der bei der Verschlüsselung eingesetzt wurde, müssen zu Beginn der Entschlüsselung erstmals alle Rundenschlüssel berechnet werden um diese dann zu verwenden. Die Berechnung der Rundenschlüssel selbst ist identisch.
+
+
 
 \subsection{ARC4}
+RC4, oder auch ARC4 (Arcfour) genannt ist eine Stromverschlüsselung, wird also Bitweise ent- und verschlüsselt. %[Schneier, Seite 455]
+Nach dem Aufdecken geheimer Informationen der NSA durch den Whistleblower Edward Snowden, hat der Kryptograph Jacob Appelbaum (Mitentwickler des Sicherheitsnetzwerkes Tor und Unterstützer von WikiLeaks) auf Twitter einen Post geteilt in dem er sagt, dass mit RC4 verschlüsselte Daten von der NSA in Echtzeit entschlüsselt werden können: "RC4 is broken in real time by the \#NSA - stop using it." %[https://twitter.com/ioerror/status/398059565947699200]
+Diese Behauptung wird auch von Bruce Schneier (Experte für Kryptographie, Entwickler der Verfahren Blowfish und Twofish, Mitglied in mehreren Verbänden) in seinem offiziellen Blog als plausibel bestätigt: "Someone somewhere commented that the NSA's "groundbreaking cryptanalytic capabilities" could include a practical attack on RC4. I don't know one way or the other, but that's a good speculation." %[https://www.schneier.com/blog/archives/2013/09/the_nsa_is_brea.html] 
+Darüber hinaus warnen verschiedene Seiten, wie Golem und Heise, die sich mit Informatik beschäftigen vor der Verwendung von RC4. %[ http://www.heise.de/newsticker/meldung/NSA-entschluesselt-Webserver-Daten-angeblich-in-Echtzeit-2041383.html, % http://www.golem.de/news/verschluesselung-was-noch-sicher-ist-1309-101457-2.html, http://www.theregister.co.uk/2013/09/06/nsa_cryptobreaking_bullrun_analysis/]
+Selbst das Bundesamt für Sicherheit in der Informationstechnik (BSI) schreibt in einer technischen Richtlinie für Kryptographische Verfahren Anfang 2014: "Der Verschlüsselungsalgorithmus RC4 in TLS weist erhebliche Sicherheitsschwächen auf und darf nicht mehr eingesetzt werden." Das BSI gibt zusätzlich an, dass das Verschlüsselungsverfahren AES verwendet werden soll. %[https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR02102/BSI-TR-02102-2_pdf.pdf?__blob=publicationFile]
+Durch diese gezeigten Publikationen wird das Verfahren RC4 als unsicher angesehen und in dieser Arbeit nicht verwendet.
+
+
 \subsection{PBE}
+
+
+\subsection{Blowfish}
 
 
 \section{Asymetrische Verfahren}
@@ -219,7 +281,7 @@ Da das System als unsicher angesehen ist, wird auf eine nähere Untersuchung und
 \chapter{Zusammenfassung und Ausblick}
 \section{Zusammenfassung}
 \section{Ausblick}
-
+	
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
 %------------------------------------------------------------------
