@@ -134,6 +134,7 @@ Blowfish & SHA256 \\
 DES & SHA384 \\
 3DES & SHA512 \\
 RSA & \\
+ElGamal & \\
 \hline\hline
 \end{tabular} \\
 \\Des Weiteren wird das Key-Wrap-Verfahren (AES und 3DES), der Authentifizierungsalgorithmus HMAC und der Standard X509 beschrieben. Die Vollständige Liste aller Unterstützen Algorithmen mit dessen Providern befindet sich im Anhang. Welcher Provider für welchen Algorithmus besser geeignet ist, kann man nicht pauschalisieren und auch nicht auf einen spezifischen Anwendungsfall verallgemeinern. Im Kapitel Validierung werden Geschwindigkeitsaspekte beider großen Provider (OpenSSL und Bouncy-Castle), sofern möglich, gegenübergestellt um für jeden Algorithmus den geeigneten Provider zu wählen. Falls es innerhalb eines Providers zu größeren Sicherheitslücken von einem verwendeten Algorithmus kommt, ist es durch das JCE möglich diesen ohne weitere Code-Änderungen zu wechseln. 
@@ -156,7 +157,7 @@ D$_{K}$(E$_{K}$(M)) = M\\ \\
 Um einen sicheren Kanal zwischen Sender und Empfänger zu gewährleistet, reicht es nicht allein die Nachricht zu verschlüsseln. Authentifizierung, Integrität und Verbindlichkeit müssen darüber hinaus gewährleistet sein um sicher zu Kommunizieren. \\ \\
 \textbf{Authentifizierung} beschreibt hierbei das Verfahren indem sich die Identität einer Person beweisen lässt. Im Umkehrschluss bedeutet das, dass sich ein Angreifer nicht als eine andere Person ausgeben kann. Aus der Authentifizierung folgt dann die \textbf{Autorisierung}, also das Prüfen, ob der Benutzer die Rechte hat, die er fordert.\\ \\
 \textbf{Integrität} bedeutet, dass sichergestellt werden kann, dass eine Nachricht bei der Übermittlung zwischen Sender und Empfänger nicht durch einen Angreifer verändert wurden ist. \\ \\
-\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. \\ \\
+\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. Dies ist eine Steigerung der Authentifizierung, denn durch Verbindlichkeit ist es außerdem gewährleistet, dass der Empfänger einer Nachricht gegenüber einer dritten Person den Absender der Nachricht glaubwürdig machen kann.\\ \\
 
 
 \subsubsection{Kerhoff's Maxime}
@@ -325,16 +326,39 @@ Das Erstellen der Schlüssel wird wie folgt ausgeführt: \\
 \item berechne phi(n) = (p-1) * (q-1)
 \item wähle ein e für das gilt e $\in$ \{1,2,...,phi(n)-1\} und ggT(e, phi(n)) = 1
 \item berechne d, sodass gilt d * e $\equiv$ 1 mod phi(n)
-\item Öffentlicher Schlüssel = (n,e) , Privater Schlüssel = d
-\end{enumerate}
+\item Öffentlicher Schlüssel = (n,e) , Privater Schlüssel = d \\
+\end{enumerate} 
 Nach der Berechnung kann der öffentliche Schlüssel (n,e) frei zugänglich gemacht werden. Dieser Schlüssel wird verwendet um Nachrichten zu Verschlüsseln, oder eine Nachricht zu signieren (siehe Digitale Signaturen). Zum Entschlüsseln des entsprechenden Chiffretextes wird der private Schlüssel d benötigt. Die Werte p, q, phi(n) werden nicht mehr benötigt, dürfen jedoch auch nicht frei zugänglich gemcht werden, da mit diesen die Berechnung des privaten Schlüssels erfolgen kann. Zum Chiffrieren und Dechiffrieren einer Nachricht werden folgende mathematische Funktionen angewandt, wobei M = Message und C = Chiffrat bedeutet: \\
 \begin{itemize}
 \item C = M$^{e}$ mod n
-\item M = C$^{d}$ mod n
+\item M = C$^{d}$ mod n \\
 \end{itemize}
 Die Schlüssellänge des Verfahrens RSA ist variabel zwischen 512 und 2048 zu wählen, wobei sie die Bitlänge der berechneten Zahl n beschreibt. Zu beachten ist außerdem, dass es lediglich möglich ist Werte zu Verschlüsseln die im Bereich M $\in$ \{0, ... , n-1\} liegen. Um dennoch größere Nachrichten zu verschlüsseln, teilt man den Klartext in Blöcke auf und verschlüsselt diese einzeln mit dem Verfahren. Zur Entschlüsselung werden nach der Dechiffrierung die entsprechenden Blöcke wieder aneinandergehängt. \\
 Die Geschwindigkeit des Verfahrens hängt stark von der Wahl der Exponenten ab. Wählt man den öffentlichen Exponent e relativ klein, so wird die Verschlüsselung entsprechend schneller, hingegen ein großer privater Schlüssel d die Entschlüsselung entsprechend längere Zeit in Anspruch nimmt. Darüber hinaus ist es wichtig um die Performance von RSA zu steigern eine Möglichkeit zu finden, große Exponenten schnell zu errechnen. Hierbei kommt das Square- and Multiply Verfahren zum Einsatz.
  %https://www.youtube.com/watch?v=QSlWzKNbKrU
+
+\subsection{ElGamal}
+ElGamal ist, wie auch RSA, ein Asymmetrisches Verfahren - d. h. es gibt einen öffentlichen- und einen privaten Schlüssel. Die Sicherheit des Verfahrens besteht in der Schwierigkeit diskrete Logarithmen über einen endlichen Körper zu berechnen. \\
+Um ein Schlüsselpaar zu erzeugen wählt man eine Primzahl p und zwei Zufallszahlen g und x, welche kleiner als p sind und berechnet: \\ \\
+y = g$^{x}$ mod p \\ \\
+Der öffentliche Schlüssel ist y, g und p - der private Schlüssel ist x. Um eine Nachricht zu verschlüsseln wählt man ein zufälliges k, welches relativ prim zu p-1 ist ( 1 = ggT(k,p-1) ) und berechnet die Verschlüsselung wie folgt: \\ \\
+a = g$^{k}$ mod p \\
+b = y$^{k}$ M mod p \\ \\
+wobei a und b den Chiffretext bildet, welcher doppelt so lang ist wie der Klartext. Die Entschlüsselung des Chiffretextes erfolgt dann durch: \\ \\
+M = b/a$^{x}$ mod p \\
+
+
+\subsection{Digitale Signatur}
+Digitalte Signaturen, oder auch elektronische Signaturen sind in der Lage die, im Grundlagen Kryptologie Kapitel, gezeigten Anforderungen (Authentizität, Integrität und Verbindlichkeit) zu erfüllen. Zur Durchführung digitaler Signatur werden asymmetrische Verschlüsselungsverfahren verwendet (z. B. RSA oder ElGamal). Im folgenden Beispiel soll erläutert werden, wie das Verfahren der elektronischen Signatur anzuwenden ist. Angenommen es gibt 2 Teilnehmer die sich Daten senden wollen (in dem Fall Alice und Bob) und beide Parteien verfügen über den jeweils öffentlichen Schlüssel des Gegenübers. \\
+Alice signiert das Dokument mit ihrem privaten Schlüssel K$_{PrivA}$ (aus Perfomancegründen wird lediglich der Hash-Wert (siehe Kapitel Hash-Funktionen) der Nachricht signiert) und verschlüsselt dann die Nachricht und Signatur mit dem öffentlichen Schlüssel von Bob K$_{PubB}$. \\ \\
+sig =  E(K$_{privA}$, Hash(M)) \\
+C = E(K$_{PubB}$, M + sig)) \\ \\
+Der Chiffretext C wird dann zu Bob übertragen, der im ersten Schritt die Nachricht mit seinem privaten Schlüssel K$_{privB}$ entschlüsselt. Anschließend entschlüsselt er die digitale Signatur mit dem öffentlichen Schlüssel von Alice K$_{PubA}$. Bob errechnet nun aus der bereits entschlüsselten Nachricht den Hash-Wert und prüft den mit den Hash-Wert aus der Signatur - stimmen beide Werte überein ist die Nachricht verifiziert. \\ \\
+M, sig = D(K$_{PrivB}$, C) \\
+AliceHash(M) = D(K$_{PubA}$, sig) \\
+AliceHash(M) ?= Hash(M) \\ \\
+Unter der Voraussetzung, dass beide Parteien sicher sind den öffentlichen Schlüssel des gewünschten Partners zu besitzen sorgt dieses Verfahren dafür, dass Bob nach dem Verifizieren der Nachricht zum einen sicher sein kann, dass nur Alice (als alleinige Besitzerin des privaten Schlüssels) die Nachricht unterschrieben hat (Authentifizierung und Verbindlichkeit), zum anderen kann er aufgrund des Hash-Wertes der Nachricht sicher sein, dass die Nachricht bei der Übertragung nicht verfälscht wurde (Integrität).
+
 
 
 \section{Hash-Funktionen}
@@ -356,20 +380,21 @@ temp2 := S0 + maj \\ \\
 Nach dieser Berechnung findet eine Verschiebung der Variablen statt (h=g ; g=f ; f=e ; e=d+temp1 ; d=c ; c=b ; b=a ; a=temp1+temp2). \\
 Nachdem die oben beschriebene Berechnung für alle 64 Runden durchgeführt wurde, werden die entsprechenden Werte (a-h) miteinander konkateniert und ergeben somit den Hash-Wert.
 
-
-% NEED?!
-\section{Digitale Signature}
-\subsection{Public Key Infrastruktur}
+\subsection{Message Authentification Code}
+Hash-Funktionen an sich bieten lediglich die Sicherheit der Integrität der Daten, also dass die Daten beim Empfänger unverändert angekommen sind. Über den Ursprung der Daten, also die Authentizität, kann eine Hash-Funktion keine Sicherheit gewährleisten. Um dieses Problem zu beheben gibt es das MAC-Verfahren (Message Authentification Code). MAC-Funktionen verwenden zum errechnen eines Hash-Wertes zusätzlich einen geheimen Schlüssel der beiden Parteien vor der Kommunikation bekannt sein muss. Wird dem Dokument entsprechend ein MAC-Wert angefügt so muss der Empfänger die selbe MAC-Funktion auf das Dokument anwenden und prüfen ob beide MAC-Werte (der selbst errechnete und der zugesandte) übereinstimmen - ist dies der Fall, so ist die Authentizität gewährleistet (sofern sichergestellt ist, dass der Schlüssel geheimgehalten wurde). Dieses Verfahren ist jedoch nicht in der Lage Verbindlichkeit zu gewährleisten (einem dritten glaubwürdig zu machen, wer der Absender ist), da auch der Empfänger in der Lage ist, den entsprechenden MAC zu berechnen. 
 
 
 \section{Schlüsselvereinbarung} 
+Das Hauptproblem für alle Kryptografischen Ver- und Entschlüsselungsverfahren ist die Vereinbarung eines gemeinsamen Schlüssels. Selbst bei Asymmetrischen Verfahren ist nicht sichergestellt, dass durch einen Man-in-the-middle Angriff ein potentieller Angreifer, seinen eigenen Public-Key in das System schleust und somit über den dazugehörigen Privaten Schlüssel verfügt. Verschiedene Verfahren sollen es ermöglich einen Schlüssel auszutauschen, ohne das ein Angreifer diesen auch erhält.
+
 \subsection{Diffie Hellmann}
-\subsection{ElGamal}
+Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rechnung, für den Angreifer besteht jedoch das Problem der diskreten Logarithmen in endlichen Körpern (siehe RSA-Verfahren). Das Problem dieses Verfahrens ist, dass es gegen Man in the middle Agriffe nicht geschützt ist, da ein potentieller Angreifer seine eigenen Potenzen und Modulo-Werte in das System schleusen kann und aufgrund dessen beide Parteien den privaten Schlüssel berechnen. [Schneier 587, Ferguson 211]
+
 \subsection{Direkte Vereinbarung}
 \subsubsection{QR-Code}
 \subsubsection{PGP-Server}
-\section{Authentifizierung}
-\subsection{Zwei-Faktor-Authentifizierung}
+%\section{Authentifizierung}
+%\subsection{Zwei-Faktor-Authentifizierung}
 	% TODO: Erklärung: http://de.wikipedia.org/wiki/Zwei-Faktor-Authentifizierung (need Quelle)
 
 
@@ -403,7 +428,7 @@ Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher ang
 
 
 %% --------------------------- BIBLIO --------------------------------%%
-%\label{Bibliography}
+%\label{Bibliography}s
 
 %\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
 
