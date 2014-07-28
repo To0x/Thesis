@@ -220,7 +220,7 @@ Darüber hinaus hat die US National Security Agency (NSA) AES für interne Dokum
 \subsubsection{Funktionsweise}
 AES arbeitet mit einer Blockgröße von 128 Bit, also 16 Byte welcher intern als 2-Dimensionale Matrix (4x4) abgespeichert wird und auf der mathematische Funktionen angewandt werden.
 Alle Funktionen innerhalb von AES werden Byteweise ausgeführt (8 Bit-Blöcke).  Die interne Nachricht bezeichnet man als \textit{state}, also den aktuellen Status des Blockes. \\
-\includegraphics[scale=1.0]{aes_state.JPG} \\
+\includegraphics[scale=0.5]{aes_state.JPG} \\
 Die Schlüssellänge des Verfahren ist entweder 128, 192 oder 256 Bit, wovon auch die auszuführende Rundenzahl abhängt (10 Runden bei 128 Bit, 12 bei 192 und 14 bei 256 Bit Schlüssellänge). In jeder dieser Runden werden Verfahren angewandt um den Klartext weiter zu verschlüsseln. Bei AES sind das \textit{ByteSubstitution, ShiftRow, MixColumns} und \textit{KeyAddition}. \\ \\
 Ausgenommen von dieser Regel ist die letzte Runde, in der MixColumns ausgelassen wird. %[Eckert, Seite 345] 
 Zusätzlich wird vor der ersten Runde die Funktion KeyAddition angewendet. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
@@ -338,9 +338,24 @@ Die Geschwindigkeit des Verfahrens hängt stark von der Wahl der Exponenten ab. 
 
 
 \section{Hash-Funktionen}
-\subsection{MD5}
-\subsection{SHA1}
-\subsection{SHA256, SHA384, SHA512}
+Hash-Funktionen sind mathematische Einweg-Funktionen - das bedeutet, dass ein Wert h = H(M) leicht erzeugt werden kann, jedoch nicht aus h wieder M - es existiert keine Umkehrfunktion. Darüber hinaus ist es praktisch nicht möglich verschiedene Eingabewerte M1, M2, ... zu finden, die den selben Ausgabewert erzeugen H(M) = H(M1). Da Hash-Funktionen eine Nachricht beliebiger Länge auf einer Nachricht fester Länge abbilden ist eine Abbildung auf einen identischen Hash-Wert nicht auszuschließen. Es muss also eine Hash-Größe gewählt werden, sodass es praktisch unmöglich ist alle möglichen Hash-Werte zu berechnen und zu speichern. Ist die Hash-Größe lediglich 64 Bit lang, so gibt es 2$^{64}$ Möglichkeiten einen Hash-Wert. Dem Angreifer reichen jedoch 2$^{32}$ Nachrichten M und den dazugehörigen Hash-Wert h = H(M), sodass die Wahrscheinlichkeit für eine Kollision größer als 0,5 ist. Diese Erkenntnis beruht auf dem Geburtstags-Paradoxon, welches besagt, dass lediglich 23 Personen in einem Raum genügen, um mit einer Wahrscheinlichkeit größer als 0,5, 2 davon zu finden, die am selben Tag Geburtstag haben. Diese Logik lässt sich auch auf Hash-Funktionen abbilden und kann somit die Komplexität, eine Kollision mit über 50\% Wahrscheinlichkeit zu finden, von 2$^{k}$ auf k * 2$^{k/2}$ reduzieren.
+
+\subsection{MD5 \& SHA1}
+Wie beschrieben sollen Hash-Funktionen eine Größenordnung besitzen, die es heutigen Systemen schwierig macht Kollisionen zu errechnen und zu speichern. MD5 arbeitet mit einer Größe von 128bit und es ist möglich mit nur 2$^{64}$ Schritten eine Kollision zu entdecken (Geburtstags-Paradoxon). Ähnliches Problem zeigt sich bei der Verwendung von SHA1, welches eine Hashwert-Größe von 160 bit hat, also 2$^{80}$ Schritte für eine Kollision. Beide Größenordnung reichen für heutige Systeme nicht aus und sollten deshalb nicht verwendet werden.
+
+\subsection{SHA224, SHA256, SHA384, SHA512}
+Alle 4 Hash-Funktionen gehören zur SHA2-Familie und sind von der Vorgehensweise zur Berechnung des Hash-Wertes identisch. Unterschieden sind zwischen SHA256 und SHA512 die Blockgröße (512 Bit, 1024 Bit), Die Anzahl der Wörter (16x32Bit Wörter, 16x64Bit Wörter), sowie die Anzahl der Konstanten (64 Konsanten, 80 Konstanten). Bei den Verfahren SHA224, sowie SHA384 wird jeweils das größere Hash-Verfahren komplett berechnet und die letzten entsprechenden Bits weggelassen. Da sich die Verfahren von Ihrer Funktionsweise nicht unterscheiden, wird hier lediglich SHA256 näher erklärt.  \\ \\
+Zu Beginn werden 8 Blöcke je 32 Bit (256 Bit = Hash-Größe) initialisiert (Nachkommastellen der Wurzeln der ersten 8 Primzahlen), sie erhalten die Bezeichnungen a - h. Auf ihnen finden mathematische Funktionen statt. Ausserdem werden 64 Blöcke je 32 Bit mit Rundenkonstanten (Bestimmt aus den Kubikwurzeln der ersten 64 Primzahlen), sie erhalten die Bezeichnung k[i].
+Der Klartext wird in 512 Bit große Blöcke unterteilt und, falls erforderlich, am Ende aufgefüllt. Jeder Block wird nun in 16 x 32 Bit Worte aufgesplittet . Diese 16 Worte werden anschließend auf 64 Worte expandiert. Für jedes dieser 64 Worte (im folgenden w[i]) finden nun folgende mathematischen Funktionen statt: (i ist hierbei die Zählervariable der Wörter) \\ \\
+S1 := (e $\gg$ 6) $\oplus$ (e $\gg$ 11) $\oplus$ (e $\gg$ 25) \\
+ch := (e $\land$ f) $\oplus$ ($\lnot$ e $\land$ g) \\
+temp1 := h + S1 + ch + k[i] + w[i]\\
+S0 := (a $\gg$ 2) $\oplus$ (a $\gg$ 13) $\oplus$ (a $\gg$ 22) \\
+maj := (a $\land$ b) $\oplus$ (a $\land$ c) $\oplus$ (b $\land$ c) \\
+temp2 := S0 + maj \\ \\
+Nach dieser Berechnung findet eine Verschiebung der Variablen statt (h=g ; g=f ; f=e ; e=d+temp1 ; d=c ; c=b ; b=a ; a=temp1+temp2). \\
+Nachdem die oben beschriebene Berechnung für alle 64 Runden durchgeführt wurde, werden die entsprechenden Werte (a-h) miteinander konkateniert und ergeben somit den Hash-Wert.
+
 
 % NEED?!
 \section{Digitale Signature}
