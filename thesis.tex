@@ -174,7 +174,38 @@ Neben der chosen-ciphertext-Angriffe gibt es weitere Angriffsszenarien auf Krypt
 Bei symmetrischen Verschlüsselungsverfahren existiert ein Schlüssel, der jeweils für Ver- und Entschlüsselung verwendet wird. Dieser Schlüssel muss bereits beiden Parteien bekannt sein, bevor ein verschlüsselter Kanal aufgebaut werden kann. Eines der Probleme bei symmetrischen Verfahren ist der Austausch des Schlüssels, den man von Sender zu Empfänger, bereits vor der sicheren Kommunikation, übertragen muss (siehe Kapitel Schlüsselvereinbarung). Symmetrische Verfahren unterteilt man in zwei Grundtypen, die Block- und Stromchiffrierung. Bei der Blockchiffrierung wird der Klartext in Blöcke, mit fester Größe, aufgeteilt und innerhalb des Blockes werden die mathematischen Funktionen angewandt. Bei der Stromchiffrierung werden die Daten nicht in Blöcken zusammengefasst, sondern jedes einzelne Klartextbit wird in ein Chiffrebit überführt. [Schneier 1996, Seite 223] 
 
 \subsection{Betriebsmodi}
+Betriebsmodi sind verfahren bei der das eigentliche Kryptografische Verfahren mit einer Rückkopplung und einigen einfachen Operationen verknüpft wird. Ist eine Nachricht länger als die für das Verfahren angegebene Blocklänge, so muss die Nachricht mit einem Betriebsmodi angepasst werden. Wichtig bei den verschiedenen Betriebsmodis ist, dass sie die Sicherheit des Cryptoverfahrens nicht beeinträchtigen.
 
+\subsubsection{Padding}
+Bei der Blockchiffrierung ist eine fest Blocklänge vorgegeben, in der die Daten vorhanden sein müssen. Ist dies nicht der Fall, müssen diese so modifiziert werden, dass das Verfahren damit umgehen kann.
+Um z. B. den letzten Block einer Nachricht, der nicht der Blocklänge entspricht, zu vervollständigen wird er mit einem regelmäßigen Muster aufgefüllt. Das Muster und die Art dieser Auffüllen, bzw. das Kennzeichnen hängt von den Verschiedenen Padding-Verfahren ab. (z. B. PKCS5, PKCS7 o. ä.)
+
+\subsubsection{ECB}
+ECB (\textit{electronic codebook mode}) ist ein Betriebsmodi, bei der der Klartext in verschiedene Blöcke, der benötigten Länge, aufgeteilt wird und jeder dieser Blöcke einzeln verschlüsselt werden. Das Konkatinieren dieser Blöcke ergibt dann den neuen Chiffretext. Problem bei diesem Verfahren ist, dass 2 gleiche Klartextblöcke auf den identischen Chiffreblock ergeben, was wiederum für den Angreifer sichtbar und Nutzbar sein kann. Aus diesem Grund wird ECB als unsicher angesehen und sollte deshalb nicht verwendet werden (Do not ever use ECB for anything [Ferguson 2003, Seite 69]).
+
+\subsubsection{CBC}
+Beim \textit{cipher block chaining mode} (CBC) wird das Problem von ECB umgangen, indem man jeden Klartextblock mit den vorherigen Chiffretextblock mit einer XOR-Verknüpfung durchführt: \\ \\
+C$_{i}$ = E(K, P$_{i}$ $\oplus$ C$_{i-1}$) \\ \\
+Dadurch werden alle Bits eines Klartextblockes mit einer bereits verschlüsselten Nachricht verknüpft. Gleiche Blöcke werden so mit unterschiedlichen Cryptotexten verknüpft und ergeben so unterschiedliche Ausgaben.
+Da die obenstehende Formel erst angewandt werden kann, wenn ein Chiffretextblock vorliegt muss die Möglichkeit geschaffen werden, den ersten Klartextblock auch zu verknüpfen (also C$_{0}$). Der Initiale Block der für diese Verknüpfung angewandt wird heißt \textit{initialization vector} (IV).
+Es gibt verschiedene Möglichkeiten diesen initialization vector zu bestimmen. Zum einen kann man einen festen IV für alle Nachrichten wählen, das hätte wiederum zur Folge, dass 2 gleiche Klartextblöcke zu einem identischen Chiffreblock verschlüsselt werden (siehe ECB). Als weitere Möglichkeit besteht den IV zu iterieren - jedoch ist auch diese Möglichkeit nicht zu nutzen, da sich der IV bei einer Iteration zu Beginn nur um 1 Bit unterscheidet und dies sich im Chiffretext dann auch lediglich auf 1 Bit auswirkt. Um alle Bits des ersten Klartextblocks zu verändert, besteht die Möglichkeit des sogenannten \textit{random IV}. Der Initialisierungsvektor wird komplett zufällig gewählt und entsprechend der Nachricht angehangen, oder vorangestellt, damit beim Entschlüsseln diese Verknüpfung wieder rückgängig gemacht werden kann.
+
+\subsubsection{OFB}
+Beim OFB (\textit{Output feedback mode}) wird nicht die Klartextnachricht zur Verschlüsselung benutzt, sondern eine Zufallsreihe von Bytes. Die daraus resultierende verschlüsselte Nachricht kann dann mit der Klartextnachricht verknüpft werden. Der Vorteil besteht darin, dass die Berechnung des Chiffretextes aus der Zufallsreihe bereits durchgeführt werden kann, bevor der eigentliche Klartext zur Verfügung steht. Dieses Verfahren ist außerdem in der Lage, Klartexte zu verschlüsseln die kleiner als die eigentliche Blocklänge sind (Wichtig für Byteweise Anwendungen, z. B. Terminalanwendungen). \\ \\
+K$_{0}$ := IV \\
+K$_{i}$ := E(K, K$_{i-1}$) \\
+C$_{i}$ := P$_{i}$ $\oplus$ K$_{i}$ \\ \\
+
+
+
+\subsubsection{CFB}
+Der \textit{cipher feedback mode} ähnelt dem oben beschriebenen OFB Modus, mit dem Unterschied, dass die verschlüsselte Nachricht (nach Verknüpfung des Klartextes) als neuer Block für die nächste Verschlüsselung angesehen wird. Das bedeutet, dass eine Verschlüsselung erst stattfinden kann, sobald der erste Klartextblock vorliegt (Dieser kann, wie auch bei OFB, kleiner sein als die Blockgröße des zu Grunde liegenden Kryptoverfahrens). \\ \\
+C$_{0}$ = P$_{0}$ $\oplus$ E$_{K}$(IV) \\
+C$_{i}$ = P$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
+P$_{i}$ = C$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
+
+\subsubsection{CTR}
+Im Counter-Modus kann die Berechnung des Schlüssels, wie auch beim OFB, vor dem ersten Klartextblock erfolgen. Innerhalb des Modi gibt es einen internen Zähler, der immer konstant erhöht wird. Aus diesem Zähler und dem Schlüssel wird dann ein neuer Schlüssel erzeugt, mit dem der Klartext verschlüsselt werden kann. Der Vorteil dieses Verfahrens besteht darin, dass man nicht die komplette Nachricht entschlüsseln muss, sondern einzelne Teile des Chiffretextes entschlüsseln kann. Hierfür setzt man den internen Zähler auf die gewünscht Stelle, erzeugt den Schlüssel und entschlüsselt den Chiffreblock. Wichtig ist, dass der selbe Zähler mit den selben Schlüssel nicht doppelt verwendet werden soll (Problem ECB: zwei identische Klartextblöcke ergeben identischen Chiffretext).
 
 \subsection{DES, 3DES}
 "Its restricted key size of 56 bits and small block size of 64 bits make it unsuitable for today`s fast computers and large amounts of data. It survives in the form of 3DES, which is a block cipher built from three DES encryptions in sequence. This solves the most immediate problem of the small key size, but there is no known fix for the small block size. [...] we do not recommend using either DES oder 3DES in new designs." [Ferguson 2003, Seite 51]
@@ -281,17 +312,47 @@ Für die Generierung der Teilschlüsse, sowie der Erzeugung der S-Boxen existier
 \end{enumerate}
 Bleibt der Schlüssel identisch, so kann die Anwendung die in 521 Iterationen errechneten Teilschlüssel speichern und muss diese nicht bei jeder Verschlüsselung neu errechnen.
 Das hier gezeigte Verfahren zum Erstellen der Teilschlüssel wird auch Schlüsselexpansion genannt, da der Algorithmus nun auf insgesamt 4168 Bit Teilschlüsseln besteht. 
-
+ 
 \section{Asymetrische Verfahren}
+Im Gegensatz zu den bisher gezeigten Verschlüsselungsverfahren, ist der Ansatz bei Asymmetrischen Verfahren ein anderer. Bisher gab es einen geheimen Schlüssel, den man sowohl für die Verschlüsselung, als auch für die Entschlüsselung verwendete. Die Hauptaufgabe bei diesen Verfahren lag darin, den geheimen Schlüssel sicher von A nach B zur transportieren, ohne das ein eventueller Angreifer diesen mitlesen kann. Bei Asymmetrischen Verfahren ist der Grundgedanke derer, dass man jeweils zum Verschlüsseln einen Schlüssel besitzt als auch zum Entschlüsseln einen separaten Schlüssel. Der Schlüssel, welcher für die Verschlüsselung zuständig ist, wird Public Key genannt, da man ihn den Partnern öffentlich zuteilen kann. Das Pardon dazu ist der Private Schlüssel, der im eigenen Besitzt bleibt und nur dafür ist, die Verschlüsselte Nachricht wieder zu Dechiffrieren. Einer der Hauptaufgaben von Asymmetrischen Verfahren, oder auch Public-Key Verfahren genannnt, besteht darin 2 Schlüssel zu finden, zwar jeweils für die Verschlüsselung und Entschlüsselung zu gebrauchtn sind, aus denen man aber den jeweils anderen Schlüsselteil nicht errechnen kann. Der Grundgedanke dieses Verfahrens stammt von Whitfield Diffie und Martin Hellman, die hierzu 1976 ein Konzept auf der \textit{National Computer Conference} vorstellen. 
+
 \subsection{RSA}
+RSA, nach den Erfindern Rivest, Shamir und Adleman benannt ist, ist eines der oben beschriebenen Asymmetrischen Kryptoverfahren. Die Sicherheit von RSA beruht auf dem Problem der Primfaktorzerlegung - d. h. es ist schwierig, aus einem gegebenem Faktor 2er Primzahlen, diese zurück zu rechnen. \\
+Das Erstellen der Schlüssel wird wie folgt ausgeführt: \\
+\begin{enumerate}
+\item wähle 2 große Primzahlen p und q
+\item berechne n = p * q
+\item berechne phi(n) = (p-1) * (q-1)
+\item wähle ein e für das gilt e $\in$ \{1,2,...,phi(n)-1\} und ggT(e, phi(n)) = 1
+\item berechne d, sodass gilt d * e $\equiv$ 1 mod phi(n)
+\item Öffentlicher Schlüssel = (n,e) , Privater Schlüssel = d
+\end{enumerate}
+Nach der Berechnung kann der öffentliche Schlüssel (n,e) frei zugänglich gemacht werden. Dieser Schlüssel wird verwendet um Nachrichten zu Verschlüsseln, oder eine Nachricht zu signieren (siehe Digitale Signaturen). Zum Entschlüsseln des entsprechenden Chiffretextes wird der private Schlüssel d benötigt. Die Werte p, q, phi(n) werden nicht mehr benötigt, dürfen jedoch auch nicht frei zugänglich gemcht werden, da mit diesen die Berechnung des privaten Schlüssels erfolgen kann. Zum Chiffrieren und Dechiffrieren einer Nachricht werden folgende mathematische Funktionen angewandt, wobei M = Message und C = Chiffrat bedeutet: \\
+\begin{itemize}
+\item C = M$^{e}$ mod n
+\item M = C$^{d}$ mod n
+\end{itemize}
+Die Schlüssellänge des Verfahrens RSA ist variabel zwischen 512 und 2048 zu wählen, wobei sie die Bitlänge der berechneten Zahl n beschreibt. Zu beachten ist außerdem, dass es lediglich möglich ist Werte zu Verschlüsseln die im Bereich M $\in$ \{0, ... , n-1\} liegen. Um dennoch größere Nachrichten zu verschlüsseln, teilt man den Klartext in Blöcke auf und verschlüsselt diese einzeln mit dem Verfahren. Zur Entschlüsselung werden nach der Dechiffrierung die entsprechenden Blöcke wieder aneinandergehängt. \\
+Die Geschwindigkeit des Verfahrens hängt stark von der Wahl der Exponenten ab. Wählt man den öffentlichen Exponent e relativ klein, so wird die Verschlüsselung entsprechend schneller, hingegen ein großer privater Schlüssel d die Entschlüsselung entsprechend längere Zeit in Anspruch nimmt. Darüber hinaus ist es wichtig um die Performance von RSA zu steigern eine Möglichkeit zu finden, große Exponenten schnell zu errechnen. Hierbei kommt das Square- and Multiply Verfahren zum Einsatz.
+ %https://www.youtube.com/watch?v=QSlWzKNbKrU
+
 
 \section{Hash-Funktionen}
+\subsection{MD5}
+\subsection{SHA1}
+\subsection{SHA256, SHA384, SHA512}
+
+% NEED?!
 \section{Digitale Signature}
 \subsection{Public Key Infrastruktur}
+
+
 \section{Schlüsselvereinbarung} 
 \subsection{Diffie Hellmann}
 \subsection{ElGamal}
-\section{Schlüsselgenerierung}
+\subsection{Direkte Vereinbarung}
+\subsubsection{QR-Code}
+\subsubsection{PGP-Server}
 \section{Authentifizierung}
 \subsection{Zwei-Faktor-Authentifizierung}
 	% TODO: Erklärung: http://de.wikipedia.org/wiki/Zwei-Faktor-Authentifizierung (need Quelle)
@@ -301,6 +362,9 @@ Das hier gezeigte Verfahren zum Erstellen der Teilschlüssel wird auch Schlüsse
 \chapter{Validierung}
 	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
 	% aufzeigen der Notwendigkeit dieser Validierung
+Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher angesehen Verfahren auch auf heutigen Android-Geräten zum Einsatz kommen können. Hierbei sollen die Verfahren im Bezug auf ihre Schlüssellänge, sowie die Dateigröße validiert werden. Die Validierung soll in Bezug auf Geschwindigkeit bzw. Dauer des Verfahrens, Akkuverbrauch und Wärmeentwicklung durchgeführt werden. 
+
+
 \section{Verschlüsselungsverfahren}
 \section{Hashfunktionen}
 
