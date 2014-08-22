@@ -17,16 +17,20 @@
 \usepackage{graphicx}
 \usepackage{makeidx}
 
+\newcommand{\changefont}[3]{
+\fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
+
 \SelectInputMappings{
  adieresis={ä},
  germandbls={ß},
 }
+\changefont{cmr}{m}{n}
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
 \geometry{paper=a4paper,left=30mm,right=20mm,top=40mm} 
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
 \makeindex
 
-\onehalfspacing % Zeilenabstand erhöhen (1.5) 
+\onehalfspacing   %Zeilenabstand erhöhen (1.5) 
 % Seitenränder erhöhen!
 
 
@@ -182,7 +186,7 @@ Bei der Blockchiffrierung ist eine fest Blocklänge vorgegeben, in der die Daten
 Um z. B. den letzten Block einer Nachricht, der nicht der Blocklänge entspricht, zu vervollständigen wird er mit einem regelmäßigen Muster aufgefüllt. Das Muster und die Art dieser Auffüllen, bzw. das Kennzeichnen hängt von den Verschiedenen Padding-Verfahren ab. (z. B. PKCS5, PKCS7 o. ä.)
 
 \subsubsection{ECB}
-ECB (\textit{electronic codebook mode}) ist ein Betriebsmodi, bei der der Klartext in verschiedene Blöcke, der benötigten Länge, aufgeteilt wird und jeder dieser Blöcke einzeln verschlüsselt werden. Das Konkatinieren dieser Blöcke ergibt dann den neuen Chiffretext. Problem bei diesem Verfahren ist, dass 2 gleiche Klartextblöcke auf den identischen Chiffreblock ergeben, was wiederum für den Angreifer sichtbar und Nutzbar sein kann. Aus diesem Grund wird ECB als unsicher angesehen und sollte deshalb nicht verwendet werden (Do not ever use ECB for anything [Ferguson 2003, Seite 69]).
+ECB (\textit{electronic codebook mode}) ist ein Betriebsmodi, bei der der Klartext in verschiedene Blöcke, der benötigten Länge, aufgeteilt wird und jeder dieser Blöcke einzeln verschlüsselt werden. Das Konkatinieren dieser Blöcke ergibt dann den neuen Chiffretext. Problem bei diesem Verfahren ist, dass 2 gleiche Klartextblöcke auf den identischen Chiffreblock ergeben, was wiederum für den Angreifer sichtbar und Nutzbar sein kann. Aus diesem Grund wird ECB als unsicher angesehen und sollte deshalb nicht verwendet werden ("Do not ever use ECB for anything" [Ferguson 2003, Seite 69]).
 
 \subsubsection{CBC}
 Beim \textit{cipher block chaining mode} (CBC) wird das Problem von ECB umgangen, indem man jeden Klartextblock mit den vorherigen Chiffretextblock mit einer XOR-Verknüpfung durchführt: \\ \\
@@ -265,7 +269,7 @@ Für die Entschlüsselung eines AES-Chiffretextes müssen alle Funktionen in umg
 \subsection{ARC4}
 RC4, oder auch ARC4 (Arcfour) genannt ist eine Stromverschlüsselung, wird also Bitweise ent- und verschlüsselt. %[Schneier, Seite 455]
 Nach dem Aufdecken geheimer Informationen der NSA durch den Whistleblower Edward Snowden, hat der Kryptograph Jacob Appelbaum (Mitentwickler des Sicherheitsnetzwerkes Tor und Unterstützer von WikiLeaks) auf Twitter einen Post geteilt in dem er sagt, dass mit RC4 verschlüsselte Daten von der NSA in Echtzeit entschlüsselt werden können: "RC4 is broken in real time by the \#NSA - stop using it." %[https://twitter.com/ioerror/status/398059565947699200]
-Diese Behauptung wird auch von Bruce Schneier (Experte für Kryptographie, Entwickler der Verfahren Blowfish und Twofish, Mitglied in mehreren Verbänden) in seinem offiziellen Blog als plausibel bestätigt: "Someone somewhere commented that the NSA's "groundbreaking cryptanalytic capabilities" could include a practical attack on RC4. I don't know one way or the other, but that's a good speculation." %[https://www.schneier.com/blog/archives/2013/09/the_nsa_is_brea.html] 
+Diese Behauptung wird auch von Bruce Schneier (Experte für Kryptographie, Entwickler der Verfahren Blowfish und Twofish, Mitglied in mehreren Verbänden) in seinem offiziellen Blog als plausibel bestätigt: "Someone somewhere commented that the NSA's groundbreaking cryptanalytic capabilities could include a practical attack on RC4. I don't know one way or the other, but that's a good speculation." %[https://www.schneier.com/blog/archives/2013/09/the_nsa_is_brea.html] 
 Darüber hinaus warnen verschiedene Seiten, wie Golem und Heise, die sich mit Informatik beschäftigen vor der Verwendung von RC4. %[ http://www.heise.de/newsticker/meldung/NSA-entschluesselt-Webserver-Daten-angeblich-in-Echtzeit-2041383.html, % http://www.golem.de/news/verschluesselung-was-noch-sicher-ist-1309-101457-2.html, http://www.theregister.co.uk/2013/09/06/nsa_cryptobreaking_bullrun_analysis/]
 Selbst das Bundesamt für Sicherheit in der Informationstechnik (BSI) schreibt in einer technischen Richtlinie für Kryptographische Verfahren Anfang 2014: "Der Verschlüsselungsalgorithmus RC4 in TLS weist erhebliche Sicherheitsschwächen auf und darf nicht mehr eingesetzt werden." Das BSI gibt zusätzlich an, dass das Verschlüsselungsverfahren AES verwendet werden soll. %[https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR02102/BSI-TR-02102-2_pdf.pdf?__blob=publicationFile]
 Durch diese gezeigten Publikationen wird das Verfahren RC4 als unsicher angesehen und in dieser Arbeit nicht verwendet.
@@ -402,7 +406,9 @@ Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rec
 \chapter{Validierung}
 	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
 	% aufzeigen der Notwendigkeit dieser Validierung
-Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher angesehen Verfahren auch auf heutigen Android-Geräten zum Einsatz kommen können. Hierbei sollen die Verfahren im Bezug auf ihre Schlüssellänge, sowie die Dateigröße validiert werden. Die Validierung soll in Bezug auf Geschwindigkeit bzw. Dauer des Verfahrens, Akkuverbrauch und Wärmeentwicklung durchgeführt werden. 
+Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher angesehen Verfahren auch auf heutigen Android-Geräten zum Einsatz kommen können. Hierbei sollen die Verfahren im Bezug auf ihre Schlüssellänge, sowie die Dateigröße validiert werden. Die Validierung soll in Bezug auf Geschwindigkeit bzw. Dauer des Verfahrens, Akkuverbrauch und Wärmeentwicklung durchgeführt werden.  \\ \\
+Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1.1 (Jinger Bread) verwendet. Das Gerät verfügt über ein 1GHz Dual Core Prozessor (ARM Corext A9) und 512 MByte RAM, als Stromversorgung ist ein Lithium-Ionen-Akkumulator mit 1800 mAh verbaut. \\ \\
+
 
 
 \section{Verschlüsselungsverfahren}
