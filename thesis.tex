@@ -407,16 +407,22 @@ Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rec
 	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
 	% aufzeigen der Notwendigkeit dieser Validierung
 Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher angesehen Verfahren auch auf heutigen Android-Geräten zum Einsatz kommen können. Hierbei sollen die Verfahren im Bezug auf ihre Schlüssellänge, sowie die Dateigröße validiert werden. Die Validierung soll in Bezug auf Geschwindigkeit bzw. Dauer des Verfahrens, Akkuverbrauch und Wärmeentwicklung durchgeführt werden.  \\ \\
-Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1.1 (Jinger Bread) verwendet. Das Gerät verfügt über ein 1GHz Dual Core Prozessor (ARM Corext A9) und 512 MByte RAM, als Stromversorgung ist ein Lithium-Ionen-Akkumulator mit 1800 mAh verbaut. \\ \\
-
-
-
-\section{Verschlüsselungsverfahren}
-\section{Hashfunktionen}
+Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1.1 (Jinger Bread) verwendet. Das Gerät verfügt über ein 1GHz Dual Core Prozessor (ARM Corext A9) und 512 MByte RAM, als Stromversorgung ist ein Lithium-Ionen-Akkumulator mit 1800 mAh verbaut. Zu  beachten ist, dass die aufgenommen Messwerte stark von der verwendeten Hardware und installierten Software abhängig sind. Ein Vergleich zu anderen Geräten oder dem gleichen Gerät mit verschiedener Software kann nicht durchgeführt werden. Darüber hinaus kann jedoch angenommen werden, da alle Messwerte nahezu selbige Startbedingungen hatten, dass die Differenzen der Verfahren untereinander um einen gewissen Grad der Verschiebung ähnlich sind.\\ \\
+Aus dem Kapitel Grundlagen geht hervor, dass im Symmetrischen Bereich die Verfahren Advanced Encryption Standard (AES) mit den Schlüssellängen 128bit, 192bit und 256bit und Blowfish mit den Schlüssellängen 128bit, 256bit und 446bit Validiert werden muss. Auf beide Verfahren kann man die aufgezählten Betriebsmodi (CBC, OFB, CFB, CTR) verwenden, wodurch Dateien die größer als die Blockgröße verschlüsselt werden knnen. Die Asymmetrischen Verfahren müssen nicht validiert werden, da der Hauptaufwand bei diesen Verfahren auf der Schlüsselgenerierung beruht die lediglich beim ersten Start der Anwendung ausgeführt wird. Als Hash-Funktionen können laut Grundlagen Kapitel lediglich die Verfahren der SHA2-Familie zum Einsatz kommen, dessen Hash-Länge auf die Anwendung angepasst werden kann. \\ \\
+Um die beiden Symmetrischen Verfahren zu Validieren werden jeweils Dateien der Größe 1MB, 5MB und 20MB in zehnfacher Ausführung verschlüsselt und anschließend entschlüsselt. Diese Vorgehensweise wird für alle Schlüssellängen und alle Modi ausgeführt. \\
+Pro Modi fallen so 180 Messungen an (10 Messungen x3 Dateien x3 Schlüssellängen x2 für Ver- und Entschlüsselung). Jede dieser Messung enthält den aktuellen Akkustand, die Temperatur und die Dauer die diese Messung benötigt hat. Eine genaue Aufgliederung aller einzelnen Messergebnisse befindet sich im Anhang. Nach einer erfolgreichen Messreihe eines Modi muss das Smartphone auf den Urzustand gebracht werden, d. h. dass der Akku aufgeladen und die Temperatur normalisiert werden muss. Insgesamt fallen so 1440 Messungen an (180 Messungen x4 Modi x2 Verfahren)\\ \\
+Um die Verfahren mathematisch zu validieren müssen vorerst die Gewichtungen der einzelnen Messfaktoren dargelegt werden. Der Hauptaspekt für den reibungslosen Ablauf der zu entwickelnden Anwendung ist die Geschwindigkeit, in der die Ver- und Entschlüsselungen durchgeführt werden. Anschließend folgt der Akkuverbrauch und zum Schluss die Temperatur. So ergibt sich nach eigenem Ermessen ein Maßstab von 3 : 2 : 1 für Geschwindigkeit : Akkuverbrauch : Temperatur. \\ \\
+In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 1 das beste und 10 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Das Ergebnis soll eine Übersicht über alle Faktoren und deren Gewichtung geben und daraus folgern welches Verfahren für die zu entwickelnde Anwendung am besten geeignet ist. \\ \\
+Wie aus den Tabellen zu sehen ist, ist der Counter-Modus bei allen Messungen stets führend. Aus diesem Grund wird dieser Modus mit dem AES Verfahren angewandt. Als Schlüssellänge wird die maximale Länge von 256bit verwendet, da sie sich bei der Messung nur um einigen Sekunden von den geringeren Schlüssellängen unterscheiden.
+% TODO: Grafiken einfügen! 
+% TODO: evtl. Diagramme erstellen!
 
 %% ------------------------ IMPLEMENTIERUNG ---------------- %%
 \chapter{Implementierung}
 \section{Entwurf}
+\section{Aufbau}
+% TODO: explain KeyStore --> Speicherung von Schlüsselinformationen!
+\section{Bibliotheken}
 
 %% ----------------------------- TEST -------------------------- %%
 \chapter{Test}
@@ -426,8 +432,14 @@ Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1
 %% -------------------------- ZUSAMMENFASSUNG -------------- %%
 \chapter{Zusammenfassung und Ausblick}
 \section{Zusammenfassung}
+% TODO Prototyp erfolgreich entwickelt!
 \section{Ausblick}
-	
+\subsection{GCM}
+% Google Cloud Messaging als Austausch von Daten
+% muss eigner Server implementiert werden!
+\subsection{Password-Reset}
+% Passwort vergessen, Daten futsch!
+
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
 %------------------------------------------------------------------
