@@ -1,9 +1,8 @@
 \documentclass[10pt, a4paper]{scrreprt}
 
-	% TODO: export in Layout-File
-	% parse into new layout!
 	% create table of bibliography
 	% Schriftgröße, Seitenränder, Abstand erhöhen --> erst zum Schluss ;-)
+	% Danksagung?
 
 %% --------------------------- LAYOUT ------------------ %%
 \usepackage[T1]{fontenc}
@@ -30,15 +29,14 @@
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
 \makeindex
 
-\onehalfspacing   %Zeilenabstand erhöhen (1.5) 
-% Seitenränder erhöhen!
-
+\onehalfspacing
 
 %% ------------------------------------------------------ %%
 %% ------------------------ BEGIN ---------------------- %%
 %% -------------------------------------------------------%% 
 
 \begin{document}
+
 
 
 %% ---------------------------- TITLE ------------------------%%
@@ -97,8 +95,6 @@ Zum Ver- und Entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 
 \section{Diese Arbeit}
 \subsection{Inhaltlicher Aufbau}
-
-% \chapter{Anforderungen} ?
 
 
 %% ---------------------- GRUNDLAGEN ----------------- %%
@@ -210,7 +206,7 @@ C$_{i}$ = P$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
 P$_{i}$ = C$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
 
 \subsubsection{CTR}
-Im Counter-Modus kann die Berechnung des Schlüssels, wie auch beim OFB, vor dem ersten Klartextblock erfolgen. Innerhalb des Modi gibt es einen internen Zähler, der immer konstant erhöht wird. Aus diesem Zähler und dem Schlüssel wird dann ein neuer Schlüssel erzeugt, mit dem der Klartext verschlüsselt werden kann. Der Vorteil dieses Verfahrens besteht darin, dass man nicht die komplette Nachricht entschlüsseln muss, sondern einzelne Teile des Chiffretextes entschlüsseln kann. Hierfür setzt man den internen Zähler auf die gewünscht Stelle, erzeugt den Schlüssel und entschlüsselt den Chiffreblock. Wichtig ist, dass der selbe Zähler mit den selben Schlüssel nicht doppelt verwendet werden soll (Problem ECB: zwei identische Klartextblöcke ergeben identischen Chiffretext).
+Im Counter-Modus kann die Berechnung des Schlüssels, wie auch beim OFB, vor dem ersten Klartextblock erfolgen. Innerhalb des Modi gibt es einen internen Zähler, der immer konstant erhöht wird. Aus diesem Zähler und dem Schlüssel wird dann ein neuer Schlüssel erzeugt, mit dem der Klartext verschlüsselt werden kann. Der Vorteil dieses Verfahrens besteht darin, dass man nicht die komplette Nachricht entschlüsseln muss, sondern einzelne Teile des Chiffretextes entschlüsseln kann. Hierfür setzt man den internen Zähler auf die gewünscht Stelle, erzeugt den Schlüssel und entschlüsselt den Chiffreblock. Wichtig ist, dass der selbe Zähler mit den selben Schlüssel nicht doppelt verwendet werden soll (Problem: zwei identische Klartextblöcke ergeben identischen Chiffretext).
 
 \subsection{DES, 3DES}
 "Its restricted key size of 56 bits and small block size of 64 bits make it unsuitable for today`s fast computers and large amounts of data. It survives in the form of 3DES, which is a block cipher built from three DES encryptions in sequence. This solves the most immediate problem of the small key size, but there is no known fix for the small block size. [...] we do not recommend using either DES oder 3DES in new designs." [Ferguson 2003, Seite 51]
@@ -401,11 +397,11 @@ Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rec
 %\subsection{Zwei-Faktor-Authentifizierung}
 	% TODO: Erklärung: http://de.wikipedia.org/wiki/Zwei-Faktor-Authentifizierung (need Quelle)
 
+\section {Zusammenfassung}
+% TODO: nochmal kurz erläutern, welche Verfahren unsicher und welche Sicher sind - welche verwendet werden und welche nicht .
 
 %% ------------------------ VALIDIERUNG --------------------- %%
 \chapter{Validierung}
-	% TODO: Erläuterung des Testgerätes & der Punkte auf die getestet werden soll!
-	% aufzeigen der Notwendigkeit dieser Validierung
 Bei der Validierung soll gezeigt werden ob die im vorigen Kapitel als sicher angesehen Verfahren auch auf heutigen Android-Geräten zum Einsatz kommen können. Hierbei sollen die Verfahren im Bezug auf ihre Schlüssellänge, sowie die Dateigröße validiert werden. Die Validierung soll in Bezug auf Geschwindigkeit bzw. Dauer des Verfahrens, Akkuverbrauch und Wärmeentwicklung durchgeführt werden.  \\ \\
 Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1.1 (Jinger Bread) verwendet. Das Gerät verfügt über ein 1GHz Dual Core Prozessor (ARM Corext A9) und 512 MByte RAM, als Stromversorgung ist ein Lithium-Ionen-Akkumulator mit 1800 mAh verbaut. Zu  beachten ist, dass die aufgenommen Messwerte stark von der verwendeten Hardware und installierten Software abhängig sind. Ein Vergleich zu anderen Geräten oder dem gleichen Gerät mit verschiedener Software kann nicht durchgeführt werden. Darüber hinaus kann jedoch angenommen werden, da alle Messwerte nahezu selbige Startbedingungen hatten, dass die Differenzen der Verfahren untereinander um einen gewissen Grad der Verschiebung ähnlich sind.\\ \\
 Aus dem Kapitel Grundlagen geht hervor, dass im Symmetrischen Bereich die Verfahren Advanced Encryption Standard (AES) mit den Schlüssellängen 128bit, 192bit und 256bit und Blowfish mit den Schlüssellängen 128bit, 256bit und 446bit Validiert werden muss. Auf beide Verfahren kann man die aufgezählten Betriebsmodi (CBC, OFB, CFB, CTR) verwenden, wodurch Dateien die größer als die Blockgröße verschlüsselt werden knnen. Die Asymmetrischen Verfahren müssen nicht validiert werden, da der Hauptaufwand bei diesen Verfahren auf der Schlüsselgenerierung beruht die lediglich beim ersten Start der Anwendung ausgeführt wird. Als Hash-Funktionen können laut Grundlagen Kapitel lediglich die Verfahren der SHA2-Familie zum Einsatz kommen, dessen Hash-Länge auf die Anwendung angepasst werden kann. \\ \\
@@ -419,26 +415,182 @@ Wie aus den Tabellen zu sehen ist, ist der Counter-Modus bei allen Messungen ste
 
 %% ------------------------ IMPLEMENTIERUNG ---------------- %%
 \chapter{Implementierung}
+In diesem Kapitel soll auf den internen Aufbau der Anwendung eingegangen werden. Es wird gezeigt, warum welche Verfahren in welcher Form angewendet wurden und welche Strukturen wie zusammen arbeiten. \\
+Die Implementierung der Anwendung erfolgte für Android-Geräte und wurde mit dem Android-Development-Tool (ADT) und der IDE eclipse in der Programmiersprache Java entwickelt.  
+
+
+\section{Anforderungen}
+An die zu entwickelnde Anwendung sind verschiedene Anforderungen gestellt, die sowohl beim Entwurf als auch letztendlich bei der Implementierung beachtet werden müssen. \\
+Die Anwendung soll in der ersten Version auf Android-Geräten mit Versionen neuer als 2.3.3 (siehe Kapitel Einleitung) entwickelt werden. Darüber hinaus ist die strikte Vorgabe gegeben, dass die Schlüssel, die für die Ver- und Entschlüsselungen der Dateien zuständig sind, nicht zusammen mit den Daten selbst auf den Server abgelegt werden. Darüber hinaus ist es außerdem vorgegeben, dass die Schlüssel nicht alle auf einer Server-Struktur abgelegt werden und nach Bedarf abgefragt werden - die Schlüssel sollen lediglich den Endgeräten bekannt sein, die nötige Dateien entweder verschlüsseln oder entschlüsseln wollen. Dem Besitzer der Datei ist der Schlüssel bis zu deren Löschung bekannt. Andere Parteien können den Schlüssel halten, müssen es jedoch nicht zwingend. \\
+Als weitere Anforderung ist vorgegeben, dass Verschlüsselungsverfahren oder andere Kryptographische Konzepte, wie Hash-Funktionen oder Schlüsselspeicherung, nicht selbständig implementiert werden sollen. Das Problem bei selbstständiger Implementierung geht ein auf die Probleme von kryptographischen Angriffsmethoden ein. So muss u. a. sichergestellt werden das Nebenhören oder Timing-Angriffe auf z. B. Vergleichsfunktionen oder Angriffe auf Zufallszahlengeneratoren nicht durchführbar sind. Um alle Angriffsszenarien zu untersuchen und deren Lösung zu implementieren erfordert hohe Kenntnisse und ist in dieser Arbeit nicht Erfordert. Um Methoden der Kryptographie einzusetzen soll deshalb in der Arbeit auf standardisierte Bibliotheken, wie derer von Android, zurückgegriffen werden in der Hoffnung, dass die meisten Angriffsszenarien von diesen Bibliotheken bereits abgedeckt werden. Da die Anwendung später für wissenschaftliche Mitarbeiter am DESY eingesetzt werden soll, die nicht unbedingt über Fachkenntnisse der Bereiche Informatik und Kryptographie besitzen, sollen komplexe Strukturen oder komplizierte Vorgehensweisen möglichst einfach und transparent in der Anwendung durchgeführt werden. Es sollen keine Abfragen zur Wahl der Verfahren oder ähnliche fachspezifische Fragen dem Benutzer gestellt werden. Die Anwendung soll intuitiv und einfach zu Bedienen sein. Zusammengefasst lassen sich daraus folgende Muss- und Soll-Kriterien ableiten: \\ \\
+Muss-Kriterien:
+\begin{itemize}
+\item Dateien müssen verschlüsselt werden
+\item Schlüssel dürfen nur den Endgeräten bekannt sein
+\item Schlüssel müssen innerhalb der Anwendung sicher abgespeichert werden
+\item Schlüssel müssen auf sicherem Wege mit anderen Parteien teilbar sein.
+\item Krypto-Verfahren dürfen nicht selbstständig implementiert werden.
+\end{itemize}
+Soll-Kriterien:
+\begin{itemize}
+\item Anwendung soll Komplexität transparent behandeln
+\item Anwendung soll intuitiv zu bedienen sein
+\end{itemize}
+
+
 \section{Entwurf}
-\section{Aufbau}
-% TODO: explain KeyStore --> Speicherung von Schlüsselinformationen!
-\section{Bibliotheken}
+Da die Anwendung in der Objektorientierten Sprache Java entwickelt wird, werden die einzelnen Klassen die für die Anwendung von nöten sind in verschiedene Pakete unterteilt, die die oberste Struktur der Anwendung widerspiegeln. Das Paket (engl.: package)  Activities enthält alle Klassen die in Android zum Anzeigen von Nutzerinhalten von nöten sind. Eine Activity in Android hat einen Lebenszyklus von Create bis Destroy in der Inhalte, die in einer XML-Datei definiert werden, dem Benutzer auf dem Smartphone angezeigt werden. \\
+Darüber hinaus soll es ein package Helper geben, welches Klassen beinhaltet die gewissen Abläufe in einzelne Funktionen zusammenfassen und so die internen komplexen Zusammenhänge zu verschleiern. Des Weiteren sollen die Klassen dafür sorge tragen, dass interne Anbindungen verdeckt werden und für den Nutzer nicht sichtbar sind. So soll z. B. die Klasse DatabaseHelper für das Arbeiten mit der Datenbank helfen, jedoch die Struktur der Datenbank selbst (also deren Tabellen und Spalten) verschleichern. Die Klasse stellt dann nur jene Funktionen zur Verfügung die für den Ablauf der Anwendung von nöten sind. \\
+BroadcastReceiver nennt man in Android Klassen welche die Möglichkeit haben gewisse Aktionen des Gerätes abzufangen und anschließend eigenen Code auszuführen. So kann es z. B. von Interesse sein zu erfahren, dass das Gerät sich mit einem WLAN verbundet hat, oder ein neues Foto geschossen wurde. Um diese Klassen zusammenzufassen wird das Paket BCReceiver erstellt, in dem alle diese Klassen eingebunden sind. \\
+Als letztes Paket wird das Paket External erstellt um hier externe open-source und frei zugängliche Inhalte einzufügen. \\
+Das Zusammenspiel der Pakete soll dafür sorge tragen, dass die einzelnen Activities, wie die MainActivity (das Hauptbild der Anwendung), die nötigen Informatinoen aus den Helper-Klasse abrufen in diese anzeigen. Aktionen durch den Anwender werden entweder von den BroadcastReceivern oder der Activity abgefangen und entsprechend ausgeführt oder an Helper-Klassen weitergegeben.  Diese flache Struktur soll das zukünftige Arbeiten erleichtern und einen übersichtlichen und schnellen Einstieg in die Anwendung bieten. \\ \\
+Folgende kurze Übersicht der Pakete und Klassen soll erläutern welche Klassen für welche Funktionalitäten eingesetzt werden sollen:\\ \\
+Activities:
+\begin{itemize}
+\item MainActivity: Das Hauptfenster der Anwendung. Hier sollen alle wichtigen Funktionen zur Verfügung stehen und dem Anwender die möglichkeit bieten auf weitere Activites zu navigieren.
+\item ServerActivity: Diese Activity soll den aktuellen Inhalt des Servers anzeigen und dem Benutzer die Möglichkeit bieten diesen Inhalt herunterzuladen oder entsprechend mit anderen Benutzern zu teilen
+\item ProfileActivity: Dieses Fenster soll Informationen zum eigenen Profil enthalten
+\item ShareActivity: Hier soll dem Benutzer die Möglichkeit gegeben werden, die gewählte Datei mit einem Benutzer zu teilen.
+\end{itemize}
+Helper:
+\begin{itemize}
+\item CryptoHelper: Diese Klasse abstrahiert die Methoden zum ver- und entschlüsseln der Daten sowie den Umgang mit Hash-Funktionen oder weiteren Verfahren die im Zusammenhang mit Kryptographie stehen
+\item DatabaseHelper: Diese Klasse beinhaltet die Struktur der Datenbank und bietet Funktionen zum einfachen arbeiten an
+\item KeyStoreHelper: Alle Funktionen zum Arbeiten mit einem KeyStore (siehe Bibliotheken) sind hierin enthalten.
+\end{itemize}
+Für vorher nicht absehbare Szenarien ist es über die oben angegebene Klassen hinaus möglich weitere Implementierungen durchzuführen. Die oben angegeben Klassen und Pakete stellen lediglich einen geplanten Aufbau dar und sind erweiterbar.
+
+
+\section{Programmierschnittstellen}
+Programmierschnittstellen (engl.: application programming interface, kurz: API) sind Funktionen anderer Anwendungen die zur Verfügung gestellt werden. So ist es z. B. möglich mit eigenem Programm Funktionen einer Datenbankanwendung z. B. SQLite zu nutzen.
+
+
+\subsection{KeyStore}
+KeyStore ist eine von Java zur Verfügung gestellte Schnittstelle zum sicheren sichern von Schlüsseln  (engl.: key). Der KeyStore ist eine Datei die auf dem Gerät selbst abgelegt wird. Diese Datei wird dann durch die Schnittstelle mit einem Passwort verschlüsselt. Des Weiteren sorgt das Betriebssystem dafür, dass die Datei nur durch den Anwender, der den KeyStore erstellt hat, und den root-Benutzer zugreifbar ist. Der Aufbau des KeyStores ist eine Key-Value-Struktur. Jeder Schlüssel der zu speichern ist, wird mit einem eindeutigen Key abgelegt, unter dem man später den Schlüssel wieder abrufen kann. Darüber hinaus sorgt die Struktur dafür, dass ohne die nötigen Keys auch die Values verdeckt bleiben - eine Auflistung aller Key-Values ist durch den KeyStore nicht möglich. %http://docs.oracle.com/javase/7/docs/api/java/security/KeyStore.html
+
+
+\subsection{SQLite}
+SQLite ist eine Datenbank, welche in Android standardmäßig zur Verfügung gestellt werden. Mit ihr ist es möglich Daten in einer relationalen Datenbank mit Tabellen und Spalten abzuspeichern. Darüber hinaus können Daten mit sogenannten SQL-Anweisungen (Structured Query Language) wieder abgefragt werden. Android sorgt dafür, dass entsprechende Tabellen die für die Anwendung benötigt werden beim errsten Start der App eingerichtet werden. 
+
+
+\subsection{zxing}
+zxing ist eine von Google bereitgestellt API zum Erstellen und Lesen von 1D / 2D Barcodes, u. a. auch für den in der Anwendung genutzte QR-Code.
+
+
+\subsection{Bouncy-Castle}
+Mit dieser Schnittstelle ist es möglich Kryptographische Verfahren zu verwenden. Zwar ist Bouncy-Castle bereits in angepasste Version in Android standardisiert integriert, bietet jedoch in der Version nicht alle durch die eigentliche Schnittstelle angebotenen Funktionen. Mit Boncy-Castle ist es mögliche Funktionen wie das Ver- und Entschlüsseln mit AES, RSA oder anderen Verschlüsselungsverfahren durchzufürehn. Ausserdem sind verschiedene Codefragmente für den Umgang mit Zertifikaten und Schlüsseln bereits vorhanden.
+
+
+\section{Programmablauf}
+In diesem Kapitel soll erläutert werden, welche Abläufe das Programm ausführt, wenn gewisse Interaktionen mit der Anwendung durch den Benutzer ausgeführt werden. 
+
+
+\subsection{Programmstart}
+Der Programmstart ist generell zu unterscheiden in zwei Fälle. Zum einen gibt es den intialen Start, also den ersten Start der Anwendung überhaupt und  zum anderen gibt es den normalen Start, bei der dir App bereits vorher initialisiert wurde. \\
+In beiden Fällen erscheint zu Beginn der Anwendung eine Meldung, bei der man sein eigenes Master-Passwort eingeben muss. Dieses Passwort schützt die auf dem Smartphone gespeicherten sensiblen Daten indem sie mit diesem Passwort verschlüsselt werden. Beim initialen Start wird dieses Passwort verwendet um einen KeyStore zu erstellen, in dem das eigene RSA KeyPair gespeichert wird. Das KeyPair der größe 1024Bit wird ebenfalls beim ersten Appstart erzeugt und direkt in dem angelegten KeyStore abgespeichert. Darüber hinaus wird eine Datenbank angelegt in der die öffentlichen Schlüssel von Freunden inkl. deren HashWert und einem frei wählbaren Namen abgelegt wird. Diese Informationen werden aus zwei Gründen nicht im KeyStore gespeichert:
+\begin{itemize}
+\item der Zugriff auf den KeyStore dauert länger, als der Zugriff auf die Datenbank, da die Daten im KeyStore stets verschlüsselt gehalten werden.
+\item im KeyStore ist es lediglich möglich KeyValue-Paare abzulegen, weitere Informationen wie Hash-Werte oder Namen sind nicht speicherbar.
+\end{itemize}
+Sind beide Speichermöglichkeiten (KeyStore, Datenbank) erzeugt so ist die Initialisierung der Anwendung abgeschlossen und die Anwendung wechselt in die \textit{MainActivity} - also das Hauptmenü.\\ \\
+Bei erneutem Start der Anwendung sollten die initialen Vorgänge abgeschlossen sein, dies wird überprüft indem zunächst das Master-Passwort abgefragt wird. Mit diesem Passwort wird versucht die vorhandene KeyStore-Datei zu lesen. Erfolgt das Lesen, so ist das Passwort korrekt - ist ein Lesen nicht möglich, so ist das Passwort falsch, in dem Fall wird der Benutzer darauf hingewiesen und muss es erneut versuchen. Erst nach erfolgreichem verbinden mit dem KeyStore wechselt die Anwendung in das Hauptmenü.
+
+
+\subsection{Hauptmenü}
+Von diesem Fenster aus, welches nach dem Initialisierungsvorgang der Anwendung erscheint hat der Benutzer die Möglichkeit die verschiedenen Funktionen innerhalb der Anwendung zu wählen. In einer Liste hat er die Funktionen Server, Einstellungen, Profil und Import - wobei Import nur eine vorübergehende Lösung bietet  (siehe Datei teilen). Darüber hinaus findet er in der oberen Titelleiste noch zwei Symbole welche Datei hochladen und Nutzer hinzufügen beschreiben. Durch die Wahl der gewünschten Funktion wird in die entsprechende Activity gewechselt.
+
+
+\subsection{Einstellungen}
+In diesem Fenster werden Grundlegende Einstellung für die Verbindung mit dem Server hinterlegt. Zum einen ist hier die Server-Adresse sichtbar, welche jedoch durch den Benutzer nicht änderbar ist. Darüber hinaus ist es zwingend notwendig, dass der Benutzer in diesem Fenster die für den Serverzugriff nötigen Anmeldeinformationen einträgt.
+
+
+\subsection{Server abrufen}
+Beim Wahl der Funktion Server abrufen wird zunächst geprüft, ob die in den Einstellungen relevanten Benutzername und Passwort-Informationen für den Serverzugriff vorhanden ist - ist dies nicht der Fall erfolgt eine Fehlermeldung und der User wird darauf hingewiesen diese einzutragen. Sind die Daten vorhanden wird eine sichere Verbindung mittels TLS (Transport Layer Security) mit dem Server aufgebaut. Der Server antwortet mit einer Response und liefert eine Liste mit den auf dem Server abgelegten Dateien. Diese Antwort des Servers wird entsprechend der Bedürfnisse angepasst und dem Benutzer in einer Liste dargestellt. \\
+Im weiteren hat der User in diesem Fenster die Möglichkeit durch einen Klick auf eine Datei zu entscheiden ob er diese herunterladen oder mit einem Freund teilen möchte. Durch das Auswählen einer der beiden Möglichkeiten werden die entsprechende Funktionen innerhalb des Programms aufgerufen.
+
+
+\subsection{Datei Uploaden}
+Um eine Datei auf dem Server abzulegen hat der Benutzer 2 Möglichkeiten. Zum einen kann er im Hauptmenü in der Titelleiste das entsprechende Symbol zum hochladen anklicken und wird dann aufgefordert über einen Dateiexplorer zu der Datei zu navigieren. Die dort angewählte Datei wird entsprechend auf dem Server hochgeladen. \\
+Die andere Variante ist direkt aus dem Context einer Datei selbst, z. B. einem Bild. Hier wählt der Anwender den von Android zur Vergügung gestellten Knopf zum teilen der Datei wählt die Option dCache-Cloud. \\
+In beiden Fällen wird der Pfad zur Datei vom System abgegriffen und an den \textit{CryptoHelper} weitergegeben, der die Datei  verschlüsselt. Die Verschlüsselung erfolgt indem zuerst ein Symmetrischer AES-Schlüssel der Länge 256Bit erzeugt wird und mit diesem die Datei im Counter-Modus (CTR) verschlüsselt wird und innerhalb der SD-Karte im Unterordner dCache-Cloud/.enc/ abgelegt wird. Um den entsprechenden Schlüssel zu sichern wird über den Dateinamen ein Hash-Wert (SHA-256) gebildet und beides an den \textit{KeyStoreHelper} weitergegeben. Dieser speichert den  Hash-Wert als Key und den Schlüssel als Value in seiner internen Struktur und sichert das ganze mit dem eingehend gewählten Master-Passwort. Der symmetrische Schlüssel kann nun anhand des Hash-Wertes des Dateinamens wieder gefunden werden.
+
+
+\subsection{Datei Downloaden}
+Um eine Datei vom Server zu laden muss der Anwender in der \textit{ServerViewActivity}, das Fenster welches den Inhalt des Servers zeigt, die entsprechende Datei anwählen und im auftretenden Kontextmenü die Option \textit{Download} auswählen.  \\
+Die Datei wird dann vom Server heruntergeladen und auf der SD-Karte im Ordner dCachec-Cloud/.enc/ gesichert. Nachdem die Datei erfolgreich heruntergeladen wurde wird über den \textit{KeyStoreHelper} der entsprechende Schlüssel herausgesucht. Dies geschieht indem über den Dateinamen ein Hash-Wert erzeugt wird und dieser im KeysStoreHelper abgefragt wird. Der daraus erlangte SecretKey wird an den \textit{CryptoHelper} weitergeben, der die Datei von der SD-Karte liest und mit dem entsprechenden Schlüssel wieder entschülsselt. Das Ergbnis der Entschlüsselung wird auf der SD-Karte im Ordner dCache-Cloud/ abgelegt.
+
+
+\subsection{Schlüsselaustausch}
+Die generelle Bezeichnung Schlüsselaustausch ist innerhalb der Anwendung differenziert zu betrachten. Auf der einen Seite existieren zu jeder Person privater sowie öffentlicher Schlüssel, wobei der öffentliche Schlüssel mit anderen Personen ausgetauscht werden muss. Zum anderen existiert zu jeder verschlüsselten auf dem Server abgelegten Datei ein symmetrischer AES-Schlüssel, der mit den Personen geteilt werden muss, die Zugang zu der Datei erhalten sollen. (siehe Datei teilen). \\
+Der Austausch des öffentlichen Schlüssels wird über einen Quick-Response-Code (QR-Code) ausgeführt. Hierbei wird der eigene öffentliche Schlüssel kodiert und in Base64-Format (lesbare ASCII-Form) überführt. Dieser String-Text wird dann entsprechend durch den \textit{QRCodeGenerator} in einen 2Dimensionalen QR-Code überführt. Um Fehler oder Manipulation zu vermeiden wird zusätzlich über den erzeugten Schlüssel ein Hash-Wert gebildet und als Fingerprint ausgewiesen. \\
+Die Gegenseite, also der Anwender der den öffentlichen Schlüssel erlangen möchte, kann im Hauptmenü in der Titelleiste den Knopf für \textit{Person hinzufügen} wählen und gelangt dann in den QR-Code-Scanner. Der eingesetzte QR-Code Scanner ist eine externe Anwendung die aufgerufen wird, sofern sie auf dem Smartphone installiert ist. Sollte die Anwendung nicht installiert sein, wird eine Fehlermeldung erzeugt und der Anwender darauf hingewiesen diese Anwendung zu installieren. Das auftretende Fehlerfenster ist automatisch mit dem Google Play Store verbunden und schlägt bereits eine kostenfreie Anwendung vor. \\
+Scannt der Benutzer nun mit der geöffneten Anwendung den Barcode seines gegenübers wird der gescannte Code automatisch in das SecretKey-Format für Android zurückgeführt und der entsprechende Fingerprint errechnet. Ein direkter Abgleich beider Fingerprints stellt sicher, dass eine Manipulation nicht stattgefunden hat. Der Anwender hat nun noch die Möglichkeit seinem jetzt neu hinzugefügten Freund einen Namen zu geben um ihn im späteren Verlauf der Anwendung wieder einwandfrei identifizieren zu können. Um Fehlerquellen zu vermeiden muss dieser gewählte Namen eindeutig sein (doppelte Namensvergabe ist nicht gestattet).
+
+
+\subsection{Datei teilen}
+Die Funktion Datei teilen erlaubt es dem Anwender verschlüsselte auf dem Server abgelegte Dateien mit anderen Personen zu teilen. Um dies durchzuführen ist es notwendig, dass die Person die Zugriff auf die Datei erlangen soll den nötigen AES-Schlüssel, der bei der Generierung erstellt wurde, auf sicherem Wege erhält. Da eine Übertragung über das Internet als unsicherer Kanal gilt muss die Übertragung entsprechend mit digitalen Signaturen und Verschlüsselung geschützt werden. Hierfür wird zuerst die zu übertragende Nachricht erzeugt, indem ein JSON-Objekt erstellt und folgende KeyValue-Paare darin abgelegt werden:
+\begin{itemize}
+\item Dateiname: der Dateinamen der verschlüsselten Datei
+\item AES-Key: der notwendige SecretKey zum entschlüsseln der Datei
+\item PublicKey-Hash: Der Hash-Wert des eigenen PublicKeys (= Fingerprint aus Schlüsselaustausch)
+\end{itemize}
+Dieses Objekt wird in eine Nachricht umgewandelt, auf die die Hash-Funktion SHA-256 angewandt wird. Der erzeugte Hash-Wert wird mit dem eigenen privaten Schlüssel verschlüsselt und stellt die digitale Signatur dar. Anschließend wird die ursprüngliche Nachricht und die erzeugte Signatur mit dem öffentlichen Schlüssel des Gegenübers verschlüsselt und erzeugt somit die endgültig zu versendende Nachricht.
+Diese erzeugte Nachricht kann nun über unsichere Kanäle dem Partner übertragen werden. Um zu verifizieren, dass die Nachricht an der Empfängerseite korrekt übertragen wurde wird sie zuerst mit dem eigenen privaten Schlüssel entschlüsselt und erzeugt somit die ursprüngliche Nachricht und die digitale Signatur. Durch das entschlüsseln der digitalen Signatur mit dem öffentlichen Schlüssel des Gegenübers und dem Vergleich des darin enthaltenen Hash-Wertes und dem Hash-Wert der aus der enthaltenen Nachricht selbst erzeugt werden kann ist zum einen sichergestellt, dass die Nachricht nicht verändert wurde und das sie wirklich von der Person stammt, die sie vorgibt zu sein. Ist die Verifizierung abgeschlossen wird der in der Nachricht erhaltende AES-Schlüssel mit Dateinahmen und Hash-Wert des Dateinamens in der internen auf dem Gerät abgelegten Datenbank gespeichert. Beim Download kann der entsprechende Schlüssel dann aus der Datenbank gelesen werden um die Datei zu entschlüsseln.
+
 
 %% ----------------------------- TEST -------------------------- %%
 \chapter{Test}
-\section{Validierung}
-\section{Testverfahren}
+In diesem Kapitel soll gezeigt werden, wie die entwickelte Anwendung auf Fehlverhalten oder andere Probleme getestet wurde. Die gezeigten Mechanismen sollen Fehler innerhalb der Anwendung aufdecken und auch bei weiterentwicklung des Systems stets diesen Status behalten. Testfälle sind einzeln Konzepierte Abläufe die die Anwendung durchlaufen muss und welche das Verhalten der Anwendung auf Richtigkeit oder Fehlerhaftigkeit hin überprüfen. Da Testfälle vom Entwickler selbst implementiert werden müssen, ist es nicht umsetzbar alle möglichen Kombinationen von Eingaben und Aktionen zu überprüfen. Diese Anwendung gilt als Funktionsfähig, wenn die im Kapitel Programmablauf beschriebenen Fälle ohne Absturz oder andere Mängel ausgeführt werden können.
+
+
+\section{Performance- und Lasttest}
+Um eine Anwendung auf ein Smartphone zu bringen, die komplexe Strukturen wie Verschlüsselung oder größere Berechnungen durchführt ist es wichtig, dass diese Anwendung nicht die Fähigkeiten des Gerätes selbst überfordern. So ist es z. B. einem Anwender nicht zumutbar, wenn die Anwendung selbst eine so hohe Prozessorlast erzeugt, dass weitere Aktionen mit dem Smartphone unbrauchbar sind. Außerdem ist eine nicht flüssige Anwendung oder ein extremer Temperaturanstieg durch Rechenleistung nicht zu gebrauchen. Um diese Faktoren bereits vor der Entwicklung der Anwendung sicherzustellen wurde eine Validierung auf rechenintensive Inhalte der Anwendung ausgeführt. Im Kapitel Validierung wurde gezeigt welche Auswirkungen Verschlüsselungsverfahren, die innerhalb der Anwendung verwendet werden, auf einem gewählten Gerät haben. Hierbei wurde der verbrauchte Akkustand, sowie der Temperaturanstieg und die verbrauchte Zeit gemessen. Eines der Hauptaspekte der Anwendung ist die Verschlüsselung selbst, die durch diese Testreihe validiert wurde. Als weiteren Zeitaspekt der Anwendung ist die Dauer die benötigt wird um eine Datei auf den Server zu laden. Da diese Geschwindigkeit jedoch von der Verfügbaren Netzabdeckung, sowie dem vom Benutzer gewählten Vertrag oder der Verbindung zum WLAN abhängt,  müssen die Faktoren in der Anwendung nicht getestet werden. \\
+Durch mehrfaches Ausführen vieler Verschlüsselungsverfahren aneinander wurde der Prozessor dauerhaften Berechnungen ausgesetzt und zeigt so die Auswirkung von Verbrauch und Temperatur im Lastzustand. \\
+Die im Kapitel Validierung gezeigten Werte geben an, dass bei ungefähr 180 Ver- und Entschlüsselungen von 1-20MB Dateien ein Akkuverbauch von ca. 25\% stattfindet und sich die Temperatur auf ein Maximum von 38$^\circ$C erhöht. Die Zeiten, die für die Verschlüsselung benötigt wurden, liegen innerhalb weniger Sekunden bei kleinen Dateien und bis zu einer halben Minute bei 20MB. 
+
+
+\section{Funktionstest}
+Die Programmiersprache Java ist eine objektorientierte Programmiersprache mit Klassen und deren Methoden. Diese Methoden, welche einen mehr oder minder komplexen Algorithmus abbilden müssen auf ihr richtiges Verhalten hin getestet werden. Diese Tests einzelner Funktionen oder Methoden nennt man Funktionstest und wurden innerhalb der Anwendung mit jUnit ausgeführt. jUnit ist ein Test-Framework zum wiederholten Testen einzelner Funktionen. Der Vorteil an der Wiederholbarkeit besteht darin, dass auch bei einer Änderung der Funktion oder des komplexen ganzen, die Funktion erneut auf Ihr richtiges Verhalten hin getestet werden kann.   
+
+
+\section{Usabilitytest}
+Um die im Kapitel Anforderung gestellten Kriterien der leichten Bedienbarkeit und der Intuitivität zu beweisen bedarf es eigener Testszenarien. Diese Eigenschaften einer Anwendung sind jedoch objektiver Natur und können nur von Menschenhand selbst bewertet werden. Da es aufgrund des zeitlichen Rahmens dieser Arbeit nicht möglich war eine Testlauf mit ausgewählten Personen durchzuführen, so soll nach Abschluss der erzeugte Prototyp erstmals Studenten der HTW und ausgewählten Mitarbeitern des DESY an die Hand gegeben werden. Differenziert wird dabei in zwei Personengruppen: Jene die die Anwendung kennen und derer Funktion wissen und jene die ohne jegliche Hintergrundinformationen die Anwendung bedienen sollen. Durch diese Tests soll zum einen gezeigt werden, dass  selbst für unwissende Anwender die App intuitiv zu bedienen ist, als auch durch Wissen über die Funktionsweise der Anwendung dessen Struktur klar und eindeutig darauf verweist welche Fenster in welcher Reihenfolge geöffnet werden müssen um das gewünschte Ziel zu erreichen. Diese Usabilitytests werden dann als Grundlage für weitere Diskussionen oder Änderungen herangezogen um ggf. aufgetretene Mängel zu beseitigen.
+
+
+\section{UI-Test}
+Smartphones besitzen als Interaktionsmöglichkeit das Touchfeld, indem der Benutzer durch drücken oder wischen mit dem/n Finger(n) Anweisungen an das Gerät liefern kann. Um zu Überprüfen, ob die angezeigten Elemente bei Interaktion richtig arbeiten werden UI-Tests (User Interface Test) verwendet. Innerhalb der Anwendung wird damit überprüft ob bei drücken der verschiedenen Inhalte, die die App zur Verfügung stellt, die entsprechenden Fenster aufgerufen werden und dessen Funktion ausgeführt wird. Darüber hinaus wird geprüft ob erwartet Inhalte, wie z. B. Texte oder Bilder, dem Awender auf dem Display angezeigt werden. 
+
+
+\section{weitere}
+% TODO: Zusammenspiel der Komponente Anwendung nd dCache Server?
 
 %% -------------------------- ZUSAMMENFASSUNG -------------- %%
+
+
 \chapter{Zusammenfassung und Ausblick}
 \section{Zusammenfassung}
 % TODO Prototyp erfolgreich entwickelt!
+
+
 \section{Ausblick}
+
+
+\subsection{Verschlüsselung}
+% In späteren Version könnte darüber nachgedacht werden, ob eine Ablauffrist für Schlüssel eingeführt werden soll, oder eine Hierarchie die das Verbreiten von Dateien erlaubt oder diese einschränkt.
+
+
 \subsection{GCM}
 % Google Cloud Messaging als Austausch von Daten
 % muss eigner Server implementiert werden!
+
+
 \subsection{Password-Reset}
 % Passwort vergessen, Daten futsch!
+% registieren per e-mail, passwort-Reset möglich? aber wie? ... 
+
+
+\subsection{Schlüsselaustausch}
+% andere Methoden wie PGP-Server, oder ähnliches.
 
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
@@ -446,13 +598,13 @@ Wie aus den Tabellen zu sehen ist, ist der Counter-Modus bei allen Messungen ste
 
 
 %% --------------------------- BIBLIO --------------------------------%%
-%\label{Bibliography}s
+% \label{Bibliography}
 
-%\lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
+% \lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
 
-%\bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
+% \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
 
-%\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+% \bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
 
 \printindex
 
@@ -464,5 +616,6 @@ Wie aus den Tabellen zu sehen ist, ist der Counter-Modus bei allen Messungen ste
 
 %% ---------------------------------- ANHANG --------------------------- %%
 	%TODO: Algorithmen 411 und 322.
+	%TODO: Daten durch die Validierung.
 
 \end{document}
