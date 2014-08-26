@@ -1,8 +1,14 @@
 \documentclass[10pt, a4paper]{scrreprt}
 
-	% create table of bibliography
-	% Schriftgröße, Seitenränder, Abstand erhöhen --> erst zum Schluss ;-)
-	% Danksagung?
+	% BIB
+	% Grafiken (besonders Validierung & Implementierung)
+	% Anhänge
+	% Glossar
+	% Eigenständniskeitserklärung
+	% Layout
+	% Danksagung
+	% Text zu verwandte Arbeiten oder Aufbau der Arbeit??
+	% bisschen mehr text zu Grundlagen Android? 
 
 %% --------------------------- LAYOUT ------------------ %%
 \usepackage[T1]{fontenc}
@@ -36,6 +42,7 @@
 %% -------------------------------------------------------%% 
 
 \begin{document}
+\pagestyle{empty}
 
 
 
@@ -55,12 +62,18 @@ Bruce Schneier
 \end{flushright}
 \vspace*{\fill}
 
-
-\tableofcontents
+\clearpage% oder \cleardoublepage bei twoside
+\begingroup
+  \renewcommand*{\chapterpagestyle}{empty}
+  \pagestyle{empty}
+  \tableofcontents
+  \clearpage
+\endgroup
 
 %% -------------------- EINLEITUNG ------------------ %%
 \chapter{Einleitung}
-% \setcounter{page}{1}
+\setcounter{page}{1}
+\pagestyle{plain}
 "Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
 Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
 \begin{center}
@@ -83,9 +96,9 @@ In der ersten Version dieser Arbeit wird ein Programm entwickelt, welches auf An
 Zum Ver- und Entschüsseln der Daten sollen Verfahren verwendet werden, die in der heutigen Zeit als sicher angesehen werden und Smartphones im Bezug auf Performance und Akkuverbrauch nicht zu stark belasten. Um diese Faktoren zu Validieren wird eine Testanwendung geschrieben, die mit bestimmten Faktoren die verschiedenen Verfahren untereinander überprüfen (siehe Kapitel Validierung).
 
 	% TODO: Prüfen, ob dieser Part wirklich hier rein muss? Andere Software vergleichen?
-\section{Verwandte Arbeiten}
+% \section{Verwandte Arbeiten}
 	% TODO: Recherche?!? --> wird nicht benötigt, da es sich bei der Arbeit hautpsächlich um die Entwicklung des Programmes handelt. Kryptographische Verfahren wurdne zu genüge behandelt.
-\section{Verwandte Programme}
+% \section{Verwandte Programme}
 	% TODO: Unterscheidung in Arbeiten & Programme notwendig?
 	% vgl. Dropbox
 	% vgl. ownCloud <<- speziell: soll in Zukunft am DESY verwendet werden --> kompatiblität beachten?!? 
@@ -93,8 +106,8 @@ Zum Ver- und Entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 	% vgl. cloudfogger
 
 
-\section{Diese Arbeit}
-\subsection{Inhaltlicher Aufbau}
+% \setion{Diese Arbeit}
+% \subsection{Inhaltlicher Aufbau}
 
 
 %% ---------------------- GRUNDLAGEN ----------------- %%
@@ -565,37 +578,52 @@ Smartphones besitzen als Interaktionsmöglichkeit das Touchfeld, indem der Benut
 % TODO: Zusammenspiel der Komponente Anwendung nd dCache Server?
 % Abnahmetest?!?
 
+\chapter{Problemfälle und Lösungen}
+Folgend soll kurz beschrieben werden, welche Probleme während der Arbeit auftraten und welche Lösungsstrategien sich überlegt wurden.
+
+
+\section{Kommunikation}
+Während der Entwicklung der Software sind verschiedene Problemfälle aufgetreten, die vorher nicht absehbar und geplant wurden. So ist unter anderem die Kommunikation zweier Geräte miteinander nur über einen eigenen externen Server lösbar. Dieser externe Server handhabt die Nachrichten und merkt sich die für diese Anwendung registrierten Geräte und stellt darüber hinaus Funktionen zur Verfügung, dass Anwender andere Geräte anhand von eigens definierten Kriterien wiederfinden. Der eigene Server selbst kommuniziert dann mit dem von Google bereits gestellten Cloud-Messaging-Server und gibt an Ihn die zu übertragende Nachricht und die registrierte ID weiter (näheres unter GCM). Da die Implementierung eines eigenen Servers in der Planung nicht berücksichtigt wurde und der zeitliche Rahmen dieser Arbeit dies nicht zulässt wurde die zu übertragende Nachricht in einem separaten Fenster auf dem Bildschirm ausgegeben und automatisch über einen Knopf in die Zwischenablage kopiert. Der Benutzer hat nun die Möglichkeit den kopierten Text über einen beliebigen Kanal an den Empfänger zu versenden (e-Mail, Whatsapp, Facebook etc.). Der Empfänger kann nun über ein ähnliches Fenster den Text in der Anwendung einfügen, die diesen dann entsprechend verarbeitet. Die Kommunikation zweier Geräte ist in den Anforderungen nicht zwingend gestellt und stellt lediglich einen Weg dar, die Schlüssel auszutauschen. 
+
+\section{direkter Schlüsselaustausch}
+Um den eigenen öffentlichen Schlüssel seinem Gegenüber zu Übertragen so muss dieser denn im Profil enthaltenden QR-Code scannen. Dieses Verfahren kann während der Übertragung der Daten nicht manipuliert werden, da ein Angreifer sich zwischen Display des Anzeigegerätes und Kamera des Empfänger-Gerätes schalten müsste. Ein Problem ergibt sich hieraus, wenn beide Person eine größere Entfernung zueinander haben und diese nicht überbrücken können (Person 1 lebt in Europa, Person 2 in Amerika). Für diesen Problemfall gibt es in der Prototypversion nur eine umständliche Lösung, eine weitere Möglichkeit wird jedoch im Kapitel Ausblick (siehe Schlüsselaustausch) gegeben. Da in der aktuellen Version der Anwendung der QR-Code die einzige Möglichkeit ist, den entsprechenden Schlüssel auszutauschen müssten beide Parteien den QR-Code auf anderem Wege übertragen um ihn dort zu scannen. Es ist möglich in Android über eine Tastenkombination (Lautstärke Hoch + Power-Knopf) ein Bildschirmfoto zu erstellen. Dieses Foto kann man per unsicheren Kanal übertragen und an Empfängerseite einscannen. Da auf diesem Wege die eingehend beschriebene Sicherheit entfällt ist es zwingend notwendig den zum QR-Code angezeigten Fingerprint genau zu überprüfen um sicherzustellen, dass der QR-Code während der Übertragung über den unsicheren Kanal nicht verändert wurde.
+
+%\section{Schlüsselverknüpfung via Hash}
+% TODO: ?!?! Der AES-Schlüssel ist mit dem Hash-Wert des Dateinamens verknüpft... wenn die datei umbenannt wird, ist der schlüssel weg :P 
+% 
+
 %% -------------------------- ZUSAMMENFASSUNG -------------- %%
-
-
 \chapter{Zusammenfassung und Ausblick}
 \section{Zusammenfassung}
-% TODO Prototyp erfolgreich entwickelt!
+In dieser Arbeit wurde ein Prototyp entwickelt, der die gestellten Anforderungen erfüllt. Die Anforderung der leichten Bedienbarkeit können bis zum Abschluss dieser Arbeit nicht verifiziert werden, sollen jedoch direkt im Anschluss durch ein Usabilitytest durchgeführt werden (seihe Kapitel Test). Der Prototyp der entwickelt wurde, ist bisher nur auf dem Testgerät selbst und auf verschiedenen emulierten Geräten zum Einsatz gekommen, zeigt jedoch dort keine Probleme. 
 
 
 \section{Ausblick}
+Dieses Kapitel soll auf Grundlage des Prototypen einen Ausblick geben, welche Funktionalitäten in der Anwendung zusätzlich zum Einsatz kommen könnten und welche Verbesserungen dadurch erreicht werden. Alle diese gezeigten Punkten stellen Vorschläge dar, die nach Abschluss mit den verantwortlichen Personen diskutiert werden müssen. Eine Implementierung dieser Punkte ist für die Anwendung nicht zwingend notwendig.
 
 
 \subsection{Verschlüsselung}
-% In späteren Version könnte darüber nachgedacht werden, ob eine Ablauffrist für Schlüssel eingeführt werden soll, oder eine Hierarchie die das Verbreiten von Dateien erlaubt oder diese einschränkt.
+In der aktuellen Version der Anwendung werden zu Beginn der Anwendung ein Schlüsselpaar erzeugt und mit diesem Schlüsselpaar zweier Seiten AES-Schlüssel ausgetauscht, die zum Entschlüsseln der Dateien dienen. Jeder Benutzer der die Schlüssel hat, hat auch die Möglichkeit die ihm zugeteilte Datei weiter zu verbreiten. Eine Variante wäre, dass eine Art Rechtesystem eingeführt wird, in dem nur bestimmte Personen gewisse Dateien weiter teilen dürfen. Der Ursprüngliche Inhaber hat das uneingeschränkte Recht die Datei zu verbreiten, alle anderen Teilnehmer, die Zugriff auf die Datei haben dürfen diese jedoch nur lesen und nicht weiter verbreiten. Darüber hinaus ist der Zugriff auf eine Datei zeitlich uneingeschränkt. Solange die Datei auf dem Server gespeichert ist, kann jeder der den nötigen Schlüssel hält diese Datei auch lesen und ggf. verändern oder weiter teilen. Ein zeitlicher Rahmen, in dem auf die Datei zugegriffen werde kann, könnte realisiert werden. Nach Ablauf dieser Zeit gibt es entweder die Möglichkeit den Schlüssel auf den geteilten Geräten zu entfernen, oder die Datei vom Server zu löschen. Um beide gezeigten Varianten jedoch umsetzen zu können, müsste vorher sichergestellt werden, dass die Datei auf Dateisystemebene nicht zugreifbar ist, da der Anwender sonst die Möglichkeit hat die Datei an einen anderen Ort zu verschieben und erneut selbstständig auf den Server zu laden.
 
 
 \subsection{GCM}
-% Google Cloud Messaging als Austausch von Daten
-% muss eigner Server implementiert werden!
+Google Cloud Messaging (kurz GCM) ist ein System von Google mit dem Entwickler an verschiedene Android-Geräte Push-Nachrichten zu versenden können, dabei ist eine Push-Nachricht eine Meldung von einem Server an ein Gerät, ohne dass das Gerät selbst die Initiative ergreifen muss. Ein Smartphone muss auf diesem Wege nicht dauerhaft prüfen ob neue Inhalte für ihn verfügbar sind, sondern es wird ihm vom Server mitgeteilt. \\
+\includegraphics[scale=0.6]{gcm-a-modr.png} % TODO Grafik selber bauen!!
+Um Push-Nachrichten nutzen zu können ist es notwendig, dass ein eigener Server vorhanden ist. Zu Beginn registrieren sich die Geräte mit der Anwendung am GCM-Server und erhalten eine eindeutige Registrierungsnummer. Die Nummer identifiziert eindeutig das Gerät und die Anwendung. Diese Nummer muss nun dem eigenen Anwendungsserver mitgeteilt werden, der diese mit weiteren optionalen Informationen wie Name, ID, Telefonnummer oder ähnlichen speichert. Alle Geräte die die Anwendung verwenden registrieren sich so am GCM-Server und speichern ihre erhaltene ID im Anwendungsserver. Sobald eine Kommunikation mit einem anderen Gerät stattfinden soll erstellt der Sender die entsprechende Nachricht und sendet sie mit Empfängerinformationen (Name, ID o. ä.) an den Server. Dieser prüft anhand der Informationen ob ein solcher Benutzer registriert ist, indem er diese in seinem System sucht und prüft ob eine entsprechende Registrierungsnummer vorhanden ist. Anschließend sendet der Server die Nachricht und die Registrierungsnnummer an den GCM-Server, der anhand der Registrierungsnummer das Gerät identifizieren kann, welches die Nachricht erhalten soll. Mit diesem System ist sichergestellt, dass ausschließlich der GCM-Server in der Lage ist eine Push-Nachricht an die Geräte zu senden. Die Implementierung eines eigenen Servers ist notwendig um ein System zu schaffen, welches die Registrierten Geräte speichert und eine Möglichkeit bietet diese durch eigene Informationen wieder zu finden. \\
+In dieser Anwendung wäre das GCM-System denkbar um die verschlüsselte Nachricht, die erzeugt wird um eine Datei zu teilen, an die Empfängerseite zu übertragen.
 
 
 \subsection{Password-Reset}
-% Passwort vergessen, Daten futsch!
-% registieren per e-mail, passwort-Reset möglich? aber wie? ... 
+In der Anwendung werden sensible Daten im KeyStore gespeichert, welcher wiederum im System durch ein Passwort geschützt ist. Sollte es einem Anwender passieren, dass er das Master-Passwort, welches zu Beginn der Anwendung gesetzt wird, vergisst so kann er nicht mehr auf den KeyStore zugreifen. Alle AES-Schlüssel, sowie sein eigener Privater und Öffentlicher Schlüssel sind dann nicht mehr zugreifbar. Einzige Möglichkeit ist das Löschen der KeyStore datei um damit die Anwendung dazu zu bringen die Daten entsprechend neu zu initialisieren. Eine Wiederherstellung der Daten ist jedoch nicht möglich. Eine Lösung wäre, die entsprechenden Passwörter der KeyStore-Dateien auf irgendeine Art und Weise gesichert auf einem Server zu hinterlegen, sodass sie bei Verlust wieder hergestellt werden könnten. Ein Angreifer bräuchte dann zum einen Zugriff auf den Server und zum anderen die nötigen KeyStore-Dateien um alle Daten aus dem Gerät auszulesen um die Schlüssel zu erfahren. Eine Speicherung der Passwörter von KeyStore-Dateien würde das System an einer Stelle angreifbar machen und dessen Sicherheit stark beeinflussen.
 
 
 \subsection{Schlüsselaustausch}
-% andere Methoden wie PGP-Server, oder ähnliches.
+In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen Schlüssel über eine QR-Code anderen Endgeräten mitzuteilen. Wie bereits im Kapitel Problem erläutert, ist dies bei größeren Entfernungen nicht umsetzbar. Um dennoch die Schlüssel austauschen zu können, wäre ein Einsatz von Key-Servern. Auf einem solchen Server können alle Personen ihre öffentlichen Schlüssel hinterlegen und diese anhand eines eindeutigen Strings wiederfinden. Man müsste für einen Austausch der Schlüssel lediglich den eindeutigen String seinem Gegenüber mitteilen, der den öffentlichen Schlüssel dann am Key-Server abrufen kann. Durch einen Fingersprint kann dann geprüft werden, ob der erhaltene Schlüssel tatsächlich jener ist, der zu der Person gehört. Der Einsatz von Schlüsselservern erlaubt den Austausch von öffentlichen Schlüsseln über eine größere Entfernung, bietet jedoch nicht die Sicherheit die bei einer direkten Vereinbarung (wie QR-Code) gegeben ist.
 
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
 %------------------------------------------------------------------
+
 
 
 %% --------------------------- BIBLIO --------------------------------%%
