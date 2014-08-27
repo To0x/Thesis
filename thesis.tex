@@ -1,4 +1,4 @@
-\documentclass[10pt, a4paper]{scrreprt}
+\documentclass[10pt, a4paper,headsepline]{scrreprt}
 
 	% BIB
 	% Grafiken (besonders Validierung & Implementierung)
@@ -22,6 +22,9 @@
 \usepackage{graphicx}
 \usepackage{makeidx}
 
+\input{_Meta}
+\input{Packages}
+
 \newcommand{\changefont}[3]{
 \fontfamily{#1} \fontseries{#2} \fontshape{#3} \selectfont}
 
@@ -37,20 +40,31 @@
 
 \onehalfspacing
 
+
 %% ------------------------------------------------------ %%
 %% ------------------------ BEGIN ---------------------- %%
 %% -------------------------------------------------------%% 
 
+% neue Kopfzeilen mit fancypaket
+\usepackage{fancyhdr} %Paket laden
+\pagestyle{fancy} %eigener Seitenstil
+\fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
+\fancyhead[L]{\nouppercase{\leftmark}} %Kopfzeile links
+\fancyhead[C]{} %zentrierte Kopfzeile
+\fancyhead[R]{\thepage} %Kopfzeile rechts
+\renewcommand{\headrulewidth}{0.4pt} %obere Trennlinie
+%\fancyfoot[C]{\thepage} %Seitennummer
+%\renewcommand{\footrulewidth}{0.4pt} %untere Trennlinie
+
 \begin{document}
 \pagestyle{empty}
 
+%\ofoot{}
+\include{Deckblatt}
+%\ofoot{\pagemark}
 
 
 %% ---------------------------- TITLE ------------------------%%
-\begin{titlepage}
-\title{Implementierung einer Smartphone-Anwendung zum Austausch verschlüsselter Daten mit einer Cloud}
-\maketitle
-\end{titlepage}
 
 % Text komplett in der Mitte von der Seite!
 \vspace*{\fill}
@@ -70,10 +84,16 @@ Bruce Schneier
   \clearpage
 \endgroup
 
+
+
+
+\fancyhead[L]{\nouppercase{\leftmark}} %Kopfzeile links
+%\pagestyle{fancy}
+
 %% -------------------- EINLEITUNG ------------------ %%
 \chapter{Einleitung}
 \setcounter{page}{1}
-\pagestyle{plain}
+\pagestyle{fancy}
 "Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
 Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
 \begin{center}
