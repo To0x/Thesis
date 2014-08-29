@@ -34,7 +34,7 @@
 }
 \changefont{cmr}{m}{n}
 \setlength{\topskip}{\ht\strutbox} % behebt Warnung von geometry
-\geometry{paper=a4paper,left=30mm,right=20mm,top=40mm} 
+\geometry{paper=a4paper,left=35mm,right=25mm,top=35mm,headsep=1.0cm} 
 \graphicspath{{pictures/}} % Specifies the directory where pictures are stored
 \makeindex
 
@@ -53,6 +53,7 @@
 \fancyhead[C]{} %zentrierte Kopfzeile
 \fancyhead[R]{\thepage} %Kopfzeile rechts
 \renewcommand{\headrulewidth}{0.4pt} %obere Trennlinie
+
 %\fancyfoot[C]{\thepage} %Seitennummer
 %\renewcommand{\footrulewidth}{0.4pt} %untere Trennlinie
 
@@ -95,7 +96,7 @@ Bruce Schneier
 \setcounter{page}{1}
 \pagestyle{fancy}
 "Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
-Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
+Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index*{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index*{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
 \begin{center}
 \includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
 \end{center}
@@ -440,9 +441,13 @@ Für die Validierung wird ein Alcatel One Touch 997D mit der Android Version 4.1
 Aus dem Kapitel Grundlagen geht hervor, dass im Symmetrischen Bereich die Verfahren Advanced Encryption Standard (AES) mit den Schlüssellängen 128bit, 192bit und 256bit und Blowfish mit den Schlüssellängen 128bit, 256bit und 446bit Validiert werden muss. Auf beide Verfahren kann man die aufgezählten Betriebsmodi (CBC, OFB, CFB, CTR) verwenden, wodurch Dateien die größer als die Blockgröße verschlüsselt werden knnen. Die Asymmetrischen Verfahren müssen nicht validiert werden, da der Hauptaufwand bei diesen Verfahren auf der Schlüsselgenerierung beruht die lediglich beim ersten Start der Anwendung ausgeführt wird. Als Hash-Funktionen können laut Grundlagen Kapitel lediglich die Verfahren der SHA2-Familie zum Einsatz kommen, dessen Hash-Länge auf die Anwendung angepasst werden kann. \\ \\
 Um die beiden Symmetrischen Verfahren zu Validieren werden jeweils Dateien der Größe 1MB, 5MB und 20MB in zehnfacher Ausführung verschlüsselt und anschließend entschlüsselt. Diese Vorgehensweise wird für alle Schlüssellängen und alle Modi ausgeführt. \\
 Pro Modi fallen so 180 Messungen an (10 Messungen x3 Dateien x3 Schlüssellängen x2 für Ver- und Entschlüsselung). Jede dieser Messung enthält den aktuellen Akkustand, die Temperatur und die Dauer die diese Messung benötigt hat. Eine genaue Aufgliederung aller einzelnen Messergebnisse befindet sich im Anhang. Nach einer erfolgreichen Messreihe eines Modi muss das Smartphone auf den Urzustand gebracht werden, d. h. dass der Akku aufgeladen und die Temperatur normalisiert werden muss. Insgesamt fallen so 1440 Messungen an (180 Messungen x4 Modi x2 Verfahren)\\ \\
-Um die Verfahren mathematisch zu validieren müssen vorerst die Gewichtungen der einzelnen Messfaktoren dargelegt werden. Der Hauptaspekt für den reibungslosen Ablauf der zu entwickelnden Anwendung ist die Geschwindigkeit, in der die Ver- und Entschlüsselungen durchgeführt werden. Anschließend folgt der Akkuverbrauch und zum Schluss die Temperatur. So ergibt sich nach eigenem Ermessen ein Maßstab von 3 : 2 : 1 für Geschwindigkeit : Akkuverbrauch : Temperatur. \\ \\
-In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 1 das beste und 10 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Das Ergebnis soll eine Übersicht über alle Faktoren und deren Gewichtung geben und daraus folgern welches Verfahren für die zu entwickelnde Anwendung am besten geeignet ist. \\ \\
-Wie aus den Tabellen zu sehen ist, ist der Counter-Modus bei allen Messungen stets führend. Aus diesem Grund wird dieser Modus mit dem AES Verfahren angewandt. Als Schlüssellänge wird die maximale Länge von 256bit verwendet, da sie sich bei der Messung nur um einigen Sekunden von den geringeren Schlüssellängen unterscheiden.
+Um die Verfahren mathematisch zu validieren müssen vorerst die Gewichtungen der einzelnen Messfaktoren dargelegt werden. Der Hauptaspekt für den reibungslosen Ablauf der zu entwickelnden Anwendung ist die Geschwindigkeit, in der die Ver- und Entschlüsselungen durchgeführt werden. Anschließend folgt der Akkuverbrauch und zum Schluss die Temperatur. So ergibt sich nach eigenem Ermessen ein Maßstab von 3 : 2 : 1 für Geschwindigkeit : Akkuverbrauch : Temperatur. 
+\section{Ergebnisse}
+In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 10 das beste und 1 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Die Verteilung der Werte erfolgt durch die Ergebnisse, welche bei der Messung durchgeführt wurden, dabei werden die Punkte 10 und 9 jeweils nur einmal vergeben und die Punkte 8 - 1 jeweils 3 mal. Exemplarisch ist diese Vorgehensweise in nachfolgender Grafik abgebildete. Alle weitere Grafiken und tabellarischen Ausführungen, sowie dessen Rohdaten befinden sich im Anhang. \\ \\
+\includegraphics[scale=0.8]{tabelle_zeitvergleich_punkte.JPG} \\ \\
+Das Ergebnis soll eine Übersicht über alle Faktoren und deren Gewichtung geben und daraus folgern welches Verfahren für die zu entwickelnde Anwendung am besten geeignet ist. \\ \\
+\includegraphics[scale=0.65]{tabelle_Cryptovergleich_einzeln.JPG} \\ \\
+Wie aus der Tabelle zu sehen ist, ist der Counter-Modus bei allen Messungen stets führend. Aus diesem Grund wird dieser Modus mit dem AES Verfahren angewandt. Als Schlüssellänge wird die maximale Länge von 256bit verwendet, da sie sich bei der Messung nur um einigen Sekunden von den geringeren Schlüssellängen unterscheiden.
 % TODO: Grafiken einfügen! 
 % TODO: evtl. Diagramme erstellen!
 
@@ -627,8 +632,8 @@ In der aktuellen Version der Anwendung werden zu Beginn der Anwendung ein Schlü
 
 
 \subsection{GCM}
-Google Cloud Messaging (kurz GCM) ist ein System von Google mit dem Entwickler an verschiedene Android-Geräte Push-Nachrichten zu versenden können, dabei ist eine Push-Nachricht eine Meldung von einem Server an ein Gerät, ohne dass das Gerät selbst die Initiative ergreifen muss. Ein Smartphone muss auf diesem Wege nicht dauerhaft prüfen ob neue Inhalte für ihn verfügbar sind, sondern es wird ihm vom Server mitgeteilt. \\
-\includegraphics[scale=0.6]{gcm-a-modr.png} % TODO Grafik selber bauen!!
+Google Cloud Messaging (kurz GCM) ist ein System von Google mit dem Entwickler an verschiedene Android-Geräte Push-Nachrichten zu versenden können, dabei ist eine Push-Nachricht eine Meldung von einem Server an ein Gerät, ohne dass das Gerät selbst die Initiative ergreifen muss. Ein Smartphone muss auf diesem Wege nicht dauerhaft prüfen ob neue Inhalte für ihn verfügbar sind, sondern es wird ihm vom Server mitgeteilt. \\ \\
+\includegraphics[scale=0.6]{gcm-a-modr.png} \\ \\ % TODO Grafik selber bauen!!
 Um Push-Nachrichten nutzen zu können ist es notwendig, dass ein eigener Server vorhanden ist. Zu Beginn registrieren sich die Geräte mit der Anwendung am GCM-Server und erhalten eine eindeutige Registrierungsnummer. Die Nummer identifiziert eindeutig das Gerät und die Anwendung. Diese Nummer muss nun dem eigenen Anwendungsserver mitgeteilt werden, der diese mit weiteren optionalen Informationen wie Name, ID, Telefonnummer oder ähnlichen speichert. Alle Geräte die die Anwendung verwenden registrieren sich so am GCM-Server und speichern ihre erhaltene ID im Anwendungsserver. Sobald eine Kommunikation mit einem anderen Gerät stattfinden soll erstellt der Sender die entsprechende Nachricht und sendet sie mit Empfängerinformationen (Name, ID o. ä.) an den Server. Dieser prüft anhand der Informationen ob ein solcher Benutzer registriert ist, indem er diese in seinem System sucht und prüft ob eine entsprechende Registrierungsnummer vorhanden ist. Anschließend sendet der Server die Nachricht und die Registrierungsnnummer an den GCM-Server, der anhand der Registrierungsnummer das Gerät identifizieren kann, welches die Nachricht erhalten soll. Mit diesem System ist sichergestellt, dass ausschließlich der GCM-Server in der Lage ist eine Push-Nachricht an die Geräte zu senden. Die Implementierung eines eigenen Servers ist notwendig um ein System zu schaffen, welches die Registrierten Geräte speichert und eine Möglichkeit bietet diese durch eigene Informationen wieder zu finden. \\
 In dieser Anwendung wäre das GCM-System denkbar um die verschlüsselte Nachricht, die erzeugt wird um eine Datei zu teilen, an die Empfängerseite zu übertragen.
 
@@ -639,6 +644,8 @@ In der Anwendung werden sensible Daten im KeyStore gespeichert, welcher wiederum
 
 \subsection{Schlüsselaustausch}
 In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen Schlüssel über eine QR-Code anderen Endgeräten mitzuteilen. Wie bereits im Kapitel Problem erläutert, ist dies bei größeren Entfernungen nicht umsetzbar. Um dennoch die Schlüssel austauschen zu können, wäre ein Einsatz von Key-Servern. Auf einem solchen Server können alle Personen ihre öffentlichen Schlüssel hinterlegen und diese anhand eines eindeutigen Strings wiederfinden. Man müsste für einen Austausch der Schlüssel lediglich den eindeutigen String seinem Gegenüber mitteilen, der den öffentlichen Schlüssel dann am Key-Server abrufen kann. Durch einen Fingersprint kann dann geprüft werden, ob der erhaltene Schlüssel tatsächlich jener ist, der zu der Person gehört. Der Einsatz von Schlüsselservern erlaubt den Austausch von öffentlichen Schlüsseln über eine größere Entfernung, bietet jedoch nicht die Sicherheit die bei einer direkten Vereinbarung (wie QR-Code) gegeben ist.
+
+\chapter{Schlusswort und Dank}
 
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
