@@ -5,7 +5,6 @@
 	% Anhänge
 	% Glossar
 	% Eigenständniskeitserklärung
-	% Layout
 	% Danksagung
 	% Text zu verwandte Arbeiten oder Aufbau der Arbeit??
 	% bisschen mehr text zu Grundlagen Android? 
@@ -21,6 +20,7 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{makeidx}
+\usepackage[justification=RaggedRight, singlelinecheck=false]{caption} 
 
 \input{_Meta}
 \input{Packages}
@@ -59,10 +59,7 @@
 
 \begin{document}
 \pagestyle{empty}
-
-%\ofoot{}
 \include{Deckblatt}
-%\ofoot{\pagemark}
 
 
 %% ---------------------------- TITLE ------------------------%%
@@ -82,10 +79,9 @@ Bruce Schneier
   \renewcommand*{\chapterpagestyle}{empty}
   \pagestyle{empty}
   \tableofcontents
+  \listoffigures
   \clearpage
 \endgroup
-
-
 
 
 \fancyhead[L]{\nouppercase{\leftmark}} %Kopfzeile links
@@ -96,13 +92,12 @@ Bruce Schneier
 \setcounter{page}{1}
 \pagestyle{fancy}
 "Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
-Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index*{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index*{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\ 
+Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index*{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index*{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\
+
 \begin{center}
 \includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\captionof{figure}{Smartphonenutzer in Deutschland}
 \end{center}
-% http://de.statista.com/statistik/daten/studie/198959/umfrage/anzahl-der-smartphonenutzer-in-deutschland-seit-2010/
-% http://de.statista.com/statistik/daten/studie/12885/umfrage/marktanteil-bei-smartphones-nach-betriebssystem-weltweit-seit-2009/
-% http://de.statista.com/statistik/daten/studie/3506/umfrage/monatliches-datenvolumen-pro-mobilfunknutzer-in-deutschland/
 Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. % TODO: prüfen? kann man das so stehen lassen?!?
 
 
@@ -135,8 +130,10 @@ Zum Ver- und Entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 \chapter{Grundlagen Android}
 Android ist ein Betriebssystem für Smartphones und Tablets, welches von der open handset alliance entwickelt wird. Das Konsortium besteht aktuell aus 84 Unternehmen, die an der Entwicklung des Betriebssystems arbeiten. %http://www.openhandsetalliance.com/index.html]
 In diesem Kapitel wird kurz darauf eingegangen, welche Kryptografischen Aspekte Android in den verschiedenen Versionen zur Verfügung stellt um diese im darauffolgenden Kapitel genauer zu Untersuchen. Aufgrund der Tatsache, dass die Android Version Gingerbread (2.3.3) im Juni 2014 noch einen Marktanteil von knapp 15\% hält, ist dies auch die niedrigste vom Programm unterstützte Version. \\
+
 \begin{center}
 \includegraphics[scale=0.6]{android_version_marktanteil.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\captionof{figure}{Anteil d. Android-Versionen}
 \end{center}
 Bei der Analyse wird darauf geachtet, dass alle Funktionalitäten die im Programm entwickelt werden, von dieser Version unterstützt werden. Die, während des Schreibens dieser Arbeit, aktuellste Version der Android API ist KitKat (4.4), bei der darauf geachtet wird, dass die eingesetzten Funktionen auch in dieser Version noch zur Verfügung stehen und nicht mit \textit{deprecated (veraltet)} markiert sind.
 
@@ -147,8 +144,10 @@ Um dennoch verschiedene Zugriffe zu erlauben muss in der sogenannten Manifest-Da
 Auch wenn dieses Konzept Daten zur Laufzeit innerhalb einer Anwendung schützt, ist es möglich Dateien auch auf einer SD-Karte zu speichern, in das Internet zu verschicken oder über andere Wege auszutauschen. Diese Daten sind dann außerhalb der Anwendung und gegen externe Zugriffe nicht mehr geschützt.
 Dennoch gibt es die Möglichkeit in Android diese Daten zusätzlich mit einer Verschlüsselung zu versehen - hierfür stellt Java, seit der Version 1.4, die \textit{Java Cryptography Extension (JCE)} innerhalb von Android zur Verfügung. Innerhalb der Erweiterung (engl. extension) sind verschiedene Provider eingebunden, die dem Programmierer die Möglichkeit geben Kryptografische Verfahren aufzurufen, ohne die genaue Implementierung kennen zu müssen. In Java-Anwendungen gibt es diverse Implementierungen von Sun, die jedoch aus Datenschutzrechtlichen Gründen nicht in der Android Java-API vorhanden sind. der Provider Bouncy-Castle stellt eine Alternative zur Implementierung von Sun darf und wird in Android zur Verfügung gestellt. Innerhalb von Android wurde das Paket so geändert, dass es den Richtlinien der JCE entspricht. 
 Bouncy-Castle ist einer der von Android zur Verfügung gestellten Provider - jedoch gibt es noch weitere Provider, die selbige oder andere Implementierungen zur Verfügung stellen. Mit folgendem Codeabschnitt ist es möglich die einzelnen Provider mit den unterstützten Verfahren auszulesen und untereinander zu vergleichen. Dieser Code wurde auf verschiedenen Versionen ausgeführt, um die Unterschiede der einzelnen Versionen hervorzuheben. \\
+
 \begin{center}
 \includegraphics[scale=0.8]{read_cryptoprovider.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\captionof{figure}{Code zur Anzeige von Cryptoverfahren}
 \end{center}
 Im Vergleich stehen folgende Android-Versionen:
 \shorthandoff{"}
@@ -159,19 +158,13 @@ Im Vergleich stehen folgende Android-Versionen:
 \item "L" : zukünftige Version, welche bereits zu Testzwecken als Entwickler-Version freigeschaltet ist. Der Codename "L" zeigt auf, dass es sich in der Folge der Süßigkeiten (Gingerbread, HoneyComb, Ice Cream Sandwich, Jelly Bean, KitKat) vermutlich alphabetisch fortsetzen wird - die Versionsnummer ist bis dato nicht bekannt.
 \end{itemize}
 Im Vergleich der Ausgabe eines Gerätes mit Android 2.3.3 und eines mit 4.1.1 bzw. 4.4.4 und "L" liegt der Hauptunterschied in der Unterstützung von Elliptischen Kurven für das Diffie-Hellmann-Verfahren (ECDH) und den Digital-Signature-Algorithm (ECDSA), welche in der Version 2.3.3 nicht unterstützt werden. Des Weiteren ist ab der Version 4.4.x der Provider OpenSSL und deren Algorithmen spezifischer dargestellt.
-Folgende Verschlüsselungsverfahren werden sowohl von der Version 2.3.3 als auch von der Version 4.1.1 , 4.4.4 und L unterstützt und werden im nachfolgenden Kapitel näher erläutert: \\ \\
-\begin{tabular}{|l|l|} \hline\hline
-\textbf{Verschluesselung} & \textbf{Hash-Funktion} \\ \hline &  \\
-AES & MD5 \\
-ARC4 & SHA1 \\
-Blowfish & SHA256 \\
-DES & SHA384 \\
-3DES & SHA512 \\
-RSA & \\
-ElGamal & \\
-\hline\hline
-\end{tabular} \\
-\\Des Weiteren wird das Key-Wrap-Verfahren (AES und 3DES), der Authentifizierungsalgorithmus HMAC und der Standard X509 beschrieben. Die Vollständige Liste aller Unterstützen Algorithmen mit dessen Providern befindet sich im Anhang. Welcher Provider für welchen Algorithmus besser geeignet ist, kann man nicht pauschalisieren und auch nicht auf einen spezifischen Anwendungsfall verallgemeinern. Im Kapitel Validierung werden Geschwindigkeitsaspekte beider großen Provider (OpenSSL und Bouncy-Castle), sofern möglich, gegenübergestellt um für jeden Algorithmus den geeigneten Provider zu wählen. Falls es innerhalb eines Providers zu größeren Sicherheitslücken von einem verwendeten Algorithmus kommt, ist es durch das JCE möglich diesen ohne weitere Code-Änderungen zu wechseln. 
+Folgende Verschlüsselungsverfahren werden sowohl von der Version 2.3.3 als auch von der Version 4.1.1 , 4.4.4 und L unterstützt und werden im nachfolgenden Kapitel näher erläutert: \\
+
+\includegraphics[scale=1.0]{vorh_crypto.PNG}
+\captionof{figure}{Vorhanden Cryptoverfahren}
+\hfill
+
+Des Weiteren wird das Key-Wrap-Verfahren (AES und 3DES), der Authentifizierungsalgorithmus HMAC und der Standard X509 beschrieben. Die Vollständige Liste aller Unterstützen Algorithmen mit dessen Providern befindet sich im Anhang. Welcher Provider für welchen Algorithmus besser geeignet ist, kann man nicht pauschalisieren und auch nicht auf einen spezifischen Anwendungsfall verallgemeinern. Im Kapitel Validierung werden Geschwindigkeitsaspekte beider großen Provider (OpenSSL und Bouncy-Castle), sofern möglich, gegenübergestellt um für jeden Algorithmus den geeigneten Provider zu wählen. Falls es innerhalb eines Providers zu größeren Sicherheitslücken von einem verwendeten Algorithmus kommt, ist es durch das JCE möglich diesen ohne weitere Code-Änderungen zu wechseln. 
 
 
 \chapter{Grundlagen Kryptologie}
@@ -191,7 +184,7 @@ D$_{K}$(E$_{K}$(M)) = M\\ \\
 Um einen sicheren Kanal zwischen Sender und Empfänger zu gewährleistet, reicht es nicht allein die Nachricht zu verschlüsseln. Authentifizierung, Integrität und Verbindlichkeit müssen darüber hinaus gewährleistet sein um sicher zu Kommunizieren. \\ \\
 \textbf{Authentifizierung} beschreibt hierbei das Verfahren indem sich die Identität einer Person beweisen lässt. Im Umkehrschluss bedeutet das, dass sich ein Angreifer nicht als eine andere Person ausgeben kann. Aus der Authentifizierung folgt dann die \textbf{Autorisierung}, also das Prüfen, ob der Benutzer die Rechte hat, die er fordert.\\ \\
 \textbf{Integrität} bedeutet, dass sichergestellt werden kann, dass eine Nachricht bei der Übermittlung zwischen Sender und Empfänger nicht durch einen Angreifer verändert wurden ist. \\ \\
-\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. Dies ist eine Steigerung der Authentifizierung, denn durch Verbindlichkeit ist es außerdem gewährleistet, dass der Empfänger einer Nachricht gegenüber einer dritten Person den Absender der Nachricht glaubwürdig machen kann.\\ \\
+\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. Dies ist eine Steigerung der Authentifizierung, denn durch Verbindlichkeit ist es außerdem gewährleistet, dass der Empfänger einer Nachricht gegenüber einer dritten Person den Absender der Nachricht glaubwürdig machen kann. \\ \\
 
 
 \subsubsection{Kerhoff's Maxime}
@@ -255,7 +248,11 @@ Darüber hinaus hat die US National Security Agency (NSA) AES für interne Dokum
 \subsubsection{Funktionsweise}
 AES arbeitet mit einer Blockgröße von 128 Bit, also 16 Byte welcher intern als 2-Dimensionale Matrix (4x4) abgespeichert wird und auf der mathematische Funktionen angewandt werden.
 Alle Funktionen innerhalb von AES werden Byteweise ausgeführt (8 Bit-Blöcke).  Die interne Nachricht bezeichnet man als \textit{state}, also den aktuellen Status des Blockes. \\
-\includegraphics[scale=0.5]{aes_state.JPG} \\
+
+\includegraphics[scale=0.5]{aes_state.JPG} 
+\captionof{figure}{AES State-Block}
+\hfill
+
 Die Schlüssellänge des Verfahren ist entweder 128, 192 oder 256 Bit, wovon auch die auszuführende Rundenzahl abhängt (10 Runden bei 128 Bit, 12 bei 192 und 14 bei 256 Bit Schlüssellänge). In jeder dieser Runden werden Verfahren angewandt um den Klartext weiter zu verschlüsseln. Bei AES sind das \textit{ByteSubstitution, ShiftRow, MixColumns} und \textit{KeyAddition}. \\ \\
 Ausgenommen von dieser Regel ist die letzte Runde, in der MixColumns ausgelassen wird. %[Eckert, Seite 345] 
 Zusätzlich wird vor der ersten Runde die Funktion KeyAddition angewendet. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
@@ -269,15 +266,26 @@ Zusätzlich ist die S-Box bijektiv, es existiert also zu jeder Bitreihenfolge ge
 
 \subsubsection{ShiftRow}
 Das zweite Verfahren zum Vergeben von Redundanz ist die Diffusion, bei der die Redundanz verteilt wird (Einfachster Anwendungsfall ist das Vertauschen der Klartextbuchstaben in eine neue Reihenfolge). Eine Funktion die innerhalb von AES die für Diffusion sorgt, ist das ShiftRow-Verfahren. Hierbei werden die Bytes innerhalb einer Spalte des state-Blockes auf alle anderen Spalten aufgeteilt. Eine Änderung innerhalb einer Spalte (A$_{0}$ bis A$_{3}$ der state-Matrix) hat somit Auswirkung auf alle anderen Spalten (Auswirkung auf komplette State-Matrix). Folgende Grafik soll das verdeutlichen, wobei B$_{0}$, B$_{1}$, ..., B$_{15}$ jeweils die Bytes A$_{0}$, A$_{1}$, ..., A$_{15}$ nach der Transformation durch die S-Box sind. In der Grafik ist die interne 4x4 Matrix (state) hier Spaltenweise nebeneinander abgebildet. (Vergleiche state-Matrix)  \\ \\%TODO: Grafik-Nummer
-\includegraphics[scale=0.5]{aes_Shift_Row.JPG} \\ \\
-Die in der Grafik gezeigten Linien, die die Verschiebung darstellen sollen, ist innerhalb der state-Matrix durch einfaches Shifting realisiert. Hierbei wird in der ersten Zeile keine Verschiebung durchgeführt, in der zweiten Zeile wird jedes Byte um 1 nach Links rotiert, in der dritten 2 nach Links und in der vierten Zeile 3 nach Links. \\ \\
+
+\includegraphics[scale=0.5]{aes_Shift_Row.JPG} 
+\captionof{figure}{AES ShiftRow Verfahren}
+\hfill
+
+Die in der Grafik gezeigten Linien, die die Verschiebung darstellen sollen, ist innerhalb der state-Matrix durch einfaches Shifting realisiert. Hierbei wird in der ersten Zeile keine Verschiebung durchgeführt, in der zweiten Zeile wird jedes Byte um 1 nach Links rotiert, in der dritten 2 nach Links und in der vierten Zeile 3 nach Links. 
+
 \includegraphics[scale=0.5]{shift_row_before.JPG}
-\includegraphics[scale=0.5]{shift_row_after.JPG} \\
+\includegraphics[scale=0.5]{shift_row_after.JPG} 
+\captionof{figure}{AES ShiftRow StateMatrix}
+\hfill
 
 
 \subsubsection{MixColumns}
-Die MixColumns-Funktion ist die zweite Funktion in AES die für die Diffusion sorgt - sie bewirkt, dass die Änderung eines einzigen Eingabebytes in die Funktion alle Ausgabebytes verändert. Hierbei wird jede Spalte (als Vector dargestellt) mit einer festen 4x4 Matrix multipliziert. \\ \\
-\includegraphics[scale=0.5]{aes_mixcol.JPG} \\
+Die MixColumns-Funktion ist die zweite Funktion in AES die für die Diffusion sorgt - sie bewirkt, dass die Änderung eines einzigen Eingabebytes in die Funktion alle Ausgabebytes verändert. Hierbei wird jede Spalte (als Vector dargestellt) mit einer festen 4x4 Matrix multipliziert. 
+
+\includegraphics[scale=0.5]{aes_mixcol.JPG}
+\captionof{figure}{AES MixColumns}
+\hfill
+
 In der Grafik beschreibt der Vector B$_{0}$, B$_{5}$, B$_{10}$, B$_{15}$ genau die erste Spalte nach der Verschiebung durch ShiftRow. 
 Durch die starke Diffusion die durch die Verteilung der Bytes von einer Spalte auf alle Spalten in der Funktion ShiftRow und die Vermischung aller Bytes durch die MixColumns-Funktion erreicht wird, ist es dem Verfahren AES mögilch in 3 Runden jedes Byte des Klartextes von allen 16Byte der state-Matrix abhängig zu machen. Wenn also die zu verschlüsselnde Nachricht aus einer 1 und restlichen Nullen besteht wird diese 1 in nur 3 Runden auf alle anderen Nullen Auswirkung zeigen.
 
@@ -286,9 +294,13 @@ Durch die starke Diffusion die durch die Verteilung der Bytes von einer Spalte a
 Beim KeyAddition wird jeweils der aktuelle Block (4x4 state-Matrix) mit dem aktuellen Rundenschlüssel (16 byte) via XOR Bitweise verknüpft. 
 
 \subsubsection{Rundenschlüssel}
-AES erzeugt für die verschiedenen Runden, die bei der Ver- und Entschlüsselung durchlaufen werden Rundenschlüssel (1 Schlüssel mehr als Runden die durchlaufen werden), welche in 4x 32-Bit große Blöcke (Word-oriented) abgespeichert werden. In der ersten Runde entspricht der Rundenschlüssel dem Original AES-Schlüssel (W[0] bis W[3] = 4x32Bit = 128Bit Schlüssellänge). Der letzte Word-Block einer Runde, wird dann durch eine Funktion gegeben und mit den anderen Blöcken XOR-Verknüpft. \\ \\
-\includegraphics[scale=0.5]{key_sched_1_round.JPG} 
-\includegraphics[scale=0.5]{aes_key_sched_function_g.JPG} \\
+AES erzeugt für die verschiedenen Runden, die bei der Ver- und Entschlüsselung durchlaufen werden Rundenschlüssel (1 Schlüssel mehr als Runden die durchlaufen werden), welche in 4x 32-Bit große Blöcke (Word-oriented) abgespeichert werden. In der ersten Runde entspricht der Rundenschlüssel dem Original AES-Schlüssel (W[0] bis W[3] = 4x32Bit = 128Bit Schlüssellänge). Der letzte Word-Block einer Runde, wird dann durch eine Funktion gegeben und mit den anderen Blöcken XOR-Verknüpft. 
+
+\includegraphics[scale=0.4]{key_sched_1_round.JPG} 
+\includegraphics[scale=0.55]{aes_key_sched_function_g.JPG}
+\captionof{figure}{AES Rundenschlüssel}
+\hfill
+
 Die Funktion \textit{g} rotiert hierbei jeweils die Eingabebytes und führt sie durch eine nichtlineare S-Box. Am Ende dieses Verfahrens wird noch die Rundennummer mittels XOR dem linken Teilblock zugefügt. Das Ergebnis dieser Durchführung (W[4] bis W[7]) ist dann der Rundenschlüssel für die erste Runde. Dieses Verfahren wird wiederholt bis alle Rundenschlüssel entsprechend berechnet wurden. Die Anzahl der benötigten Rundenschlüssel und damit verbunden mit den benötigten Word-Blöcke erhöht sich mit der Erhöhung der Schlüssellänge von AES.
 
 \subsubsection{Entschlüsselung}
@@ -317,23 +329,28 @@ In folgender Grafik wird das Verfahren von Blowfish und der Feistel-Struktur ver
 %\includegraphics[scale=0.3]{blowfish_1.JPG} 
 
 
-\begin{figure}[htbp]
 \begin{minipage}[t]{4cm}
 \vspace{0pt}
 \centering
 \includegraphics[scale=0.3]{blowfish_1.JPG}
-\caption{Bild1}
-\label{fig:Bild1}
+\captionof{figure}{Aufbau Blowfish}
 \end{minipage}
 \hfill
+\begin{minipage}[t]{1cm}
+\vspace{0pt}
+\end{minipage}
 \begin{minipage}[t]{10cm}
 
-Hierbei beschreibt PK$_{i}$ den Teilschlüssel der aktuellen Runde. Innerhalb der Funkion von Blowfish wird die 32 Bit große Teilhälfte in 4x8 Bit unterteile gesplittet und jeweils einer Substitution durch S-Boxen unterzogen. Im Gegensatz zu AES sind alle 4 S-Boxen in Blowfish verschieden. (Berechnung: siehe Teilschlüssel) Folgende Vorgehensweise wird innerhalb der Funktion durchgeführt: \\
-\includegraphics[scale=0.25]{blowfish_2.JPG} \\ % Schneier 1996, Seite 389f]
+Hierbei beschreibt PK$_{i}$ den Teilschlüssel der aktuellen Runde. Innerhalb der Funkion von Blowfish wird die 32 Bit große Teilhälfte in 4x8 Bit unterteile gesplittet und jeweils einer Substitution durch S-Boxen unterzogen. Im Gegensatz zu AES sind alle 4 S-Boxen in Blowfish verschieden. (Berechnung: siehe Teilschlüssel) Folgende Vorgehensweise wird innerhalb der Funktion durchgeführt: \\ 
+\includegraphics[scale=0.25]{blowfish_2.JPG}  % Schneier 1996, Seite 389f]
+\captionof{figure}{Funktion Blowfish} 
+\label{fig:Funktion Blowfish} 
+\hfill
+
 Das Ergebnis von S-Box 1 und S-Box 2 wird Addiert und Modulo 2$^{32}$ berechnet. Anschließend wird das Ergebnis mit dem Ergebnis von S-Box 3 XOR-Verknüpft und zum Schluss dessen Ergebnis mit dem Ergebnis aus S-Box 4 erneut addiert und Module 2$^{32}$ errechnet. Zusammenfassend ergibt das folgende Formel: \\ \\
 F(x$_{L}$ = ((S$_{1,a}$ + S$_{2,b}$ mod 2$^{32}$) $\oplus$ S$_{3,c}$) + S$_{4,d}$ mod 2$^{32}$ \\ \\
 \end{minipage}
-\end{figure}
+
 \subsubsection{Teilschlüssel}
 Für die Generierung der Teilschlüsse, sowie der Erzeugung der S-Boxen existiert ein Algorithmus, der wie folgt vorgeht:
 \begin{enumerate}
@@ -443,10 +460,19 @@ Um die beiden Symmetrischen Verfahren zu Validieren werden jeweils Dateien der G
 Pro Modi fallen so 180 Messungen an (10 Messungen x3 Dateien x3 Schlüssellängen x2 für Ver- und Entschlüsselung). Jede dieser Messung enthält den aktuellen Akkustand, die Temperatur und die Dauer die diese Messung benötigt hat. Eine genaue Aufgliederung aller einzelnen Messergebnisse befindet sich im Anhang. Nach einer erfolgreichen Messreihe eines Modi muss das Smartphone auf den Urzustand gebracht werden, d. h. dass der Akku aufgeladen und die Temperatur normalisiert werden muss. Insgesamt fallen so 1440 Messungen an (180 Messungen x4 Modi x2 Verfahren)\\ \\
 Um die Verfahren mathematisch zu validieren müssen vorerst die Gewichtungen der einzelnen Messfaktoren dargelegt werden. Der Hauptaspekt für den reibungslosen Ablauf der zu entwickelnden Anwendung ist die Geschwindigkeit, in der die Ver- und Entschlüsselungen durchgeführt werden. Anschließend folgt der Akkuverbrauch und zum Schluss die Temperatur. So ergibt sich nach eigenem Ermessen ein Maßstab von 3 : 2 : 1 für Geschwindigkeit : Akkuverbrauch : Temperatur. 
 \section{Ergebnisse}
-In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 10 das beste und 1 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Die Verteilung der Werte erfolgt durch die Ergebnisse, welche bei der Messung durchgeführt wurden, dabei werden die Punkte 10 und 9 jeweils nur einmal vergeben und die Punkte 8 - 1 jeweils 3 mal. Exemplarisch ist diese Vorgehensweise in nachfolgender Grafik abgebildete. Alle weitere Grafiken und tabellarischen Ausführungen, sowie dessen Rohdaten befinden sich im Anhang. \\ \\
-\includegraphics[scale=0.8]{tabelle_zeitvergleich_punkte.JPG} \\ \\
-Das Ergebnis soll eine Übersicht über alle Faktoren und deren Gewichtung geben und daraus folgern welches Verfahren für die zu entwickelnde Anwendung am besten geeignet ist. \\ \\
-\includegraphics[scale=0.65]{tabelle_Cryptovergleich_einzeln.JPG} \\ \\
+In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 10 das beste und 1 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Die Verteilung der Werte erfolgt durch die Ergebnisse, welche bei der Messung durchgeführt wurden, dabei werden die Punkte 10 und 9 jeweils nur einmal vergeben und die Punkte 8 - 1 jeweils 3 mal. Exemplarisch ist diese Vorgehensweise in nachfolgender Grafik abgebildete. Alle weitere Grafiken und tabellarischen Ausführungen, sowie dessen Rohdaten befinden sich im Anhang. 
+
+\includegraphics[scale=0.9]{tabelle_zeitvergleich_punkte.JPG}
+\captionof{figure}{Zeitvergleich Asymmetrischer Verfahren}
+\hfill
+
+
+Das Ergebnis soll eine Übersicht über alle Faktoren und deren Gewichtung geben und daraus folgern welches Verfahren für die zu entwickelnde Anwendung am besten geeignet ist.  \\
+
+\includegraphics[scale=0.65]{tabelle_Cryptovergleich_einzeln.JPG}
+\captionof{figure}{Auswertung Cryptoverfahren}
+\hfill
+
 Wie aus der Tabelle zu sehen ist, ist der Counter-Modus bei allen Messungen stets führend. Aus diesem Grund wird dieser Modus mit dem AES Verfahren angewandt. Als Schlüssellänge wird die maximale Länge von 256bit verwendet, da sie sich bei der Messung nur um einigen Sekunden von den geringeren Schlüssellängen unterscheiden.
 % TODO: Grafiken einfügen! 
 % TODO: evtl. Diagramme erstellen!
@@ -522,6 +548,9 @@ Mit dieser Schnittstelle ist es möglich Kryptographische Verfahren zu verwenden
 \section{Programmablauf}
 In diesem Kapitel soll erläutert werden, welche Abläufe das Programm ausführt, wenn gewisse Interaktionen mit der Anwendung durch den Benutzer ausgeführt werden. 
 
+\includegraphics[scale=0.65]{sequenzdiag.png}
+\captionof{figure}{Sequenzdiagramm}
+\hfill
 
 \subsection{Programmstart}
 Der Programmstart ist generell zu unterscheiden in zwei Fälle. Zum einen gibt es den intialen Start, also den ersten Start der Anwendung überhaupt und  zum anderen gibt es den normalen Start, bei der dir App bereits vorher initialisiert wurde. \\
@@ -646,6 +675,7 @@ In der Anwendung werden sensible Daten im KeyStore gespeichert, welcher wiederum
 In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen Schlüssel über eine QR-Code anderen Endgeräten mitzuteilen. Wie bereits im Kapitel Problem erläutert, ist dies bei größeren Entfernungen nicht umsetzbar. Um dennoch die Schlüssel austauschen zu können, wäre ein Einsatz von Key-Servern. Auf einem solchen Server können alle Personen ihre öffentlichen Schlüssel hinterlegen und diese anhand eines eindeutigen Strings wiederfinden. Man müsste für einen Austausch der Schlüssel lediglich den eindeutigen String seinem Gegenüber mitteilen, der den öffentlichen Schlüssel dann am Key-Server abrufen kann. Durch einen Fingersprint kann dann geprüft werden, ob der erhaltene Schlüssel tatsächlich jener ist, der zu der Person gehört. Der Einsatz von Schlüsselservern erlaubt den Austausch von öffentlichen Schlüsseln über eine größere Entfernung, bietet jedoch nicht die Sicherheit die bei einer direkten Vereinbarung (wie QR-Code) gegeben ist.
 
 \chapter{Schlusswort und Dank}
+
 
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
