@@ -46,6 +46,7 @@
 %% -------------------------------------------------------%% 
 
 % neue Kopfzeilen mit fancypaket
+
 \usepackage{fancyhdr} %Paket laden
 \pagestyle{fancy} %eigener Seitenstil
 \fancyhf{} %alle Kopf- und Fußzeilenfelder bereinigen
@@ -91,18 +92,19 @@ Bruce Schneier
 \chapter{Einleitung}
 \setcounter{page}{1}
 \pagestyle{fancy}
-"Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." %[http://www.bitkom.org/files/documents/BITKOM-Presseinfo_Verschluesselung_18_12_2013_v2\%281\%29.pdf]
+"Die Computer- und Internetnutzer in Deutschland setzen seit Bekanntwerden der geheimdienstlichen Abhöraktionen häufiger Verschlüsselungsverfahren ein." \cite{website:bitkom-verschl} 
 Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index*{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index*{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\
 
 \begin{center}
 \includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
-\captionof{figure}{Smartphonenutzer in Deutschland}
+\captionof{figure}{Smartphonenutzer in Deutschland \cite{picture:smarphone-user}}
+
 \end{center}
 Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. % TODO: prüfen? kann man das so stehen lassen?!?
 
 
 \section{Motivation}
-Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine plattformunabhänginge Möglichkeit Dokumente Online abzuspeichern und von einem anderen Standort über ein internetfähiges Gerät wieder zu öffnen [https://www.dropbox.com/]. Auch wenn Dropbox nach eigenen Angaben den Advanced Encryption Standard (AES)  verwendet, bevor die Daten gespeichert werden, liegen die dafür notwendigen Schlüssel in Händen der Betreiber selbst, die somit vollen Klartextzugriff auf die Nutzerdateien haben. Dropbox begründet diesen Zugriff wie folgt:  "Wie die meisten Online-Dienste verfügt auch Dropbox über einen kleinen Mitarbeiterstamm, dem aus in unserer Datenschutzrichtlinie dargelegten Gründen Zugriffsrechte auf Nutzerdaten gewährt werden muss [...]". \\ % TODO [https://www.dropbox.com/help/27/de aufgerufen 01.07.2014]
+Am Deutschen Elektronen Synchrotron, im folgenden DESY, werden bisher wichtige und sensible Dokumente über ein Programm Namens Dropbox gesichert und verwaltet. Dropbox bietet eine plattformunabhänginge Möglichkeit Dokumente Online abzuspeichern und von einem anderen Standort über ein internetfähiges Gerät wieder zu öffnen \cite{website:dropbox-main}. Auch wenn Dropbox nach eigenen Angaben den Advanced Encryption Standard (AES)  verwendet, bevor die Daten gespeichert werden, liegen die dafür notwendigen Schlüssel in Händen der Betreiber selbst, die somit vollen Klartextzugriff auf die Nutzerdateien haben. Dropbox begründet diesen Zugriff wie folgt:  "Wie die meisten Online-Dienste verfügt auch Dropbox über einen kleinen Mitarbeiterstamm, dem aus in unserer Datenschutzrichtlinie dargelegten Gründen Zugriffsrechte auf Nutzerdaten gewährt werden muss [...]". \cite{website:dropbox-help} \\
 Da das DESY über eine eigene Cloud-Infrastruktur verfügt, sollen in Zukunft alle wichtigen Daten nicht nur in dieser Cloud gespeichert werden, sondern auch zusätzlich durch eine Verschlüsselung gesichert werden. Die Cloud am DESY stellt im Hintergrund ein Rechnernetz zum Abspeichern von Daten zur Verfügung. Durch das Programm dCache, welches das Rechnernetz im Hintergrund steuert und verwaltet, ist es dem Anwender möglich Daten in das System zu speichern, ohne dessen Struktur zu kennen. dCache sorgt dafür dass die Daten, je nach Bedarf, mehrfach abgelegt werden und bei einem Zugriff schnell zur Verfügung stehen. Die Dateien selbst werden im Hintergrund auf verschiedene Datenträger, wie z. B. SSD-Festplatten, Magnetbänder, Tapes o. ä., abgelegt. Das System sorgt dafür, dass bei reger Anfrage die Daten, sofern möglich, auf ein schnelleres Medium repliziert werden. Die genaue Struktur und Vorgehensweise des Programmes ist jedoch nicht Teil dieser Arbeit, da das hier zu entwickelnde Programm nur die Schnittstelle des dCache-Servers verwendet.
 
 
@@ -128,26 +130,26 @@ Zum Ver- und Entschüsseln der Daten sollen Verfahren verwendet werden, die in d
 
 %% ---------------------- GRUNDLAGEN ----------------- %%
 \chapter{Grundlagen Android}
-Android ist ein Betriebssystem für Smartphones und Tablets, welches von der open handset alliance entwickelt wird. Das Konsortium besteht aktuell aus 84 Unternehmen, die an der Entwicklung des Betriebssystems arbeiten. %http://www.openhandsetalliance.com/index.html]
+Android ist ein Betriebssystem für Smartphones und Tablets, welches von der open handset alliance entwickelt wird. Das Konsortium besteht aktuell aus 84 Unternehmen, die an der Entwicklung des Betriebssystems arbeiten. \cite{website:oha-main}
 In diesem Kapitel wird kurz darauf eingegangen, welche Kryptografischen Aspekte Android in den verschiedenen Versionen zur Verfügung stellt um diese im darauffolgenden Kapitel genauer zu Untersuchen. Aufgrund der Tatsache, dass die Android Version Gingerbread (2.3.3) im Juni 2014 noch einen Marktanteil von knapp 15\% hält, ist dies auch die niedrigste vom Programm unterstützte Version. \\
 
 \begin{center}
-\includegraphics[scale=0.6]{android_version_marktanteil.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
-\captionof{figure}{Anteil d. Android-Versionen}
+\includegraphics[scale=0.6]{android_version_marktanteil.JPG} 
+\captionof{figure}{Anteil d. Android-Versionen \cite{picture:android-vers}}
 \end{center}
 Bei der Analyse wird darauf geachtet, dass alle Funktionalitäten die im Programm entwickelt werden, von dieser Version unterstützt werden. Die, während des Schreibens dieser Arbeit, aktuellste Version der Android API ist KitKat (4.4), bei der darauf geachtet wird, dass die eingesetzten Funktionen auch in dieser Version noch zur Verfügung stehen und nicht mit \textit{deprecated (veraltet)} markiert sind.
 
 
 \section{Zusammenhang Kryptographie}
-Beim Thema Sicherheit im Zusammenhang mit Android ist erstmals der Begriff der Sandbox zu nennen. Eine Anwendung wird abgekapselt in einer eigenen Umgebung mit eigenem Prozess, eigenem Betriebssystem-User, eigener Dalvik-VM, eigenem Heap und eigenem Dateisystem ausgeführt. Dieses abgekapselte Konstrukt wird Sandbox bezeichnet. Dadurch ist es dem Betriebssystem möglich unerlaubten Zugriff auf Ressourcen oder andere Programme zu beschränken, hierbei wird das Berechtigung- und Prozess-Management-System von Linux verwendet. %Becker, Arno Android 4.4 - Seite 33]
+Beim Thema Sicherheit im Zusammenhang mit Android ist erstmals der Begriff der Sandbox zu nennen. Eine Anwendung wird abgekapselt in einer eigenen Umgebung mit eigenem Prozess, eigenem Betriebssystem-User, eigener Dalvik-VM, eigenem Heap und eigenem Dateisystem ausgeführt. Dieses abgekapselte Konstrukt wird Sandbox bezeichnet. Dadurch ist es dem Betriebssystem möglich unerlaubten Zugriff auf Ressourcen oder andere Programme zu beschränken, hierbei wird das Berechtigung- und Prozess-Management-System von Linux verwendet. \citep[S. 33]{book:android44} 
 Um dennoch verschiedene Zugriffe zu erlauben muss in der sogenannten Manifest-Datei der Anwendung die Berechtigung festgelegt und vom Benutzer bei der Erstinstallation bestätigt werden.
 Auch wenn dieses Konzept Daten zur Laufzeit innerhalb einer Anwendung schützt, ist es möglich Dateien auch auf einer SD-Karte zu speichern, in das Internet zu verschicken oder über andere Wege auszutauschen. Diese Daten sind dann außerhalb der Anwendung und gegen externe Zugriffe nicht mehr geschützt.
 Dennoch gibt es die Möglichkeit in Android diese Daten zusätzlich mit einer Verschlüsselung zu versehen - hierfür stellt Java, seit der Version 1.4, die \textit{Java Cryptography Extension (JCE)} innerhalb von Android zur Verfügung. Innerhalb der Erweiterung (engl. extension) sind verschiedene Provider eingebunden, die dem Programmierer die Möglichkeit geben Kryptografische Verfahren aufzurufen, ohne die genaue Implementierung kennen zu müssen. In Java-Anwendungen gibt es diverse Implementierungen von Sun, die jedoch aus Datenschutzrechtlichen Gründen nicht in der Android Java-API vorhanden sind. der Provider Bouncy-Castle stellt eine Alternative zur Implementierung von Sun darf und wird in Android zur Verfügung gestellt. Innerhalb von Android wurde das Paket so geändert, dass es den Richtlinien der JCE entspricht. 
 Bouncy-Castle ist einer der von Android zur Verfügung gestellten Provider - jedoch gibt es noch weitere Provider, die selbige oder andere Implementierungen zur Verfügung stellen. Mit folgendem Codeabschnitt ist es möglich die einzelnen Provider mit den unterstützten Verfahren auszulesen und untereinander zu vergleichen. Dieser Code wurde auf verschiedenen Versionen ausgeführt, um die Unterschiede der einzelnen Versionen hervorzuheben. \\
 
 \begin{center}
-\includegraphics[scale=0.8]{read_cryptoprovider.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
-\captionof{figure}{Code zur Anzeige von Cryptoverfahren}
+\includegraphics[scale=0.8]{read_cryptoprovider.JPG} 
+\captionof{figure}{Code zur Anzeige von Cryptoverfahren \cite{picture:cryptoprovider}}
 \end{center}
 Im Vergleich stehen folgende Android-Versionen:
 \shorthandoff{"}
@@ -168,7 +170,7 @@ Des Weiteren wird das Key-Wrap-Verfahren (AES und 3DES), der Authentifizierungsa
 
 
 \chapter{Grundlagen Kryptologie}
-Das Wort Kryptologie stammt aus dem Griechischen \textit{kryptós} für verstecken und \textit{lógos} für die Lehre.% [Duden http://www.duden.de/rechtschreibung/krypto_, http://www.duden.de/rechtschreibung/_logie] 
+Das Wort Kryptologie stammt aus dem Griechischen \textit{kryptós} für verstecken und \textit{lógos} für die Lehre. \cite{website:duden-crypto, website:duden-logie}
 Dieser Zweig umfasst die Kryptographie - die Wissenschaft die sich mit der Absicherung von Daten beschäftigt, die Kryptoanalyse - welche für das Aufbrechen von Geheimnachrichten zuständig ist sowie der Mathematik.
 Im Bereich der Kryptologie ist es das Ziel eine Nachricht, welche aus lesbaren Zeichen (Klartext) besteht unverständlich zu machen (Verschlüsseln) und daraus einen Geheimtext (Chiffretext) zu erzeugen. Dieses Verfahren wird mit mathematischen Funktionen und einem Schlüssel (Key) durchgeführt. Die Umkehrung von Chiffretext in Klartext (Entschlüsselung) wird ebenfalls durch eine mathematische Funktion und einen Schlüssel durchgeführt. Ziel dieser Ver- und Entschlüsselung ist es Nachrichten zwischen einem Sender und Empfänger so auszutauschen, dass ein Angreifer diese nicht mitlesen, oder im verschärftem Sinne nicht verändern kann. Hierbei besteht eine Nachricht in der Informatik immer aus binären Daten und kann eine Textdatei, ein Bild, ein Video oder vieles mehr darstellen. Ver- und Entschlüsselung sind mathematische Funktionen, die auf den Klartext, bzw. auf den Chiffretext angewendet werden. 
 
@@ -184,22 +186,22 @@ D$_{K}$(E$_{K}$(M)) = M\\ \\
 Um einen sicheren Kanal zwischen Sender und Empfänger zu gewährleistet, reicht es nicht allein die Nachricht zu verschlüsseln. Authentifizierung, Integrität und Verbindlichkeit müssen darüber hinaus gewährleistet sein um sicher zu Kommunizieren. \\ \\
 \textbf{Authentifizierung} beschreibt hierbei das Verfahren indem sich die Identität einer Person beweisen lässt. Im Umkehrschluss bedeutet das, dass sich ein Angreifer nicht als eine andere Person ausgeben kann. Aus der Authentifizierung folgt dann die \textbf{Autorisierung}, also das Prüfen, ob der Benutzer die Rechte hat, die er fordert.\\ \\
 \textbf{Integrität} bedeutet, dass sichergestellt werden kann, dass eine Nachricht bei der Übermittlung zwischen Sender und Empfänger nicht durch einen Angreifer verändert wurden ist. \\ \\
-\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. Dies ist eine Steigerung der Authentifizierung, denn durch Verbindlichkeit ist es außerdem gewährleistet, dass der Empfänger einer Nachricht gegenüber einer dritten Person den Absender der Nachricht glaubwürdig machen kann. \\ \\
+\textbf{Verbindlichkeit} beschreibt  dass der Sender nicht leugnen kann, dass eine Nachricht gesendet wurde. Dies ist eine Steigerung der Authentifizierung, denn durch Verbindlichkeit ist es außerdem gewährleistet, dass der Empfänger einer Nachricht gegenüber einer dritten Person den Absender der Nachricht glaubwürdig machen kann. \citep[S. 1f]{book:angewandte-krypto} \\ \\
 
 
 \subsubsection{Kerhoff's Maxime}
-Ein Aspekt in der Kryptographie sind die Kerkhoffs' Maxime, die folgendes Aussagen: "the security of the encryption scheme must depend only on the secrecy of the Key K$_{e}$, and not on the secrecy of the algorithms." [Schneier, 1997] Übersetzt bedeutet es, dass die Sicherheit eines Kryptographischen Verfahrens  auf der Geheimhaltung des Schlüssels beruhen muss und nicht auf derer des Verschlüsselungsalgorithmus.
+Ein Aspekt in der Kryptographie sind die Kerkhoffs' Maxime, die folgendes Aussagen: "the security of the encryption scheme must depend only on the secrecy of the Key K$_{e}$, and not on the secrecy of the algorithms." \citep[S. 23]{book:practical-crypto} Übersetzt bedeutet es, dass die Sicherheit eines Kryptographischen Verfahrens  auf der Geheimhaltung des Schlüssels beruhen muss und nicht auf derer des Verschlüsselungsalgorithmus.
 
 
 \subsubsection{Verfahren}
 Prinzipiell unterteilt man Kryptographie in zwei Verschiedene Verfahren. Die symmetrischen Verfahren und die asymmetrischen, auch public key infrastructure genannt. Generell lässt sich über das "bessere Verfahren" keine Aussage treffen, da es für beide Verfahren Vor- und Nachteile gibt. Bruce Schneier fasste es wie folgt zusammen: \\
-"Symmetrische Kryptographie eignet sich am besten zur Verschlüsselung von Daten. Sie ist um Größenordnungen schneller und nicht anfällig für chosen-ciphertext-Angriffe. Public-Key-Kryptographie schafft Dinge, die außerhalb des Einsatzbereichs symmetrischer Kryptographie liegen und eignen sich am besten für die Schlüsselverwaltung und eine Vielzahl der Protokolle [...]."\\ %[Schneier, 1996 übersetzt, Seite 254f]
-Der im Zitat verwendete Ausdruck, chosen-ciphertext-Angriff beschreibt einen Angriff auf ein Kryptosystem, bei dem der Kryptoanalytiker verschiedene Chiffretexte zur Entschlüsselung auswählen kann und entsprechend Zugriff auf den dazugehörigen Klartext besitzt. Die Aufgabe bei dieser Art des Angriffes besteht darin, den entsprechenden Schlüssel herauszufinden. %[Schneier 1997, Seite 7]
+"Symmetrische Kryptographie eignet sich am besten zur Verschlüsselung von Daten. Sie ist um Größenordnungen schneller und nicht anfällig für chosen-ciphertext-Angriffe. Public-Key-Kryptographie schafft Dinge, die außerhalb des Einsatzbereichs symmetrischer Kryptographie liegen und eignen sich am besten für die Schlüsselverwaltung und eine Vielzahl der Protokolle [...]." \citep[S. 254f]{book:angewandte-krypto} \\ 
+Der im Zitat verwendete Ausdruck, chosen-ciphertext-Angriff beschreibt einen Angriff auf ein Kryptosystem, bei dem der Kryptoanalytiker verschiedene Chiffretexte zur Entschlüsselung auswählen kann und entsprechend Zugriff auf den dazugehörigen Klartext besitzt. Die Aufgabe bei dieser Art des Angriffes besteht darin, den entsprechenden Schlüssel herauszufinden. \citep[S. 7]{book:angewandte-krypto}
 Neben der chosen-ciphertext-Angriffe gibt es weitere Angriffsszenarien auf Kryptosysteme, wie z. B. ciphertext-only, known-plaintext, chosen-plaintext, chosen-key und weitere. Da es sich bei dieser Arbeit nicht um eine Kryptoanalyse eines Systems handelt, werden diese Szenarien nicht näher erläutert. Es wird davon ausgegangen, dass wenn eines dieser Szenarien zum knacken des Systems führt, dieses kryptographische Verfahren bereits heute als unsicher angesehen wird.
 
 
 \section{Symmetrische Verfahren}
-Bei symmetrischen Verschlüsselungsverfahren existiert ein Schlüssel, der jeweils für Ver- und Entschlüsselung verwendet wird. Dieser Schlüssel muss bereits beiden Parteien bekannt sein, bevor ein verschlüsselter Kanal aufgebaut werden kann. Eines der Probleme bei symmetrischen Verfahren ist der Austausch des Schlüssels, den man von Sender zu Empfänger, bereits vor der sicheren Kommunikation, übertragen muss (siehe Kapitel Schlüsselvereinbarung). Symmetrische Verfahren unterteilt man in zwei Grundtypen, die Block- und Stromchiffrierung. Bei der Blockchiffrierung wird der Klartext in Blöcke, mit fester Größe, aufgeteilt und innerhalb des Blockes werden die mathematischen Funktionen angewandt. Bei der Stromchiffrierung werden die Daten nicht in Blöcken zusammengefasst, sondern jedes einzelne Klartextbit wird in ein Chiffrebit überführt. [Schneier 1996, Seite 223] 
+Bei symmetrischen Verschlüsselungsverfahren existiert ein Schlüssel, der jeweils für Ver- und Entschlüsselung verwendet wird. Dieser Schlüssel muss bereits beiden Parteien bekannt sein, bevor ein verschlüsselter Kanal aufgebaut werden kann. Eines der Probleme bei symmetrischen Verfahren ist der Austausch des Schlüssels, den man von Sender zu Empfänger, bereits vor der sicheren Kommunikation, übertragen muss (siehe Kapitel Schlüsselvereinbarung). Symmetrische Verfahren unterteilt man in zwei Grundtypen, die Block- und Stromchiffrierung. Bei der Blockchiffrierung wird der Klartext in Blöcke, mit fester Größe, aufgeteilt und innerhalb des Blockes werden die mathematischen Funktionen angewandt. Bei der Stromchiffrierung werden die Daten nicht in Blöcken zusammengefasst, sondern jedes einzelne Klartextbit wird in ein Chiffrebit überführt. \citep[S. 223]{book:angewandte-krypto}
 
 \subsection{Betriebsmodi}
 Betriebsmodi sind verfahren bei der das eigentliche Kryptografische Verfahren mit einer Rückkopplung und einigen einfachen Operationen verknüpft wird. Ist eine Nachricht länger als die für das Verfahren angegebene Blocklänge, so muss die Nachricht mit einem Betriebsmodi angepasst werden. Wichtig bei den verschiedenen Betriebsmodis ist, dass sie die Sicherheit des Cryptoverfahrens nicht beeinträchtigen.
@@ -209,17 +211,17 @@ Bei der Blockchiffrierung ist eine fest Blocklänge vorgegeben, in der die Daten
 Um z. B. den letzten Block einer Nachricht, der nicht der Blocklänge entspricht, zu vervollständigen wird er mit einem regelmäßigen Muster aufgefüllt. Das Muster und die Art dieser Auffüllen, bzw. das Kennzeichnen hängt von den Verschiedenen Padding-Verfahren ab. (z. B. PKCS5, PKCS7 o. ä.)
 
 \subsubsection{ECB}
-ECB (\textit{electronic codebook mode}) ist ein Betriebsmodi, bei der der Klartext in verschiedene Blöcke, der benötigten Länge, aufgeteilt wird und jeder dieser Blöcke einzeln verschlüsselt werden. Das Konkatinieren dieser Blöcke ergibt dann den neuen Chiffretext. Problem bei diesem Verfahren ist, dass 2 gleiche Klartextblöcke auf den identischen Chiffreblock ergeben, was wiederum für den Angreifer sichtbar und Nutzbar sein kann. Aus diesem Grund wird ECB als unsicher angesehen und sollte deshalb nicht verwendet werden ("Do not ever use ECB for anything" [Ferguson 2003, Seite 69]).
+ECB (\textit{electronic codebook mode}) ist ein Betriebsmodi, bei der der Klartext in verschiedene Blöcke, der benötigten Länge, aufgeteilt wird und jeder dieser Blöcke einzeln verschlüsselt werden. Das Konkatinieren dieser Blöcke ergibt dann den neuen Chiffretext. Problem bei diesem Verfahren ist, dass 2 gleiche Klartextblöcke auf den identischen Chiffreblock ergeben, was wiederum für den Angreifer sichtbar und Nutzbar sein kann \citep[S. 223ff]{book:angewandte-krypto}. Aus diesem Grund wird ECB als unsicher angesehen und sollte deshalb nicht verwendet werden ("Do not ever use ECB for anything" \citep[S. 69]{book:practical-crypto}).
 
 \subsubsection{CBC}
 Beim \textit{cipher block chaining mode} (CBC) wird das Problem von ECB umgangen, indem man jeden Klartextblock mit den vorherigen Chiffretextblock mit einer XOR-Verknüpfung durchführt: \\ \\
 C$_{i}$ = E(K, P$_{i}$ $\oplus$ C$_{i-1}$) \\ \\
 Dadurch werden alle Bits eines Klartextblockes mit einer bereits verschlüsselten Nachricht verknüpft. Gleiche Blöcke werden so mit unterschiedlichen Cryptotexten verknüpft und ergeben so unterschiedliche Ausgaben.
 Da die obenstehende Formel erst angewandt werden kann, wenn ein Chiffretextblock vorliegt muss die Möglichkeit geschaffen werden, den ersten Klartextblock auch zu verknüpfen (also C$_{0}$). Der Initiale Block der für diese Verknüpfung angewandt wird heißt \textit{initialization vector} (IV).
-Es gibt verschiedene Möglichkeiten diesen initialization vector zu bestimmen. Zum einen kann man einen festen IV für alle Nachrichten wählen, das hätte wiederum zur Folge, dass 2 gleiche Klartextblöcke zu einem identischen Chiffreblock verschlüsselt werden (siehe ECB). Als weitere Möglichkeit besteht den IV zu iterieren - jedoch ist auch diese Möglichkeit nicht zu nutzen, da sich der IV bei einer Iteration zu Beginn nur um 1 Bit unterscheidet und dies sich im Chiffretext dann auch lediglich auf 1 Bit auswirkt. Um alle Bits des ersten Klartextblocks zu verändert, besteht die Möglichkeit des sogenannten \textit{random IV}. Der Initialisierungsvektor wird komplett zufällig gewählt und entsprechend der Nachricht angehangen, oder vorangestellt, damit beim Entschlüsseln diese Verknüpfung wieder rückgängig gemacht werden kann.
+Es gibt verschiedene Möglichkeiten diesen initialization vector zu bestimmen. Zum einen kann man einen festen IV für alle Nachrichten wählen, das hätte wiederum zur Folge, dass 2 gleiche Klartextblöcke zu einem identischen Chiffreblock verschlüsselt werden (siehe ECB). Als weitere Möglichkeit besteht den IV zu iterieren - jedoch ist auch diese Möglichkeit nicht zu nutzen, da sich der IV bei einer Iteration zu Beginn nur um 1 Bit unterscheidet und dies sich im Chiffretext dann auch lediglich auf 1 Bit auswirkt. Um alle Bits des ersten Klartextblocks zu verändert, besteht die Möglichkeit des sogenannten \textit{random IV}. Der Initialisierungsvektor wird komplett zufällig gewählt und entsprechend der Nachricht angehangen, oder vorangestellt, damit beim Entschlüsseln diese Verknüpfung wieder rückgängig gemacht werden kann. \citep[S. 227ff]{book:angewandte-krypto}
 
 \subsubsection{OFB}
-Beim OFB (\textit{Output feedback mode}) wird nicht die Klartextnachricht zur Verschlüsselung benutzt, sondern eine Zufallsreihe von Bytes. Die daraus resultierende verschlüsselte Nachricht kann dann mit der Klartextnachricht verknüpft werden. Der Vorteil besteht darin, dass die Berechnung des Chiffretextes aus der Zufallsreihe bereits durchgeführt werden kann, bevor der eigentliche Klartext zur Verfügung steht. Dieses Verfahren ist außerdem in der Lage, Klartexte zu verschlüsseln die kleiner als die eigentliche Blocklänge sind (Wichtig für Byteweise Anwendungen, z. B. Terminalanwendungen). \\ \\
+Beim OFB (\textit{Output feedback mode}) wird nicht die Klartextnachricht zur Verschlüsselung benutzt, sondern eine Zufallsreihe von Bytes. Die daraus resultierende verschlüsselte Nachricht kann dann mit der Klartextnachricht verknüpft werden. Der Vorteil besteht darin, dass die Berechnung des Chiffretextes aus der Zufallsreihe bereits durchgeführt werden kann, bevor der eigentliche Klartext zur Verfügung steht. Dieses Verfahren ist außerdem in der Lage, Klartexte zu verschlüsseln die kleiner als die eigentliche Blocklänge sind (Wichtig für Byteweise Anwendungen, z. B. Terminalanwendungen). \citep[S. 240ff]{book:angewandte-krypto} \\ \\
 K$_{0}$ := IV \\
 K$_{i}$ := E(K, K$_{i-1}$) \\
 C$_{i}$ := P$_{i}$ $\oplus$ K$_{i}$ \\ \\
@@ -227,22 +229,22 @@ C$_{i}$ := P$_{i}$ $\oplus$ K$_{i}$ \\ \\
 
 
 \subsubsection{CFB}
-Der \textit{cipher feedback mode} ähnelt dem oben beschriebenen OFB Modus, mit dem Unterschied, dass die verschlüsselte Nachricht (nach Verknüpfung des Klartextes) als neuer Block für die nächste Verschlüsselung angesehen wird. Das bedeutet, dass eine Verschlüsselung erst stattfinden kann, sobald der erste Klartextblock vorliegt (Dieser kann, wie auch bei OFB, kleiner sein als die Blockgröße des zu Grunde liegenden Kryptoverfahrens). \\ \\
+Der \textit{cipher feedback mode} ähnelt dem oben beschriebenen OFB Modus, mit dem Unterschied, dass die verschlüsselte Nachricht (nach Verknüpfung des Klartextes) als neuer Block für die nächste Verschlüsselung angesehen wird. Das bedeutet, dass eine Verschlüsselung erst stattfinden kann, sobald der erste Klartextblock vorliegt (Dieser kann, wie auch bei OFB, kleiner sein als die Blockgröße des zu Grunde liegenden Kryptoverfahrens).  \citep[S. 235ff]{book:angewandte-krypto} \\ \\
 C$_{0}$ = P$_{0}$ $\oplus$ E$_{K}$(IV) \\
 C$_{i}$ = P$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
 P$_{i}$ = C$_{i}$ $\oplus$ E$_{K}$(C$_{i-1}$) \\
 
 \subsubsection{CTR}
-Im Counter-Modus kann die Berechnung des Schlüssels, wie auch beim OFB, vor dem ersten Klartextblock erfolgen. Innerhalb des Modi gibt es einen internen Zähler, der immer konstant erhöht wird. Aus diesem Zähler und dem Schlüssel wird dann ein neuer Schlüssel erzeugt, mit dem der Klartext verschlüsselt werden kann. Der Vorteil dieses Verfahrens besteht darin, dass man nicht die komplette Nachricht entschlüsseln muss, sondern einzelne Teile des Chiffretextes entschlüsseln kann. Hierfür setzt man den internen Zähler auf die gewünscht Stelle, erzeugt den Schlüssel und entschlüsselt den Chiffreblock. Wichtig ist, dass der selbe Zähler mit den selben Schlüssel nicht doppelt verwendet werden soll (Problem: zwei identische Klartextblöcke ergeben identischen Chiffretext).
+Im Counter-Modus kann die Berechnung des Schlüssels, wie auch beim OFB, vor dem ersten Klartextblock erfolgen. Innerhalb des Modi gibt es einen internen Zähler, der immer konstant erhöht wird. Aus diesem Zähler und dem Schlüssel wird dann ein neuer Schlüssel erzeugt, mit dem der Klartext verschlüsselt werden kann. Der Vorteil dieses Verfahrens besteht darin, dass man nicht die komplette Nachricht entschlüsseln muss, sondern einzelne Teile des Chiffretextes entschlüsseln kann. Hierfür setzt man den internen Zähler auf die gewünscht Stelle, erzeugt den Schlüssel und entschlüsselt den Chiffreblock. Wichtig ist, dass der selbe Zähler mit den selben Schlüssel nicht doppelt verwendet werden soll (Problem: zwei identische Klartextblöcke ergeben identischen Chiffretext). \citep[S. 243]{book:angewandte-krypto}
 
 \subsection{DES, 3DES}
-"Its restricted key size of 56 bits and small block size of 64 bits make it unsuitable for today`s fast computers and large amounts of data. It survives in the form of 3DES, which is a block cipher built from three DES encryptions in sequence. This solves the most immediate problem of the small key size, but there is no known fix for the small block size. [...] we do not recommend using either DES oder 3DES in new designs." [Ferguson 2003, Seite 51]
+"Its restricted key size of 56 bits and small block size of 64 bits make it unsuitable for today`s fast computers and large amounts of data. It survives in the form of 3DES, which is a block cipher built from three DES encryptions in sequence. This solves the most immediate problem of the small key size, but there is no known fix for the small block size. [...] we do not recommend using either DES oder 3DES in new designs." \citep[S. 51]{book:practical-crypto}
 Niels Ferguson weißt darauf hin, dass DES aufgrund seiner Schlüsselänge von 56 bits und der Blockgröße von 64 bits ungeeignet für heutige Systeme ist. Weiterhin beschreibt er, dass auch durch 3DES das Problem der geringen Blockgröße nicht behoben wird und er schlussfolgert dass man in heutigen neuen Systemen beide Verfahren nicht verwenden sollte. \\
 Da das System als unsicher angesehen ist, wird auf eine nähere Untersuchung und Erläuterung der mathematischen Funktionen verzichtet. DES und 3DES wird in der zu entwickelnden Anwendung nicht implementiert.
 
 \subsection{AES}
-Der Advanced Encryption Standard, im folgenden AES genannt, ist ein Verschlüsselungsverfahren welches auf Blockchiffrierung beruht und seit 2002 ein offizieller Standard ist. Entwickelt wurde der neue Standard mit dem Namen Rijndael bei einer Ausschreibung für einen neuen Sicherheitsstandard durch J. Daemen und V. Rijmen, die sich gegen 14 andere Konkurrenten durchsetzen konnten. Auch unter den besten 5 dieser Ausschreibung waren die Verfahren MARS, RC6, Serpent und Twofish, wobei keiner dieser fünf eine Sicherheitsschwäche aufwies. Rijndael konnte letztendlich durch seine einfache Struktur und gute Performance im Software-, sowie im Hardwarebereich überzeugen. %[Eckert 2012, Seite 343f]
-Darüber hinaus hat die US National Security Agency (NSA) AES für interne Dokumente bis zum Sicherheitsstatus TOP SECRET, mit einer Schlüssellänge von 192 oder 256 und für den Sicherheitsstatus SECRET mit einer Schlüsselänge von 128 Bit erlaubt, was verdeutlicht, dass selbst Kryptographen von Geheimdiensten diesen Standard als sicher ansehen. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
+Der Advanced Encryption Standard, im folgenden AES genannt, ist ein Verschlüsselungsverfahren welches auf Blockchiffrierung beruht und seit 2002 ein offizieller Standard ist. Entwickelt wurde der neue Standard mit dem Namen Rijndael bei einer Ausschreibung für einen neuen Sicherheitsstandard durch J. Daemen und V. Rijmen, die sich gegen 14 andere Konkurrenten durchsetzen konnten. Auch unter den besten 5 dieser Ausschreibung waren die Verfahren MARS, RC6, Serpent und Twofish, wobei keiner dieser fünf eine Sicherheitsschwäche aufwies. Rijndael konnte letztendlich durch seine einfache Struktur und gute Performance im Software-, sowie im Hardwarebereich überzeugen. \citep[S. 343f]{book:it-sicherheit}
+Darüber hinaus hat die US National Security Agency (NSA) AES für interne Dokumente bis zum Sicherheitsstatus TOP SECRET, mit einer Schlüssellänge von 192 oder 256 und für den Sicherheitsstatus SECRET mit einer Schlüsselänge von 128 Bit erlaubt, was verdeutlicht, dass selbst Kryptographen von Geheimdiensten diesen Standard als sicher ansehen. \citep[S. 89]{book:understanding-crypto}
 
 
 \subsubsection{Funktionsweise}
@@ -250,22 +252,21 @@ AES arbeitet mit einer Blockgröße von 128 Bit, also 16 Byte welcher intern als
 Alle Funktionen innerhalb von AES werden Byteweise ausgeführt (8 Bit-Blöcke).  Die interne Nachricht bezeichnet man als \textit{state}, also den aktuellen Status des Blockes. \\
 
 \includegraphics[scale=0.5]{aes_state.JPG} 
-\captionof{figure}{AES State-Block}
+\captionof{figure}{AES State-Block \citep[S. 100]{book:understanding-crypto}}
 \hfill
 
 Die Schlüssellänge des Verfahren ist entweder 128, 192 oder 256 Bit, wovon auch die auszuführende Rundenzahl abhängt (10 Runden bei 128 Bit, 12 bei 192 und 14 bei 256 Bit Schlüssellänge). In jeder dieser Runden werden Verfahren angewandt um den Klartext weiter zu verschlüsseln. Bei AES sind das \textit{ByteSubstitution, ShiftRow, MixColumns} und \textit{KeyAddition}. \\ \\
 Ausgenommen von dieser Regel ist die letzte Runde, in der MixColumns ausgelassen wird. %[Eckert, Seite 345] 
-Zusätzlich wird vor der ersten Runde die Funktion KeyAddition angewendet. %[http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
-
+Zusätzlich wird vor der ersten Runde die Funktion KeyAddition angewendet. \citep[S. 89ff]{book:understanding-crypto}
 
 \subsubsection{ByteSubstitution}
 In der Funktion ByteSubstitution wird eines der beiden Verfahren zum Verbergen von Redundanz angewendet - die Konfusion. Die Konfusion sorgt dafür, dass der Zusammenhang zwischen Klartext und Chiffrat verschleiert wird und möglichst aus einer kleiner Änderung im Klartext eine große Änderung im Chiffrat erzeugt wird. Hierzu wird jedes Byte in eine sogenannte S-Box eingegeben, wobei diese  wiederum ein Byte aus Ausgabewert hat (Dieses Verfahren wird für alle 16 Byte eines Blockes angewandt). Die S-Box selbst ist eine 16x16 Matrix, mit der zu jeder eingegebenen Bit-Reihenfolge eine neue Ausgabe-Reihenfolge erzeugt wird. Ziel ist es, durch minimale Veränderung des Eingabewertes eine maximale Veränderung des Ausgabewertes zu erzeugen. Darüber hinaus ist die in AES verwendete S-Box nicht linear - das bedeutet, dass die Addition zweier einzelner Ausgabewerte nicht das selbe Ergebnis liefert wie die Addition zweier Eingabewerte:\\ \\
 \(S(A) + S(B) \neq S(A+B)\) \\ \\
-Zusätzlich ist die S-Box bijektiv, es existiert also zu jeder Bitreihenfolge genaue eine eindeutige Zuweisung - Bitreihenfolgen die zwei Ausgabewerte erzeugen können existieren nicht. Im Umkehrschluss bedeutet das, dass jedes Ausgabebyte der S-Box wieder durch eine inverse S-Box zurück transformiert werden kann (Wird bei der Entschlüsselung verwendet). Die S-Boxen innerhalb von AES sind alle identische, sodass 16x pro Runde immer die selbe Matrix verwendet wird. Das hat zur Folge, dass sie in den den meisten Softwareimplementierungen durch fixe Tabellen realisiert werden, anstatt sie jedes mal neu zu Berechnen. Die Berechnung einer S-Box erfolgt durch Endliche Körper und eine fixe Multiplikation und Addition um die Logik der endlichen Körper zu verwischen. [c. Paar, Seite 102 %http://wiki.crypto.rub.de/Buch/download/Understanding-Cryptography-Chapter4.pdf]
+Zusätzlich ist die S-Box bijektiv, es existiert also zu jeder Bitreihenfolge genaue eine eindeutige Zuweisung - Bitreihenfolgen die zwei Ausgabewerte erzeugen können existieren nicht. Im Umkehrschluss bedeutet das, dass jedes Ausgabebyte der S-Box wieder durch eine inverse S-Box zurück transformiert werden kann (Wird bei der Entschlüsselung verwendet). Die S-Boxen innerhalb von AES sind alle identische, sodass 16x pro Runde immer die selbe Matrix verwendet wird. Das hat zur Folge, dass sie in den den meisten Softwareimplementierungen durch fixe Tabellen realisiert werden, anstatt sie jedes mal neu zu Berechnen. Die Berechnung einer S-Box erfolgt durch Endliche Körper und eine fixe Multiplikation und Addition um die Logik der endlichen Körper zu verwischen \citep[S. 101ff]{book:understanding-crypto}.
 
 
 \subsubsection{ShiftRow}
-Das zweite Verfahren zum Vergeben von Redundanz ist die Diffusion, bei der die Redundanz verteilt wird (Einfachster Anwendungsfall ist das Vertauschen der Klartextbuchstaben in eine neue Reihenfolge). Eine Funktion die innerhalb von AES die für Diffusion sorgt, ist das ShiftRow-Verfahren. Hierbei werden die Bytes innerhalb einer Spalte des state-Blockes auf alle anderen Spalten aufgeteilt. Eine Änderung innerhalb einer Spalte (A$_{0}$ bis A$_{3}$ der state-Matrix) hat somit Auswirkung auf alle anderen Spalten (Auswirkung auf komplette State-Matrix). Folgende Grafik soll das verdeutlichen, wobei B$_{0}$, B$_{1}$, ..., B$_{15}$ jeweils die Bytes A$_{0}$, A$_{1}$, ..., A$_{15}$ nach der Transformation durch die S-Box sind. In der Grafik ist die interne 4x4 Matrix (state) hier Spaltenweise nebeneinander abgebildet. (Vergleiche state-Matrix)  \\ \\%TODO: Grafik-Nummer
+Das zweite Verfahren zum Vergeben von Redundanz ist die Diffusion, bei der die Redundanz verteilt wird (Einfachster Anwendungsfall ist das Vertauschen der Klartextbuchstaben in eine neue Reihenfolge). Eine Funktion die innerhalb von AES die für Diffusion sorgt, ist das ShiftRow-Verfahren. Hierbei werden die Bytes innerhalb einer Spalte des state-Blockes auf alle anderen Spalten aufgeteilt. Eine Änderung innerhalb einer Spalte (A$_{0}$ bis A$_{3}$ der state-Matrix) hat somit Auswirkung auf alle anderen Spalten (Auswirkung auf komplette State-Matrix). Folgende Grafik soll das verdeutlichen, wobei B$_{0}$, B$_{1}$, ..., B$_{15}$ jeweils die Bytes A$_{0}$, A$_{1}$, ..., A$_{15}$ nach der Transformation durch die S-Box sind. In der Grafik ist die interne 4x4 Matrix (state) hier Spaltenweise nebeneinander abgebildet. (Vergleiche state-Matrix)  \\ \\
 
 \includegraphics[scale=0.5]{aes_Shift_Row.JPG} 
 \captionof{figure}{AES ShiftRow Verfahren}
@@ -275,7 +276,7 @@ Die in der Grafik gezeigten Linien, die die Verschiebung darstellen sollen, ist 
 
 \includegraphics[scale=0.5]{shift_row_before.JPG}
 \includegraphics[scale=0.5]{shift_row_after.JPG} 
-\captionof{figure}{AES ShiftRow StateMatrix}
+\captionof{figure}{AES ShiftRow StateMatrix \citep[S. 104]{book:understanding-crypto}}
 \hfill
 
 
@@ -283,7 +284,7 @@ Die in der Grafik gezeigten Linien, die die Verschiebung darstellen sollen, ist 
 Die MixColumns-Funktion ist die zweite Funktion in AES die für die Diffusion sorgt - sie bewirkt, dass die Änderung eines einzigen Eingabebytes in die Funktion alle Ausgabebytes verändert. Hierbei wird jede Spalte (als Vector dargestellt) mit einer festen 4x4 Matrix multipliziert. 
 
 \includegraphics[scale=0.5]{aes_mixcol.JPG}
-\captionof{figure}{AES MixColumns}
+\captionof{figure}{AES MixColumns \citep[S. 105]{book:understanding-crypto}}
 \hfill
 
 In der Grafik beschreibt der Vector B$_{0}$, B$_{5}$, B$_{10}$, B$_{15}$ genau die erste Spalte nach der Verschiebung durch ShiftRow. 
@@ -298,27 +299,27 @@ AES erzeugt für die verschiedenen Runden, die bei der Ver- und Entschlüsselung
 
 \includegraphics[scale=0.4]{key_sched_1_round.JPG} 
 \includegraphics[scale=0.55]{aes_key_sched_function_g.JPG}
-\captionof{figure}{AES Rundenschlüssel}
+\captionof{figure}{AES Rundenschlüssel \citep[S. 107]{book:understanding-crypto}}
 \hfill
 
 Die Funktion \textit{g} rotiert hierbei jeweils die Eingabebytes und führt sie durch eine nichtlineare S-Box. Am Ende dieses Verfahrens wird noch die Rundennummer mittels XOR dem linken Teilblock zugefügt. Das Ergebnis dieser Durchführung (W[4] bis W[7]) ist dann der Rundenschlüssel für die erste Runde. Dieses Verfahren wird wiederholt bis alle Rundenschlüssel entsprechend berechnet wurden. Die Anzahl der benötigten Rundenschlüssel und damit verbunden mit den benötigten Word-Blöcke erhöht sich mit der Erhöhung der Schlüssellänge von AES.
 
 \subsubsection{Entschlüsselung}
-Für die Entschlüsselung eines AES-Chiffretextes müssen alle Funktionen in umgekehrter Reihenfolge und umgekehrter Logik (Inverse Funktionen) ausgeführt werden. So hat man z. B. in der letzten Runde der Verschlüsselung die Funktion MixColumns nicht ausgeführt - so wird man in der ersten Runde der Entschlüsselung diese Funktion ebenfalls nicht ausführen. Darüber hinaus muss man für alle fixen Matrizen, die verwendet wurden eine inverse Matrix erstellen (S-Boxen, MixColumns-Matrix). Das Shifting in der Funktion ShiftRow erfolgt bei der Entschlüsselung dann entsprechend nach Rechts, anstatt nach Links wie bei der Entschlüsselung. Ausgenommen von der Umgekehrten Logik ist die Berechnung der Rundenschlüssel - da man in der ersten Runde der Entschlüsselung den letzten Rundenschlüssel benötigt, der bei der Verschlüsselung eingesetzt wurde, müssen zu Beginn der Entschlüsselung erstmals alle Rundenschlüssel berechnet werden um diese dann zu verwenden. Die Berechnung der Rundenschlüssel selbst ist identisch.
+Für die Entschlüsselung eines AES-Chiffretextes müssen alle Funktionen in umgekehrter Reihenfolge und umgekehrter Logik (Inverse Funktionen) ausgeführt werden. So hat man z. B. in der letzten Runde der Verschlüsselung die Funktion MixColumns nicht ausgeführt - so wird man in der ersten Runde der Entschlüsselung diese Funktion ebenfalls nicht ausführen. Darüber hinaus muss man für alle fixen Matrizen, die verwendet wurden eine inverse Matrix erstellen (S-Boxen, MixColumns-Matrix). Das Shifting in der Funktion ShiftRow erfolgt bei der Entschlüsselung dann entsprechend nach Rechts, anstatt nach Links wie bei der Entschlüsselung. Ausgenommen von der Umgekehrten Logik ist die Berechnung der Rundenschlüssel - da man in der ersten Runde der Entschlüsselung den letzten Rundenschlüssel benötigt, der bei der Verschlüsselung eingesetzt wurde, müssen zu Beginn der Entschlüsselung erstmals alle Rundenschlüssel berechnet werden um diese dann zu verwenden. Die Berechnung der Rundenschlüssel selbst ist identisch \citep[S. 110ff]{book:understanding-crypto}.
 
 
 
 \subsection{ARC4}
-RC4, oder auch ARC4 (Arcfour) genannt ist eine Stromverschlüsselung, wird also Bitweise ent- und verschlüsselt. %[Schneier, Seite 455]
-Nach dem Aufdecken geheimer Informationen der NSA durch den Whistleblower Edward Snowden, hat der Kryptograph Jacob Appelbaum (Mitentwickler des Sicherheitsnetzwerkes Tor und Unterstützer von WikiLeaks) auf Twitter einen Post geteilt in dem er sagt, dass mit RC4 verschlüsselte Daten von der NSA in Echtzeit entschlüsselt werden können: "RC4 is broken in real time by the \#NSA - stop using it." %[https://twitter.com/ioerror/status/398059565947699200]
-Diese Behauptung wird auch von Bruce Schneier (Experte für Kryptographie, Entwickler der Verfahren Blowfish und Twofish, Mitglied in mehreren Verbänden) in seinem offiziellen Blog als plausibel bestätigt: "Someone somewhere commented that the NSA's groundbreaking cryptanalytic capabilities could include a practical attack on RC4. I don't know one way or the other, but that's a good speculation." %[https://www.schneier.com/blog/archives/2013/09/the_nsa_is_brea.html] 
-Darüber hinaus warnen verschiedene Seiten, wie Golem und Heise, die sich mit Informatik beschäftigen vor der Verwendung von RC4. %[ http://www.heise.de/newsticker/meldung/NSA-entschluesselt-Webserver-Daten-angeblich-in-Echtzeit-2041383.html, % http://www.golem.de/news/verschluesselung-was-noch-sicher-ist-1309-101457-2.html, http://www.theregister.co.uk/2013/09/06/nsa_cryptobreaking_bullrun_analysis/]
-Selbst das Bundesamt für Sicherheit in der Informationstechnik (BSI) schreibt in einer technischen Richtlinie für Kryptographische Verfahren Anfang 2014: "Der Verschlüsselungsalgorithmus RC4 in TLS weist erhebliche Sicherheitsschwächen auf und darf nicht mehr eingesetzt werden." Das BSI gibt zusätzlich an, dass das Verschlüsselungsverfahren AES verwendet werden soll. %[https://www.bsi.bund.de/SharedDocs/Downloads/DE/BSI/Publikationen/TechnischeRichtlinien/TR02102/BSI-TR-02102-2_pdf.pdf?__blob=publicationFile]
+RC4, oder auch ARC4 (Arcfour) genannt ist eine Stromverschlüsselung, wird also Bitweise ent- und verschlüsselt \citep[S. 455]{book:angewandte-krypto}.
+Nach dem Aufdecken geheimer Informationen der NSA durch den Whistleblower Edward Snowden, hat der Kryptograph Jacob Appelbaum (Mitentwickler des Sicherheitsnetzwerkes Tor und Unterstützer von WikiLeaks) auf Twitter einen Post geteilt in dem er sagt, dass mit RC4 verschlüsselte Daten von der NSA in Echtzeit entschlüsselt werden können: "RC4 is broken in real time by the \#NSA - stop using it." \cite{website:twitter-appelbaum}
+Diese Behauptung wird auch von Bruce Schneier (Experte für Kryptographie, Entwickler der Verfahren Blowfish und Twofish, Mitglied in mehreren Verbänden) in seinem offiziellen Blog als plausibel bestätigt: "Someone somewhere commented that the NSA's groundbreaking cryptanalytic capabilities could include a practical attack on RC4. I don't know one way or the other, but that's a good speculation." \cite{website:schneier-breaking-most-enc}
+Darüber hinaus warnen verschiedene Seiten, wie Golem und Heise, die sich mit Informatik beschäftigen vor der Verwendung von RC4 \cite{website:heise-nsa, website:golem-rc4, website:theregister-rc4}.
+Selbst das Bundesamt für Sicherheit in der Informationstechnik (BSI) schreibt in einer technischen Richtlinie für Kryptographische Verfahren Anfang 2014: "Der Verschlüsselungsalgorithmus RC4 in TLS weist erhebliche Sicherheitsschwächen auf und darf nicht mehr eingesetzt werden." Das BSI gibt zusätzlich an, dass das Verschlüsselungsverfahren AES verwendet werden soll \cite{website:bsi-rc4}.
 Durch diese gezeigten Publikationen wird das Verfahren RC4 als unsicher angesehen und in dieser Arbeit nicht verwendet.
 
 
 \subsection{Blowfish}
-Blowfish ist eine Blockchiffrierung mit einer Blockgröße von 64 Bit. Wie auch bei DES und Triple-DES beschrieben ist diese Blockgröße für die heutigen Computer ungeeignet. Um diese Problem zu beheben hat der Erfinder des Verfahrens Bruce Schneier das Verfahren Twofish entwickelt, welches bei der Ausschreibung von AES auch unter den 5 Finalisten nominiert war. Es arbeitet auf einer Blockgröße von 128 Bit. Auch wenn es keine Beweisbaren belege für die Unsicherheit von Blowfish gibt, merkt Bruce Schneier in einem Interview an, dass man Twofish verwenden solle: "If people ask, I recommend Twofish instead." %http://www.computerworld.com.au/article/46254/bruce_almighty_schneier_preaches_security_linux_faithful/?pp=3
+Blowfish ist eine Blockchiffrierung mit einer Blockgröße von 64 Bit. Wie auch bei DES und Triple-DES beschrieben ist diese Blockgröße für die heutigen Computer ungeeignet. Um diese Problem zu beheben hat der Erfinder des Verfahrens Bruce Schneier das Verfahren Twofish entwickelt, welches bei der Ausschreibung von AES auch unter den 5 Finalisten nominiert war. Es arbeitet auf einer Blockgröße von 128 Bit. Auch wenn es keine Beweisbaren belege für die Unsicherheit von Blowfish gibt, merkt Bruce Schneier in einem Interview an, dass man Twofish verwenden solle: "If people ask, I recommend Twofish instead." \cite{website:compworld-schneier}
 Aus der Analyse der Verfügbaren Kryptoverfahren, die in den verwendeten Android-Versionen angeboten werden ist Twofish noch nicht standardisiert enthalten. Durch die Validierung im späteren Kapitel bleibt offen, ob das Verfahren Blowfish in der Implementierung Einzug finden wird.
 
 \subsubsection{Funktionsweise}
@@ -326,14 +327,13 @@ Die Vorgehensweise der Datenverschlüsselung von Blowfish beruht auf dem Feistel
 L$_{i}$ = R$_{i-1}$ \\
 R$_{i}$ = L$_{i-1}$ $\oplus$ f(R$_{i-1}$, PK$_{i}$) \\ \\
 In folgender Grafik wird das Verfahren von Blowfish und der Feistel-Struktur verdeutlicht dargestellt: \\ \\
-%\includegraphics[scale=0.3]{blowfish_1.JPG} 
 
 
 \begin{minipage}[t]{4cm}
 \vspace{0pt}
 \centering
 \includegraphics[scale=0.3]{blowfish_1.JPG}
-\captionof{figure}{Aufbau Blowfish}
+\captionof{figure}{Aufbau Blowfish \cite[S. 389]{book:angewandte-krypto}}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{1cm}
@@ -342,8 +342,8 @@ In folgender Grafik wird das Verfahren von Blowfish und der Feistel-Struktur ver
 \begin{minipage}[t]{10cm}
 
 Hierbei beschreibt PK$_{i}$ den Teilschlüssel der aktuellen Runde. Innerhalb der Funkion von Blowfish wird die 32 Bit große Teilhälfte in 4x8 Bit unterteile gesplittet und jeweils einer Substitution durch S-Boxen unterzogen. Im Gegensatz zu AES sind alle 4 S-Boxen in Blowfish verschieden. (Berechnung: siehe Teilschlüssel) Folgende Vorgehensweise wird innerhalb der Funktion durchgeführt: \\ 
-\includegraphics[scale=0.25]{blowfish_2.JPG}  % Schneier 1996, Seite 389f]
-\captionof{figure}{Funktion Blowfish} 
+\includegraphics[scale=0.25]{blowfish_2.JPG} 
+\captionof{figure}{Funktion Blowfish \cite[S. 390]{book:angewandte-krypto}} 
 \label{fig:Funktion Blowfish} 
 \hfill
 
@@ -363,10 +363,10 @@ Für die Generierung der Teilschlüsse, sowie der Erzeugung der S-Boxen existier
 \item Dieses Verfahren wird solange fortgesetzt, bis alle Elemente des P-Array, sowie der Reihe nach alle vier S-Boxen mit der Ausgabe des wechselnden Blowfish-Algorithmus ersetzt wurden.
 \end{enumerate}
 Bleibt der Schlüssel identisch, so kann die Anwendung die in 521 Iterationen errechneten Teilschlüssel speichern und muss diese nicht bei jeder Verschlüsselung neu errechnen.
-Das hier gezeigte Verfahren zum Erstellen der Teilschlüssel wird auch Schlüsselexpansion genannt, da der Algorithmus nun auf insgesamt 4168 Bit Teilschlüsseln besteht. 
+Das hier gezeigte Verfahren zum Erstellen der Teilschlüssel wird auch Schlüsselexpansion genannt, da der Algorithmus nun auf insgesamt 4168 Bit Teilschlüsseln besteht. \citep[S. 390f]{book:angewandte-krypto}
  
 \section{Asymetrische Verfahren}
-Im Gegensatz zu den bisher gezeigten Verschlüsselungsverfahren, ist der Ansatz bei Asymmetrischen Verfahren ein anderer. Bisher gab es einen geheimen Schlüssel, den man sowohl für die Verschlüsselung, als auch für die Entschlüsselung verwendete. Die Hauptaufgabe bei diesen Verfahren lag darin, den geheimen Schlüssel sicher von A nach B zur transportieren, ohne das ein eventueller Angreifer diesen mitlesen kann. Bei Asymmetrischen Verfahren ist der Grundgedanke derer, dass man jeweils zum Verschlüsseln einen Schlüssel besitzt als auch zum Entschlüsseln einen separaten Schlüssel. Der Schlüssel, welcher für die Verschlüsselung zuständig ist, wird Public Key genannt, da man ihn den Partnern öffentlich zuteilen kann. Das Pardon dazu ist der Private Schlüssel, der im eigenen Besitzt bleibt und nur dafür ist, die Verschlüsselte Nachricht wieder zu Dechiffrieren. Einer der Hauptaufgaben von Asymmetrischen Verfahren, oder auch Public-Key Verfahren genannnt, besteht darin 2 Schlüssel zu finden, zwar jeweils für die Verschlüsselung und Entschlüsselung zu gebrauchtn sind, aus denen man aber den jeweils anderen Schlüsselteil nicht errechnen kann. Der Grundgedanke dieses Verfahrens stammt von Whitfield Diffie und Martin Hellman, die hierzu 1976 ein Konzept auf der \textit{National Computer Conference} vorstellen. 
+Im Gegensatz zu den bisher gezeigten Verschlüsselungsverfahren, ist der Ansatz bei Asymmetrischen Verfahren ein anderer. Bisher gab es einen geheimen Schlüssel, den man sowohl für die Verschlüsselung, als auch für die Entschlüsselung verwendete. Die Hauptaufgabe bei diesen Verfahren lag darin, den geheimen Schlüssel sicher von A nach B zur transportieren, ohne das ein eventueller Angreifer diesen mitlesen kann. Bei Asymmetrischen Verfahren ist der Grundgedanke derer, dass man jeweils zum Verschlüsseln einen Schlüssel besitzt als auch zum Entschlüsseln einen separaten Schlüssel. Der Schlüssel, welcher für die Verschlüsselung zuständig ist, wird Public Key genannt, da man ihn den Partnern öffentlich zuteilen kann. Das Pardon dazu ist der Private Schlüssel, der im eigenen Besitzt bleibt und nur dafür ist, die Verschlüsselte Nachricht wieder zu Dechiffrieren. Einer der Hauptaufgaben von Asymmetrischen Verfahren, oder auch Public-Key Verfahren genannnt, besteht darin 2 Schlüssel zu finden, zwar jeweils für die Verschlüsselung und Entschlüsselung zu gebrauchen sind, aus denen man aber den jeweils anderen Schlüsselteil nicht errechnen kann. Der Grundgedanke dieses Verfahrens stammt von Whitfield Diffie und Martin Hellman, die hierzu 1976 ein Konzept auf der \textit{National Computer Conference} vorstellten \citep[S. 525]{book:angewandte-krypto}
 
 \subsection{RSA}
 RSA, nach den Erfindern Rivest, Shamir und Adleman benannt ist, ist eines der oben beschriebenen Asymmetrischen Kryptoverfahren. Die Sicherheit von RSA beruht auf dem Problem der Primfaktorzerlegung - d. h. es ist schwierig, aus einem gegebenem Faktor 2er Primzahlen, diese zurück zu rechnen. \\
@@ -385,11 +385,10 @@ Nach der Berechnung kann der öffentliche Schlüssel (n,e) frei zugänglich gema
 \item M = C$^{d}$ mod n \\
 \end{itemize}
 Die Schlüssellänge des Verfahrens RSA ist variabel zwischen 512 und 2048 zu wählen, wobei sie die Bitlänge der berechneten Zahl n beschreibt. Zu beachten ist außerdem, dass es lediglich möglich ist Werte zu Verschlüsseln die im Bereich M $\in$ \{0, ... , n-1\} liegen. Um dennoch größere Nachrichten zu verschlüsseln, teilt man den Klartext in Blöcke auf und verschlüsselt diese einzeln mit dem Verfahren. Zur Entschlüsselung werden nach der Dechiffrierung die entsprechenden Blöcke wieder aneinandergehängt. \\
-Die Geschwindigkeit des Verfahrens hängt stark von der Wahl der Exponenten ab. Wählt man den öffentlichen Exponent e relativ klein, so wird die Verschlüsselung entsprechend schneller, hingegen ein großer privater Schlüssel d die Entschlüsselung entsprechend längere Zeit in Anspruch nimmt. Darüber hinaus ist es wichtig um die Performance von RSA zu steigern eine Möglichkeit zu finden, große Exponenten schnell zu errechnen. Hierbei kommt das Square- and Multiply Verfahren zum Einsatz.
- %https://www.youtube.com/watch?v=QSlWzKNbKrU
+Die Geschwindigkeit des Verfahrens hängt stark von der Wahl der Exponenten ab. Wählt man den öffentlichen Exponent e relativ klein, so wird die Verschlüsselung entsprechend schneller, hingegen ein großer privater Schlüssel d die Entschlüsselung entsprechend längere Zeit in Anspruch nimmt. Darüber hinaus ist es wichtig um die Performance von RSA zu steigern eine Möglichkeit zu finden, große Exponenten schnell zu errechnen. Hierbei kommt das Square- and Multiply Verfahren zum Einsatz \citep[S. 173ff]{book:understanding-crypto}.
 
 \subsection{ElGamal}
-ElGamal ist, wie auch RSA, ein Asymmetrisches Verfahren - d. h. es gibt einen öffentlichen- und einen privaten Schlüssel. Die Sicherheit des Verfahrens besteht in der Schwierigkeit diskrete Logarithmen über einen endlichen Körper zu berechnen. \\
+ElGamal ist, wie auch RSA, ein Asymmetrisches Verfahren - d. h. es gibt einen öffentlichen- und einen privaten Schlüssel. Die Sicherheit des Verfahrens besteht in der Schwierigkeit diskrete Logarithmen über einen endlichen Körper zu berechnen \citep[S. 543ff]{book:angewandte-krypto}. \\
 Um ein Schlüsselpaar zu erzeugen wählt man eine Primzahl p und zwei Zufallszahlen g und x, welche kleiner als p sind und berechnet: \\ \\
 y = g$^{x}$ mod p \\ \\
 Der öffentliche Schlüssel ist y, g und p - der private Schlüssel ist x. Um eine Nachricht zu verschlüsseln wählt man ein zufälliges k, welches relativ prim zu p-1 ist ( 1 = ggT(k,p-1) ) und berechnet die Verschlüsselung wie folgt: \\ \\
@@ -408,7 +407,7 @@ Der Chiffretext C wird dann zu Bob übertragen, der im ersten Schritt die Nachri
 M, sig = D(K$_{PrivB}$, C) \\
 AliceHash(M) = D(K$_{PubA}$, sig) \\
 AliceHash(M) ?= Hash(M) \\ \\
-Unter der Voraussetzung, dass beide Parteien sicher sind den öffentlichen Schlüssel des gewünschten Partners zu besitzen sorgt dieses Verfahren dafür, dass Bob nach dem Verifizieren der Nachricht zum einen sicher sein kann, dass nur Alice (als alleinige Besitzerin des privaten Schlüssels) die Nachricht unterschrieben hat (Authentifizierung und Verbindlichkeit), zum anderen kann er aufgrund des Hash-Wertes der Nachricht sicher sein, dass die Nachricht bei der Übertragung nicht verfälscht wurde (Integrität).
+Unter der Voraussetzung, dass beide Parteien sicher sind den öffentlichen Schlüssel des gewünschten Partners zu besitzen sorgt dieses Verfahren dafür, dass Bob nach dem Verifizieren der Nachricht zum einen sicher sein kann, dass nur Alice (als alleinige Besitzerin des privaten Schlüssels) die Nachricht unterschrieben hat (Authentifizierung und Verbindlichkeit), zum anderen kann er aufgrund des Hash-Wertes der Nachricht sicher sein, dass die Nachricht bei der Übertragung nicht verfälscht wurde (Integrität) \citep[S. 391ff]{book:it-sicherheit}.
 
 
 
@@ -444,9 +443,7 @@ Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rec
 \subsection{Direkte Vereinbarung}
 \subsubsection{QR-Code}
 \subsubsection{PGP-Server}
-%\section{Authentifizierung}
-%\subsection{Zwei-Faktor-Authentifizierung}
-	% TODO: Erklärung: http://de.wikipedia.org/wiki/Zwei-Faktor-Authentifizierung (need Quelle)
+
 
 \section {Zusammenfassung}
 % TODO: nochmal kurz erläutern, welche Verfahren unsicher und welche Sicher sind - welche verwendet werden und welche nicht .
@@ -676,7 +673,6 @@ In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen 
 
 \chapter{Schlusswort und Dank}
 
-
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
 %------------------------------------------------------------------
@@ -684,14 +680,9 @@ In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen 
 
 
 %% --------------------------- BIBLIO --------------------------------%%
-% \label{Bibliography}
-
 % \lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
-
-% \bibliographystyle{unsrtnat} % Use the "unsrtnat" BibTeX style for formatting the Bibliography
-
-% \bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
-
+\bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
+\bibliographystyle{alpha}
 \printindex
 
 %Glossar
