@@ -20,6 +20,7 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{makeidx}
+\usepackage{pdfpages}
 \usepackage[justification=RaggedRight, singlelinecheck=false]{caption} 
 
 \input{_Meta}
@@ -96,11 +97,11 @@ Bruce Schneier
 Aus der Pressemitteilung der BITKOM geht weiterhin hervor, dass von Juli 2013 auf November 2013 insgesamt 1,1 Millionen mehr Bundesbürger ihre persönlichen Dateien verschlüsseln. Besonders wichtig ist der Aspekt der Sicherheit, wenn es sich bei den Daten um relevante oder firmeninterne Informationen handelt, wie es z. B. am \index*{Deutschen Elektronen Synchrotron (DESY)} in Hamburg der Fall ist. Auch der Austausch von Daten von mobilen Endgeräten wie \index*{Smartphones} oder Tables spielen eine immer größere Rolle wie die Entwicklung der letzten Jahre zeigt (siehe Grafik). \\
 
 \begin{center}
-\includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} %\includegraphics[scale=0.40]{datatraffic_germany.JPG} % zweite Grafik evtl. an anderer Stelle passender?
+\includegraphics[scale=0.6]{smartphoneUser_Germany.JPG} 
 \captionof{figure}{Smartphonenutzer in Deutschland \cite{picture:smarphone-user}}
 
 \end{center}
-Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. % TODO: prüfen? kann man das so stehen lassen?!?
+Herkömmliche Verfahren zum Austausch von Daten reichen oftmals nicht mehr aus, wenn man den Aspekt der Sicherheit näher beleuchtet. 
 
 
 \section{Motivation}
@@ -412,10 +413,10 @@ Unter der Voraussetzung, dass beide Parteien sicher sind den öffentlichen Schl�
 
 
 \section{Hash-Funktionen}
-Hash-Funktionen sind mathematische Einweg-Funktionen - das bedeutet, dass ein Wert h = H(M) leicht erzeugt werden kann, jedoch nicht aus h wieder M - es existiert keine Umkehrfunktion. Darüber hinaus ist es praktisch nicht möglich verschiedene Eingabewerte M1, M2, ... zu finden, die den selben Ausgabewert erzeugen H(M) = H(M1). Da Hash-Funktionen eine Nachricht beliebiger Länge auf einer Nachricht fester Länge abbilden ist eine Abbildung auf einen identischen Hash-Wert nicht auszuschließen. Es muss also eine Hash-Größe gewählt werden, sodass es praktisch unmöglich ist alle möglichen Hash-Werte zu berechnen und zu speichern. Ist die Hash-Größe lediglich 64 Bit lang, so gibt es 2$^{64}$ Möglichkeiten einen Hash-Wert. Dem Angreifer reichen jedoch 2$^{32}$ Nachrichten M und den dazugehörigen Hash-Wert h = H(M), sodass die Wahrscheinlichkeit für eine Kollision größer als 0,5 ist. Diese Erkenntnis beruht auf dem Geburtstags-Paradoxon, welches besagt, dass lediglich 23 Personen in einem Raum genügen, um mit einer Wahrscheinlichkeit größer als 0,5, 2 davon zu finden, die am selben Tag Geburtstag haben. Diese Logik lässt sich auch auf Hash-Funktionen abbilden und kann somit die Komplexität, eine Kollision mit über 50\% Wahrscheinlichkeit zu finden, von 2$^{k}$ auf k * 2$^{k/2}$ reduzieren.
+Hash-Funktionen sind mathematische Einweg-Funktionen - das bedeutet, dass ein Wert h = H(M) leicht erzeugt werden kann, jedoch nicht aus h wieder M - es existiert keine Umkehrfunktion. Darüber hinaus ist es praktisch nicht möglich verschiedene Eingabewerte M1, M2, ... zu finden, die den selben Ausgabewert erzeugen H(M) = H(M1). Da Hash-Funktionen eine Nachricht beliebiger Länge auf einer Nachricht fester Länge abbilden ist eine Abbildung auf einen identischen Hash-Wert nicht auszuschließen. Es muss also eine Hash-Größe gewählt werden, sodass es praktisch unmöglich ist alle möglichen Hash-Werte zu berechnen und zu speichern. Ist die Hash-Größe lediglich 64 Bit lang, so gibt es 2$^{64}$ Möglichkeiten einen Hash-Wert. Dem Angreifer reichen jedoch 2$^{32}$ Nachrichten M und den dazugehörigen Hash-Wert h = H(M), sodass die Wahrscheinlichkeit für eine Kollision größer als 0,5 ist. Diese Erkenntnis beruht auf dem Geburtstags-Paradoxon, welches besagt, dass lediglich 23 Personen in einem Raum genügen, um mit einer Wahrscheinlichkeit größer als 0,5, 2 davon zu finden, die am selben Tag Geburtstag haben. Diese Logik lässt sich auch auf Hash-Funktionen abbilden und kann somit die Komplexität, eine Kollision mit über 50\% Wahrscheinlichkeit zu finden, von 2$^{k}$ auf k * 2$^{k/2}$ reduzieren \cite[S. 375ff]{book:it-sicherheit}.
 
 \subsection{MD5 \& SHA1}
-Wie beschrieben sollen Hash-Funktionen eine Größenordnung besitzen, die es heutigen Systemen schwierig macht Kollisionen zu errechnen und zu speichern. MD5 arbeitet mit einer Größe von 128bit und es ist möglich mit nur 2$^{64}$ Schritten eine Kollision zu entdecken (Geburtstags-Paradoxon). Ähnliches Problem zeigt sich bei der Verwendung von SHA1, welches eine Hashwert-Größe von 160 bit hat, also 2$^{80}$ Schritte für eine Kollision. Beide Größenordnung reichen für heutige Systeme nicht aus und sollten deshalb nicht verwendet werden.
+Wie beschrieben sollen Hash-Funktionen eine Größenordnung besitzen, die es heutigen Systemen schwierig macht Kollisionen zu errechnen und zu speichern. MD5 arbeitet mit einer Größe von 128bit und es ist möglich mit nur 2$^{64}$ Schritten eine Kollision zu entdecken (Geburtstags-Paradoxon). Ähnliches Problem zeigt sich bei der Verwendung von SHA1, welches eine Hashwert-Größe von 160 bit hat, also 2$^{80}$ Schritte für eine Kollision. Beide Größenordnung reichen für heutige Systeme nicht aus und sollten deshalb nicht verwendet werden. \citep[S.382ff]{book:it-sicherheit} \citep[S. 84ff]{book:practical-crypto} \citep[S. 498ff, 504ff]{book:angewandte-krypto}.
 
 \subsection{SHA224, SHA256, SHA384, SHA512}
 Alle 4 Hash-Funktionen gehören zur SHA2-Familie und sind von der Vorgehensweise zur Berechnung des Hash-Wertes identisch. Unterschieden sind zwischen SHA256 und SHA512 die Blockgröße (512 Bit, 1024 Bit), Die Anzahl der Wörter (16x32Bit Wörter, 16x64Bit Wörter), sowie die Anzahl der Konstanten (64 Konsanten, 80 Konstanten). Bei den Verfahren SHA224, sowie SHA384 wird jeweils das größere Hash-Verfahren komplett berechnet und die letzten entsprechenden Bits weggelassen. Da sich die Verfahren von Ihrer Funktionsweise nicht unterscheiden, wird hier lediglich SHA256 näher erklärt.  \\ \\
@@ -428,24 +429,24 @@ S0 := (a $\gg$ 2) $\oplus$ (a $\gg$ 13) $\oplus$ (a $\gg$ 22) \\
 maj := (a $\land$ b) $\oplus$ (a $\land$ c) $\oplus$ (b $\land$ c) \\
 temp2 := S0 + maj \\ \\
 Nach dieser Berechnung findet eine Verschiebung der Variablen statt (h=g ; g=f ; f=e ; e=d+temp1 ; d=c ; c=b ; b=a ; a=temp1+temp2). \\
-Nachdem die oben beschriebene Berechnung für alle 64 Runden durchgeführt wurde, werden die entsprechenden Werte (a-h) miteinander konkateniert und ergeben somit den Hash-Wert.
+Nachdem die oben beschriebene Berechnung für alle 64 Runden durchgeführt wurde, werden die entsprechenden Werte (a-h) miteinander konkateniert und ergeben somit den Hash-Wert \citep[S. 89f]{book:practical-crypto}.
 
 \subsection{Message Authentification Code}
-Hash-Funktionen an sich bieten lediglich die Sicherheit der Integrität der Daten, also dass die Daten beim Empfänger unverändert angekommen sind. Über den Ursprung der Daten, also die Authentizität, kann eine Hash-Funktion keine Sicherheit gewährleisten. Um dieses Problem zu beheben gibt es das MAC-Verfahren (Message Authentification Code). MAC-Funktionen verwenden zum errechnen eines Hash-Wertes zusätzlich einen geheimen Schlüssel der beiden Parteien vor der Kommunikation bekannt sein muss. Wird dem Dokument entsprechend ein MAC-Wert angefügt so muss der Empfänger die selbe MAC-Funktion auf das Dokument anwenden und prüfen ob beide MAC-Werte (der selbst errechnete und der zugesandte) übereinstimmen - ist dies der Fall, so ist die Authentizität gewährleistet (sofern sichergestellt ist, dass der Schlüssel geheimgehalten wurde). Dieses Verfahren ist jedoch nicht in der Lage Verbindlichkeit zu gewährleisten (einem dritten glaubwürdig zu machen, wer der Absender ist), da auch der Empfänger in der Lage ist, den entsprechenden MAC zu berechnen. 
+Hash-Funktionen an sich bieten lediglich die Sicherheit der Integrität der Daten, also dass die Daten beim Empfänger unverändert angekommen sind. Über den Ursprung der Daten, also die Authentizität, kann eine Hash-Funktion keine Sicherheit gewährleisten. Um dieses Problem zu beheben gibt es das MAC-Verfahren (Message Authentification Code). MAC-Funktionen verwenden zum errechnen eines Hash-Wertes zusätzlich einen geheimen Schlüssel der beiden Parteien vor der Kommunikation bekannt sein muss. Wird dem Dokument entsprechend ein MAC-Wert angefügt so muss der Empfänger die selbe MAC-Funktion auf das Dokument anwenden und prüfen ob beide MAC-Werte (der selbst errechnete und der zugesandte) übereinstimmen - ist dies der Fall, so ist die Authentizität gewährleistet (sofern sichergestellt ist, dass der Schlüssel geheimgehalten wurde). Dieses Verfahren ist jedoch nicht in der Lage Verbindlichkeit zu gewährleisten (einem dritten glaubwürdig zu machen, wer der Absender ist), da auch der Empfänger in der Lage ist, den entsprechenden MAC zu berechnen \citep[S. 97ff] {book:practical-crypto}.
 
 
 \section{Schlüsselvereinbarung} 
 Das Hauptproblem für alle Kryptografischen Ver- und Entschlüsselungsverfahren ist die Vereinbarung eines gemeinsamen Schlüssels. Selbst bei Asymmetrischen Verfahren ist nicht sichergestellt, dass durch einen Man-in-the-middle Angriff ein potentieller Angreifer, seinen eigenen Public-Key in das System schleust und somit über den dazugehörigen Privaten Schlüssel verfügt. Verschiedene Verfahren sollen es ermöglich einen Schlüssel auszutauschen, ohne das ein Angreifer diesen auch erhält.
 
 \subsection{Diffie Hellmann}
-Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rechnung, für den Angreifer besteht jedoch das Problem der diskreten Logarithmen in endlichen Körpern (siehe RSA-Verfahren). Das Problem dieses Verfahrens ist, dass es gegen Man in the middle Agriffe nicht geschützt ist, da ein potentieller Angreifer seine eigenen Potenzen und Modulo-Werte in das System schleusen kann und aufgrund dessen beide Parteien den privaten Schlüssel berechnen. [Schneier 587, Ferguson 211]
+Dieses Verfahren beruht auf einfacher mathematischer Potenzierung und Modulo-Rechnung, für den Angreifer besteht jedoch das Problem der diskreten Logarithmen in endlichen Körpern (siehe RSA-Verfahren). Das Problem dieses Verfahrens ist, dass es gegen Man in the middle Agriffe nicht geschützt ist, da ein potentieller Angreifer seine eigenen Potenzen und Modulo-Werte in das System schleusen kann und aufgrund dessen beide Parteien den privaten Schlüssel berechnen \citep[S. 211]{book:practical-crypto} \citep[S. 587]{book:angewandte-krypto}.
 
-\subsection{Direkte Vereinbarung}
-\subsubsection{QR-Code}
-\subsubsection{PGP-Server}
+%\subsection{Direkte Vereinbarung}
+%\subsubsection{QR-Code}
+%\subsubsection{PGP-Server}
 
 
-\section {Zusammenfassung}
+%\section {Zusammenfassung}
 % TODO: nochmal kurz erläutern, welche Verfahren unsicher und welche Sicher sind - welche verwendet werden und welche nicht .
 
 %% ------------------------ VALIDIERUNG --------------------- %%
@@ -456,8 +457,10 @@ Aus dem Kapitel Grundlagen geht hervor, dass im Symmetrischen Bereich die Verfah
 Um die beiden Symmetrischen Verfahren zu Validieren werden jeweils Dateien der Größe 1MB, 5MB und 20MB in zehnfacher Ausführung verschlüsselt und anschließend entschlüsselt. Diese Vorgehensweise wird für alle Schlüssellängen und alle Modi ausgeführt. \\
 Pro Modi fallen so 180 Messungen an (10 Messungen x3 Dateien x3 Schlüssellängen x2 für Ver- und Entschlüsselung). Jede dieser Messung enthält den aktuellen Akkustand, die Temperatur und die Dauer die diese Messung benötigt hat. Eine genaue Aufgliederung aller einzelnen Messergebnisse befindet sich im Anhang. Nach einer erfolgreichen Messreihe eines Modi muss das Smartphone auf den Urzustand gebracht werden, d. h. dass der Akku aufgeladen und die Temperatur normalisiert werden muss. Insgesamt fallen so 1440 Messungen an (180 Messungen x4 Modi x2 Verfahren)\\ \\
 Um die Verfahren mathematisch zu validieren müssen vorerst die Gewichtungen der einzelnen Messfaktoren dargelegt werden. Der Hauptaspekt für den reibungslosen Ablauf der zu entwickelnden Anwendung ist die Geschwindigkeit, in der die Ver- und Entschlüsselungen durchgeführt werden. Anschließend folgt der Akkuverbrauch und zum Schluss die Temperatur. So ergibt sich nach eigenem Ermessen ein Maßstab von 3 : 2 : 1 für Geschwindigkeit : Akkuverbrauch : Temperatur. 
+
+
 \section{Ergebnisse}
-In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 10 das beste und 1 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Die Verteilung der Werte erfolgt durch die Ergebnisse, welche bei der Messung durchgeführt wurden, dabei werden die Punkte 10 und 9 jeweils nur einmal vergeben und die Punkte 8 - 1 jeweils 3 mal. Exemplarisch ist diese Vorgehensweise in nachfolgender Grafik abgebildete. Alle weitere Grafiken und tabellarischen Ausführungen, sowie dessen Rohdaten befinden sich im Anhang. 
+In der Nachfolgenden Tabelle werden alle Verfahren mit Punkten von 1-10, wobei 10 das beste und 1 das schlechteste Ergebnis liefert, versehen und mit dessen Gewichtung multipliziert. Die Verteilung der Werte erfolgt durch die Ergebnisse, welche bei der Messung durchgeführt wurden, dabei werden die Punkte 10 und 9 jeweils nur einmal vergeben und die Punkte 8 - 1 jeweils 3 mal. Exemplarisch ist diese Vorgehensweise in nachfolgender Grafik abgebildete. Alle Rohdaten befinden sich im Anhang. 
 
 \includegraphics[scale=0.9]{tabelle_zeitvergleich_punkte.JPG}
 \captionof{figure}{Zeitvergleich Asymmetrischer Verfahren}
@@ -527,19 +530,19 @@ Programmierschnittstellen (engl.: application programming interface, kurz: API) 
 
 
 \subsection{KeyStore}
-KeyStore ist eine von Java zur Verfügung gestellte Schnittstelle zum sicheren sichern von Schlüsseln  (engl.: key). Der KeyStore ist eine Datei die auf dem Gerät selbst abgelegt wird. Diese Datei wird dann durch die Schnittstelle mit einem Passwort verschlüsselt. Des Weiteren sorgt das Betriebssystem dafür, dass die Datei nur durch den Anwender, der den KeyStore erstellt hat, und den root-Benutzer zugreifbar ist. Der Aufbau des KeyStores ist eine Key-Value-Struktur. Jeder Schlüssel der zu speichern ist, wird mit einem eindeutigen Key abgelegt, unter dem man später den Schlüssel wieder abrufen kann. Darüber hinaus sorgt die Struktur dafür, dass ohne die nötigen Keys auch die Values verdeckt bleiben - eine Auflistung aller Key-Values ist durch den KeyStore nicht möglich. %http://docs.oracle.com/javase/7/docs/api/java/security/KeyStore.html
+KeyStore ist eine von Java zur Verfügung gestellte Schnittstelle zum sicheren sichern von Schlüsseln  (engl.: key). Der KeyStore ist eine Datei die auf dem Gerät selbst abgelegt wird. Diese Datei wird dann durch die Schnittstelle mit einem Passwort verschlüsselt. Des Weiteren sorgt das Betriebssystem dafür, dass die Datei nur durch den Anwender, der den KeyStore erstellt hat, und den root-Benutzer zugreifbar ist. Der Aufbau des KeyStores ist eine Key-Value-Struktur. Jeder Schlüssel der zu speichern ist, wird mit einem eindeutigen Key abgelegt, unter dem man später den Schlüssel wieder abrufen kann. Darüber hinaus sorgt die Struktur dafür, dass ohne die nötigen Keys auch die Values verdeckt bleiben - eine Auflistung aller Key-Values ist durch den KeyStore nicht möglich \cite{website:javadoc-keystore}.
 
 
 \subsection{SQLite}
-SQLite ist eine Datenbank, welche in Android standardmäßig zur Verfügung gestellt werden. Mit ihr ist es möglich Daten in einer relationalen Datenbank mit Tabellen und Spalten abzuspeichern. Darüber hinaus können Daten mit sogenannten SQL-Anweisungen (Structured Query Language) wieder abgefragt werden. Android sorgt dafür, dass entsprechende Tabellen die für die Anwendung benötigt werden beim errsten Start der App eingerichtet werden. 
+SQLite ist eine Datenbank, welche in Android standardmäßig zur Verfügung gestellt werden. Mit ihr ist es möglich Daten in einer relationalen Datenbank mit Tabellen und Spalten abzuspeichern. Darüber hinaus können Daten mit sogenannten SQL-Anweisungen (Structured Query Language) wieder abgefragt werden. Android sorgt dafür, dass entsprechende Tabellen die für die Anwendung benötigt werden beim errsten Start der App eingerichtet werden \cite{website:sqlite-main}.
 
 
 \subsection{zxing}
-zxing ist eine von Google bereitgestellt API zum Erstellen und Lesen von 1D / 2D Barcodes, u. a. auch für den in der Anwendung genutzte QR-Code.
+zxing ist eine von Google bereitgestellt API zum Erstellen und Lesen von 1D / 2D Barcodes, u. a. auch für den in der Anwendung genutzte QR-Code \cite{website:zxing-main}.
 
 
 \subsection{Bouncy-Castle}
-Mit dieser Schnittstelle ist es möglich Kryptographische Verfahren zu verwenden. Zwar ist Bouncy-Castle bereits in angepasste Version in Android standardisiert integriert, bietet jedoch in der Version nicht alle durch die eigentliche Schnittstelle angebotenen Funktionen. Mit Boncy-Castle ist es mögliche Funktionen wie das Ver- und Entschlüsseln mit AES, RSA oder anderen Verschlüsselungsverfahren durchzufürehn. Ausserdem sind verschiedene Codefragmente für den Umgang mit Zertifikaten und Schlüsseln bereits vorhanden.
+Mit dieser Schnittstelle ist es möglich Kryptographische Verfahren zu verwenden. Zwar ist Bouncy-Castle bereits in angepasste Version in Android standardisiert integriert, bietet jedoch in der Version nicht alle durch die eigentliche Schnittstelle angebotenen Funktionen. Mit Boncy-Castle ist es mögliche Funktionen wie das Ver- und Entschlüsseln mit AES, RSA oder anderen Verschlüsselungsverfahren durchzufürehn. Ausserdem sind verschiedene Codefragmente für den Umgang mit Zertifikaten und Schlüsseln bereits vorhanden \cite{website:bouncy-main}.
 
 
 \section{Programmablauf}
@@ -604,7 +607,7 @@ Diese erzeugte Nachricht kann nun über unsichere Kanäle dem Partner übertrage
 
 %% ----------------------------- TEST -------------------------- %%
 \chapter{Test}
-In diesem Kapitel soll gezeigt werden, wie die entwickelte Anwendung auf Fehlverhalten oder andere Probleme getestet wurde. Die gezeigten Mechanismen sollen Fehler innerhalb der Anwendung aufdecken und auch bei weiterentwicklung des Systems stets diesen Status behalten. Testfälle sind einzeln Konzepierte Abläufe die die Anwendung durchlaufen muss und welche das Verhalten der Anwendung auf Richtigkeit oder Fehlerhaftigkeit hin überprüfen. Da Testfälle vom Entwickler selbst implementiert werden müssen, ist es nicht umsetzbar alle möglichen Kombinationen von Eingaben und Aktionen zu überprüfen. Diese Anwendung gilt als Funktionsfähig, wenn die im Kapitel Programmablauf beschriebenen Fälle ohne Absturz oder andere Mängel ausgeführt werden können.
+In diesem Kapitel soll gezeigt werden, wie die entwickelte Anwendung auf Fehlverhalten oder andere Probleme getestet wurde. Die gezeigten Mechanismen sollen Fehler innerhalb der Anwendung aufdecken und auch bei Weiterentwicklung des Systems stets diesen Status behalten. Testfälle sind einzeln Konzepierte Abläufe die die Anwendung durchlaufen muss und welche das Verhalten der Anwendung auf Richtigkeit oder Fehlerhaftigkeit hin überprüfen. Da Testfälle vom Entwickler selbst implementiert werden müssen, ist es nicht umsetzbar alle möglichen Kombinationen von Eingaben und Aktionen zu überprüfen. Diese Anwendung gilt als Funktionsfähig, wenn die im Kapitel Programmablauf beschriebenen Fälle ohne Absturz oder andere Mängel ausgeführt werden können.
 
 
 \section{Performance- und Lasttest}
@@ -620,14 +623,10 @@ Die Programmiersprache Java ist eine objektorientierte Programmiersprache mit Kl
 \section{Usabilitytest}
 Um die im Kapitel Anforderung gestellten Kriterien der leichten Bedienbarkeit und der Intuitivität zu beweisen bedarf es eigener Testszenarien. Diese Eigenschaften einer Anwendung sind jedoch objektiver Natur und können nur von Menschenhand selbst bewertet werden. Da es aufgrund des zeitlichen Rahmens dieser Arbeit nicht möglich war eine Testlauf mit ausgewählten Personen durchzuführen, so soll nach Abschluss der erzeugte Prototyp erstmals Studenten der HTW und ausgewählten Mitarbeitern des DESY an die Hand gegeben werden. Differenziert wird dabei in zwei Personengruppen: Jene die die Anwendung kennen und derer Funktion wissen und jene die ohne jegliche Hintergrundinformationen die Anwendung bedienen sollen. Durch diese Tests soll zum einen gezeigt werden, dass  selbst für unwissende Anwender die App intuitiv zu bedienen ist, als auch durch Wissen über die Funktionsweise der Anwendung dessen Struktur klar und eindeutig darauf verweist welche Fenster in welcher Reihenfolge geöffnet werden müssen um das gewünschte Ziel zu erreichen. Diese Usabilitytests werden dann als Grundlage für weitere Diskussionen oder Änderungen herangezogen um ggf. aufgetretene Mängel zu beseitigen.
 
-ich
-\section{UI-Test}
-Smartphones besitzen als Interaktionsmöglichkeit das Touchfeld, indem der Benutzer durch drücken oder wischen mit dem/n Finger(n) Anweisungen an das Gerät liefern kann. Um zu Überprüfen, ob die angezeigten Elemente bei Interaktion richtig arbeiten werden UI-Tests (User Interface Test) verwendet. Innerhalb der Anwendung wird damit überprüft ob bei drücken der verschiedenen Inhalte, die die App zur Verfügung stellt, die entsprechenden Fenster aufgerufen werden und dessen Funktion ausgeführt wird. Darüber hinaus wird geprüft ob erwartet Inhalte, wie z. B. Texte oder Bilder, dem Awender auf dem Display angezeigt werden. 
 
+%\section{UI-Test}
+%Smartphones besitzen als Interaktionsmöglichkeit das Touchfeld, indem der Benutzer durch drücken oder wischen mit dem/n Finger(n) Anweisungen an das Gerät liefern kann. Um zu Überprüfen, ob die angezeigten Elemente bei Interaktion richtig arbeiten werden UI-Tests (User Interface Test) verwendet. Innerhalb der Anwendung wird damit überprüft ob bei drücken der verschiedenen Inhalte, die die App zur Verfügung stellt, die entsprechenden Fenster aufgerufen werden und dessen Funktion ausgeführt wird. Darüber hinaus wird geprüft ob erwartet Inhalte, wie z. B. Texte oder Bilder, dem Awender auf dem Display angezeigt werden. 
 
-\section{weitere}
-% TODO: Zusammenspiel der Komponente Anwendung nd dCache Server?
-% Abnahmetest?!?
 
 \chapter{Problemfälle und Lösungen}
 Folgend soll kurz beschrieben werden, welche Probleme während der Arbeit auftraten und welche Lösungsstrategien sich überlegt wurden.
@@ -638,10 +637,6 @@ Während der Entwicklung der Software sind verschiedene Problemfälle aufgetrete
 
 \section{direkter Schlüsselaustausch}
 Um den eigenen öffentlichen Schlüssel seinem Gegenüber zu Übertragen so muss dieser denn im Profil enthaltenden QR-Code scannen. Dieses Verfahren kann während der Übertragung der Daten nicht manipuliert werden, da ein Angreifer sich zwischen Display des Anzeigegerätes und Kamera des Empfänger-Gerätes schalten müsste. Ein Problem ergibt sich hieraus, wenn beide Person eine größere Entfernung zueinander haben und diese nicht überbrücken können (Person 1 lebt in Europa, Person 2 in Amerika). Für diesen Problemfall gibt es in der Prototypversion nur eine umständliche Lösung, eine weitere Möglichkeit wird jedoch im Kapitel Ausblick (siehe Schlüsselaustausch) gegeben. Da in der aktuellen Version der Anwendung der QR-Code die einzige Möglichkeit ist, den entsprechenden Schlüssel auszutauschen müssten beide Parteien den QR-Code auf anderem Wege übertragen um ihn dort zu scannen. Es ist möglich in Android über eine Tastenkombination (Lautstärke Hoch + Power-Knopf) ein Bildschirmfoto zu erstellen. Dieses Foto kann man per unsicheren Kanal übertragen und an Empfängerseite einscannen. Da auf diesem Wege die eingehend beschriebene Sicherheit entfällt ist es zwingend notwendig den zum QR-Code angezeigten Fingerprint genau zu überprüfen um sicherzustellen, dass der QR-Code während der Übertragung über den unsicheren Kanal nicht verändert wurde.
-
-%\section{Schlüsselverknüpfung via Hash}
-% TODO: ?!?! Der AES-Schlüssel ist mit dem Hash-Wert des Dateinamens verknüpft... wenn die datei umbenannt wird, ist der schlüssel weg :P 
-% 
 
 %% -------------------------- ZUSAMMENFASSUNG -------------- %%
 \chapter{Zusammenfassung und Ausblick}
@@ -658,10 +653,11 @@ In der aktuellen Version der Anwendung werden zu Beginn der Anwendung ein Schlü
 
 
 \subsection{GCM}
-Google Cloud Messaging (kurz GCM) ist ein System von Google mit dem Entwickler an verschiedene Android-Geräte Push-Nachrichten zu versenden können, dabei ist eine Push-Nachricht eine Meldung von einem Server an ein Gerät, ohne dass das Gerät selbst die Initiative ergreifen muss. Ein Smartphone muss auf diesem Wege nicht dauerhaft prüfen ob neue Inhalte für ihn verfügbar sind, sondern es wird ihm vom Server mitgeteilt. \\ \\
-\includegraphics[scale=0.6]{gcm-a-modr.png} \\ \\ % TODO Grafik selber bauen!!
+Google Cloud Messaging (kurz GCM) ist ein System von Google mit dem Entwickler an verschiedene Android-Geräte Push-Nachrichten zu versenden können, dabei ist eine Push-Nachricht eine Meldung von einem Server an ein Gerät, ohne dass das Gerät selbst die Initiative ergreifen muss. Ein Smartphone muss auf diesem Wege nicht dauerhaft prüfen ob neue Inhalte für ihn verfügbar sind, sondern es wird ihm vom Server mitgeteilt. \\ \\ \\
+\includegraphics[scale=0.6]{gcm-a-modr.png}
+\captionof{figure}{Aufbau GCM \cite{website:androidhive-gcm}}
 Um Push-Nachrichten nutzen zu können ist es notwendig, dass ein eigener Server vorhanden ist. Zu Beginn registrieren sich die Geräte mit der Anwendung am GCM-Server und erhalten eine eindeutige Registrierungsnummer. Die Nummer identifiziert eindeutig das Gerät und die Anwendung. Diese Nummer muss nun dem eigenen Anwendungsserver mitgeteilt werden, der diese mit weiteren optionalen Informationen wie Name, ID, Telefonnummer oder ähnlichen speichert. Alle Geräte die die Anwendung verwenden registrieren sich so am GCM-Server und speichern ihre erhaltene ID im Anwendungsserver. Sobald eine Kommunikation mit einem anderen Gerät stattfinden soll erstellt der Sender die entsprechende Nachricht und sendet sie mit Empfängerinformationen (Name, ID o. ä.) an den Server. Dieser prüft anhand der Informationen ob ein solcher Benutzer registriert ist, indem er diese in seinem System sucht und prüft ob eine entsprechende Registrierungsnummer vorhanden ist. Anschließend sendet der Server die Nachricht und die Registrierungsnnummer an den GCM-Server, der anhand der Registrierungsnummer das Gerät identifizieren kann, welches die Nachricht erhalten soll. Mit diesem System ist sichergestellt, dass ausschließlich der GCM-Server in der Lage ist eine Push-Nachricht an die Geräte zu senden. Die Implementierung eines eigenen Servers ist notwendig um ein System zu schaffen, welches die Registrierten Geräte speichert und eine Möglichkeit bietet diese durch eigene Informationen wieder zu finden. \\
-In dieser Anwendung wäre das GCM-System denkbar um die verschlüsselte Nachricht, die erzeugt wird um eine Datei zu teilen, an die Empfängerseite zu übertragen.
+In dieser Anwendung wäre das GCM-System denkbar um die verschlüsselte Nachricht, die erzeugt wird um eine Datei zu teilen, an die Empfängerseite zu übertragen \cite{website:gcm-main}.
 
 
 \subsection{Password-Reset}
@@ -672,6 +668,10 @@ In der Anwendung werden sensible Daten im KeyStore gespeichert, welcher wiederum
 In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen Schlüssel über eine QR-Code anderen Endgeräten mitzuteilen. Wie bereits im Kapitel Problem erläutert, ist dies bei größeren Entfernungen nicht umsetzbar. Um dennoch die Schlüssel austauschen zu können, wäre ein Einsatz von Key-Servern. Auf einem solchen Server können alle Personen ihre öffentlichen Schlüssel hinterlegen und diese anhand eines eindeutigen Strings wiederfinden. Man müsste für einen Austausch der Schlüssel lediglich den eindeutigen String seinem Gegenüber mitteilen, der den öffentlichen Schlüssel dann am Key-Server abrufen kann. Durch einen Fingersprint kann dann geprüft werden, ob der erhaltene Schlüssel tatsächlich jener ist, der zu der Person gehört. Der Einsatz von Schlüsselservern erlaubt den Austausch von öffentlichen Schlüsseln über eine größere Entfernung, bietet jedoch nicht die Sicherheit die bei einer direkten Vereinbarung (wie QR-Code) gegeben ist.
 
 \chapter{Schlusswort und Dank}
+Zu Beginn möchte ich mich bei Prof. Dr. Hermann Heßling bedanken. Er ermöglichte mir durch Zusammenarbeit mit dem DESY Zugriff auf Infrastrukturen, die in dieser Arbeit zum Einsatz kamen. Darüber hinaus möchte ich Ihm für die Zusammenarbeit und die Betreuung während der Arbeit danken, er war bei Fragen und Ideen stets mit hilfreichen Anmerkungen für mich da. Weiterhin danke ich Frau Prof. Dr. Christin Schmidt, die ich durch ihre Herzlichkeit und Freude immer gern bei Fragen kontaktieren konnte. Ich danke beiden für die Betreuung dieser Arbeit und freue mich auch in Zukunft auf gute Zusammenarbeit. \\
+Ganz besonderen Dank gilt jedoch meiner Familie. Meinen Eltern, Carmen und Frank Schubert sowie meinen Großeltern, Ingrid und Egon Bley, die mir nicht nur finanzielle Unterstützung leisteten, sondern auch trotz der großen Entfernung mir immer zur Seite standen, sowohl seelisch als auch psychisch. Ich verdanke Euch die Chance, diesen Schritt im Leben zu gehen und Freue mich, dass Ihr immer für mich da seid. \\
+Als letztes möchte ich allen Freunden danken, die mich während des Studiums und auch während der Arbeit begleiteten und ich freue mich auf noch viele lustige, unterhaltsame und tolle Tage und Abende.
+
 
 %--------------------------------------------------------------------
 % -----------------------ENDE ------------------------------------
@@ -683,7 +683,32 @@ In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen 
 % \lhead{\emph{Bibliography}} % Change the page header to say "Bibliography"
 \bibliography{Bibliography} % The references (bibliography) information are stored in the file named "Bibliography.bib"
 \bibliographystyle{alpha}
-\printindex
+
+%%\printindex
+
+\chapter{Anhang: Kryptoverfahren Android Version 2.3.3}
+\pagenumbering{Roman} 
+\includepdf[pages=-]{anderes/crypto_2_3_3.pdf}
+
+\chapter{Anhang: Kryptoverfahren Android Version 4.1.1}
+\includepdf[pages=-]{anderes/crypto_4_1_1.pdf}
+
+\chapter{Anhang: Kryptoverfahren Android Version 4.4.2}
+\includepdf[pages=-]{anderes/crypto_4_4_2.pdf}
+
+\chapter{Anhang: Kryptoverfahren Android Version 5.0.0}
+\includepdf[pages=-]{anderes/crypto_5_0_0.pdf}
+
+\chapter{Anhang: Rohdaten Validierung}
+\includepdf[pages=-]{anderes/LogFile_CBC.pdf}
+\includepdf[pages=-]{anderes/LogFile_CFB.pdf}
+\includepdf[pages=-]{anderes/LogFile_CTR.pdf}
+\includepdf[pages=-]{anderes/LogFile_OFB.pdf}
+\includepdf[pages=-]{anderes/LogFile_Blowfish_CBC.pdf}
+\includepdf[pages=-]{anderes/LogFile_Blowfish_CFB.pdf}
+\includepdf[pages=-]{anderes/LogFile_Blowfish_CTR.pdf}
+\includepdf[pages=-]{anderes/LogFile_Blowfish_OFB.pdf}
+
 
 %Glossar
 %Literatur
@@ -692,7 +717,6 @@ In der aktuellen Version ist es lediglich Möglich seinen eigenen öffentlichen 
 %eigenständigkeitsverklärung
 
 %% ---------------------------------- ANHANG --------------------------- %%
-	%TODO: Algorithmen 411 und 322.
 	%TODO: Daten durch die Validierung.
 
 \end{document}
